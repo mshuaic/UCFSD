@@ -10,13 +10,14 @@ namespace CheckupExec.Controllers
 {
     class JobHistoryController
     {
-        private string getJobHistoriesScript = "get-bejobhistory | convertto-json";
+        private const string _getJobHistoryScript = "get-bejobhistory ";
+        private const string _converttoJsonString = "| convertto-json";
 
-        public List<JobHistory> GetJobHistories()
+        private List<JobHistory> invokeGetJobHistories(string scriptToInvoke)
         {
             List<JobHistory> jobHistories = null;
 
-            BEMCLIHelper.powershell.AddScript(getJobHistoriesScript);
+            BEMCLIHelper.powershell.AddScript(scriptToInvoke + _converttoJsonString);
 
             try
             {
@@ -35,35 +36,67 @@ namespace CheckupExec.Controllers
             return jobHistories;
         }
 
+        public List<JobHistory> GetJobHistories()
+        {
+            return invokeGetJobHistories(_getJobHistoryScript);
+        }
+
         public List<JobHistory> GetJobHistoriesBy(Dictionary<string, string> parameters)
         {
-            List<JobHistory> jobHistories = null;
-
-            string getJobHistoriesByScript = "get-bejobhistory";
+            string scriptToInvoke = _getJobHistoryScript;
 
             foreach (var parameter in parameters)
             {
-                getJobHistoriesByScript += " -" + parameter.Key + " " + parameter.Value;
+                scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
             }
-            getJobHistoriesByScript += " | convertto-json";
 
-            BEMCLIHelper.powershell.AddScript(getJobHistoriesByScript);
+            return invokeGetJobHistories(scriptToInvoke);
+        }
 
-            try
+        //get-bealert {| get-be<..> {-k j}*}+ | convertto-json
+        public List<JobHistory> GetJobHistoriesPipeline(Dictionary<string, Dictionary<string, string>> pipelineCommands)
+        {
+            string scriptToInvoke = "";
+            int numCommands = pipelineCommands.Count;
+
+            foreach (var pipeline in pipelineCommands)
             {
-                var output = BEMCLIHelper.powershell.Invoke<string>();
-                jobHistories = JsonHelper.ConvertFromJson<JobHistory>(output[0]);
+                scriptToInvoke += pipeline.Key + " ";
+
+                foreach (var parameter in pipeline.Value)
+                {
+                    scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+                }
             }
-            catch (Exception e)
+
+            scriptToInvoke += "| " + _getJobHistoryScript;
+
+            return invokeGetJobHistories(scriptToInvoke);
+        }
+
+        //get-bealert {-x y}+ {| get-be<> {-k j}*}+ | convertto-json
+        public List<JobHistory> GetJobHistoriesByPipeline(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> jobHistoryParameters)
+        {
+            string scriptToInvoke = "";
+            int numCommands = pipelineCommands.Count;
+
+            foreach (var pipeline in pipelineCommands)
             {
-                Exception baseException = e.GetBaseException();
-                //LogUtility.LogInfoFunction("Error:" + e.Message + "Message:" + baseException.Message);
-                Console.WriteLine("Error: {0}, Message: {1}", e.Message, baseException.Message);
+                scriptToInvoke += pipeline.Key + " ";
+
+                foreach (var parameter in pipeline.Value)
+                {
+                    scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+                }
             }
 
-            BEMCLIHelper.powershell.Commands.Clear();
+            scriptToInvoke += "| " + _getJobHistoryScript;
+            foreach (var parameter in jobHistoryParameters)
+            {
+                scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+            }
 
-            return jobHistories;
+            return invokeGetJobHistories(scriptToInvoke);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using CheckupExec.Controllers;
+﻿using CheckupExec.Analysis;
+using CheckupExec.Controllers;
 using CheckupExec.Models;
 using CheckupExec.Utilities;
 using Newtonsoft.Json.Linq;
@@ -14,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace CheckupExec
 {
-    //to-do: log utility, get-* validation(?), job-data-footprint+, 
+    //to-do: log utility, get-* validation(?), job-data-footprint+, jobestimate, frontendcapacityuse,  
     class DataExtraction
     {
         static void Main(string[] args)
@@ -25,32 +26,36 @@ namespace CheckupExec
             string userName = "Administrator";
 
             var Alerts = new AlertController();
-            var BEServers = new BEServerController();
-            var Jobs = new JobController();
-            var JobHistories = new JobHistoryController();
-            var Storages = new StorageController();
 
             new BEMCLIHelper(remoteAccess, password, serverName, userName);
 
-            if (BEMCLIHelper.powershell != null)
-            {
-                var alerts = Alerts.GetAlerts();
-                var beServers = BEServers.GetBEServer();
-                var jobs = Jobs.GetJobs();
-                var jobHistories = JobHistories.GetJobHistories();
-                var storages = Storages.GetStorages();
-            }
-            
-            //example of how you would pretty much run get-bealert -severity "warning" | convertto-json
-            var parameters = new Dictionary<string, string>();
-            parameters.Add("severity", "warning");
+            //if (BEMCLIHelper.powershell != null)
+            //{
+            //    //example of how you would pretty much run get-bealert -severity "warning" | convertto-json
+            //    var parameters = new Dictionary<string, string>();
+            //    parameters.Add("severity", "warning");
 
-            var alertsBySeverity = Alerts.GetAlertsBy(parameters);
+            //    var alertsBySeverity = Alerts.GetAlertsBy(parameters);
 
-            foreach (var alertBySeverity in alertsBySeverity)
-                Console.WriteLine(JsonHelper.JsonSerializer<Alert>(alertBySeverity));
+            //    foreach (var alert in alertsBySeverity)
+            //        Console.WriteLine(JsonHelper.JsonSerializer<Alert>(alert));
+            //    Console.ReadLine();
+            //}
+
+            var jobController = new JobController();
+            var jobs = jobController.GetJobs();
+            var job = jobs.First();
+
+            var bje = new BackupJobEstimate(job.Id);
+            Console.WriteLine("Next Start Date: " + bje.NextStartDate);
+            Console.WriteLine("Job rate estimate: " + bje.EstimateOfJobRateMBMin);
+            Console.WriteLine("Elapsed time estimate (sec): " + bje.EstimateOfElapsedTimeSec);
+            Console.WriteLine("=============================");
+
+            var forecast = new Forecast(job.Id);
+            Console.WriteLine("Slope: " + forecast.FinalSlope);
+            Console.WriteLine("Intercept: " + forecast.FinalIntercept);
             Console.ReadLine();
-
 
             BEMCLIHelper.cleanUp();
         }

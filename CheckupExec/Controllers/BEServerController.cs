@@ -10,18 +10,19 @@ namespace CheckupExec.Controllers
 {
     class BEServerController
     {
-        private string getBEServersScript = "get-bebackupexecserver | convertto-json";
+        private const string _getBEServersScript = "get-bebackupexecserver ";
+        private const string _converttoJsonString = "| convertto-json";
 
-        public List<BEServer> GetBEServer()
+        private List<BEServer> invokeGetBEServers(string scriptToInvoke)
         {
-            List<BEServer> BEServers = null;
+            List<BEServer> beServers = null;
 
-            BEMCLIHelper.powershell.AddScript(getBEServersScript);
+            BEMCLIHelper.powershell.AddScript(scriptToInvoke + _converttoJsonString);
 
             try
             {
                 var output = BEMCLIHelper.powershell.Invoke<string>();
-                BEServers = JsonHelper.ConvertFromJson<BEServer>(output[0]);
+                beServers = JsonHelper.ConvertFromJson<BEServer>(output[0]);
             }
             catch (Exception e)
             {
@@ -32,38 +33,70 @@ namespace CheckupExec.Controllers
 
             BEMCLIHelper.powershell.Commands.Clear();
 
-            return BEServers;
+            return beServers;
+        }
+
+        public List<BEServer> GetBEServers()
+        {
+            return invokeGetBEServers(_getBEServersScript);
         }
 
         public List<BEServer> GetBEServersBy(Dictionary<string, string> parameters)
         {
-            List<BEServer> BEServers = null;
-
-            string getBEServersByScript = "get-bebackupexecserver";
+            string scriptToInvoke = _getBEServersScript;
 
             foreach (var parameter in parameters)
             {
-                getBEServersByScript += " -" + parameter.Key + " " + parameter.Value;
+                scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
             }
-            getBEServersByScript += " | convertto-json";
 
-            BEMCLIHelper.powershell.AddScript(getBEServersByScript);
+            return invokeGetBEServers(scriptToInvoke);
+        }
 
-            try
+        //get-bealert {| get-be<..> {-k j}*}+ | convertto-json
+        public List<BEServer> GetBEServersPipeline(Dictionary<string, Dictionary<string, string>> pipelineCommands)
+        {
+            string scriptToInvoke = "";
+            int numCommands = pipelineCommands.Count;
+
+            foreach (var pipeline in pipelineCommands)
             {
-                var output = BEMCLIHelper.powershell.Invoke<string>();
-                BEServers = JsonHelper.ConvertFromJson<BEServer>(output[0]);
+                scriptToInvoke += pipeline.Key + " ";
+
+                foreach (var parameter in pipeline.Value)
+                {
+                    scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+                }
             }
-            catch (Exception e)
+
+            scriptToInvoke += "| " + _getBEServersScript;
+
+            return invokeGetBEServers(scriptToInvoke);
+        }
+
+        //get-bealert {-x y}+ {| get-be<> {-k j}*}+ | convertto-json
+        public List<BEServer> GetBEServersByPipeline(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> beServerParameters)
+        {
+            string scriptToInvoke = "";
+            int numCommands = pipelineCommands.Count;
+
+            foreach (var pipeline in pipelineCommands)
             {
-                Exception baseException = e.GetBaseException();
-                //LogUtility.LogInfoFunction("Error:" + e.Message + "Message:" + baseException.Message);
-                Console.WriteLine("Error: {0}, Message: {1}", e.Message, baseException.Message);
+                scriptToInvoke += pipeline.Key + " ";
+
+                foreach (var parameter in pipeline.Value)
+                {
+                    scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+                }
             }
 
-            BEMCLIHelper.powershell.Commands.Clear();
+            scriptToInvoke += "| " + _getBEServersScript;
+            foreach (var parameter in beServerParameters)
+            {
+                scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+            }
 
-            return BEServers;
+            return invokeGetBEServers(scriptToInvoke);
         }
     }
 }

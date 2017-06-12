@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CheckupExec.Models
 {
-    class JobHistory
+    class JobHistory : IComparable<JobHistory>
     {
         public string Name { get; set; }
 
@@ -74,10 +74,21 @@ namespace CheckupExec.Models
 
         public string ErrorCategoryType { get; set; }
 
+        public const int SuccessfulFinalStatus = 9;
+
         //update later
         public static string GetJobStatusString(string id)
         {
             return "";
+        }
+
+        public int CompareTo(JobHistory jobHistory)
+        {
+            if (jobHistory.StartTime > this.StartTime)
+                return 1;
+            else if (jobHistory.StartTime < this.StartTime)
+                return -1;
+            return 0;
         }
     }
 }

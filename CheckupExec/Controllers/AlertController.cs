@@ -9,13 +9,14 @@ namespace CheckupExec.Controllers
 {
     class AlertController
     {
-        private string getAlertsScript = "get-bealert | convertto-json";
+        private const string _getAlertsScript = "get-bealert ";
+        private const string _converttoJsonString = "| convertto-json";
 
-        public List<Alert> GetAlerts()
+        private List<Alert> invokeGetAlerts(string scriptToInvoke)
         {
             List<Alert> alerts = null;
 
-            BEMCLIHelper.powershell.AddScript(getAlertsScript);
+            BEMCLIHelper.powershell.AddScript(scriptToInvoke + _converttoJsonString);
 
             try
             {
@@ -34,35 +35,67 @@ namespace CheckupExec.Controllers
             return alerts;
         }
 
+        public List<Alert> GetAlerts()
+        {
+            return invokeGetAlerts(_getAlertsScript);
+        }
+
         public List<Alert> GetAlertsBy(Dictionary<string, string> parameters)
         {
-            List<Alert> alerts = null;
-
-            string getAlertsByScript = "get-bealert";
+            string scriptToInvoke = _getAlertsScript;
 
             foreach (var parameter in parameters)
             {
-                getAlertsByScript += " -" + parameter.Key + " " + parameter.Value;
+                scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
             }
-            getAlertsByScript += " | convertto-json";
 
-            BEMCLIHelper.powershell.AddScript(getAlertsByScript);
+            return invokeGetAlerts(scriptToInvoke);
+        }
 
-            try
+        //get-bealert {| get-be<..> {-k j}*}+ | convertto-json
+        public List<Alert> GetAlertsPipeline(Dictionary<string, Dictionary<string, string>> pipelineCommands)
+        {
+            string scriptToInvoke = "";
+            int numCommands = pipelineCommands.Count;
+
+            foreach (var pipeline in pipelineCommands)
             {
-                var output = BEMCLIHelper.powershell.Invoke<string>();
-                alerts = JsonHelper.ConvertFromJson<Alert>(output[0]);
+                scriptToInvoke += pipeline.Key + " ";
+
+                foreach (var parameter in pipeline.Value)
+                {
+                    scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+                }
             }
-            catch (Exception e)
+
+            scriptToInvoke += "| " + _getAlertsScript;
+
+            return invokeGetAlerts(scriptToInvoke);
+        }
+
+        //get-bealert {-x y}+ {| get-be<> {-k j}*}+ | convertto-json
+        public List<Alert> GetAlertsByPipeline(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> alertParameters)
+        {
+            string scriptToInvoke = ""; 
+            int numCommands = pipelineCommands.Count;
+
+            foreach (var pipeline in pipelineCommands)
             {
-                Exception baseException = e.GetBaseException();
-                //LogUtility.LogInfoFunction("Error:" + e.Message + "Message:" + baseException.Message);
-                Console.WriteLine("Error: {0}, Message: {1}", e.Message, baseException.Message);
+                scriptToInvoke += pipeline.Key + " ";
+
+                foreach (var parameter in pipeline.Value)
+                {
+                    scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+                }
             }
 
-            BEMCLIHelper.powershell.Commands.Clear();
+            scriptToInvoke += "| " + _getAlertsScript;
+            foreach (var parameter in alertParameters)
+            {
+                scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+            }
 
-            return alerts;
+            return invokeGetAlerts(scriptToInvoke);
         }
     }
 }

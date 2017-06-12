@@ -15,5 +15,23 @@ namespace CheckupExec.Models
         public int Every { get; set; }
 
         public DateTime StartDate { get; set; }
+
+        //correct this later!!
+        public string getRecurrenceTypeString(int recurrenceType)
+        {
+            switch (recurrenceType)
+            {
+                case 1:
+                    return "Yearly";
+                case 2:
+                    return "Monthly";
+                case 6:
+                    return "Weekly";
+                case 4:
+                    return "Daily";
+                default:
+                    return "Hourly";
+            }
+        }
     }
 }

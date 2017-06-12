@@ -10,13 +10,14 @@ namespace CheckupExec.Controllers
 {
     class StorageController
     {
-        private string getStoragesScript = "get-bestorage | convertto-json";
+        private const string _getStorageScript = "get-bestorage ";
+        private const string _converttoJsonString = "| convertto-json";
 
-        public List<Storage> GetStorages()
+        private List<Storage> invokeGetStorages(string scriptToInvoke)
         {
             List<Storage> storages = null;
 
-            BEMCLIHelper.powershell.AddScript(getStoragesScript);
+            BEMCLIHelper.powershell.AddScript(scriptToInvoke + _converttoJsonString);
 
             try
             {
@@ -35,35 +36,67 @@ namespace CheckupExec.Controllers
             return storages;
         }
 
+        public List<Storage> GetStorages()
+        {
+            return invokeGetStorages(_getStorageScript);
+        }
+
         public List<Storage> GetStoragesBy(Dictionary<string, string> parameters)
         {
-            List<Storage> storages = null;
-
-            string getStoragesByScript = "get-bestorage";
+            string scriptToInvoke = _getStorageScript;
 
             foreach (var parameter in parameters)
             {
-                getStoragesByScript += " -" + parameter.Key + " " + parameter.Value;
+                scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
             }
-            getStoragesByScript += " | convertto-json";
 
-            BEMCLIHelper.powershell.AddScript(getStoragesByScript);
+            return invokeGetStorages(scriptToInvoke);
+        }
 
-            try
+        //get-bealert {| get-be<..> {-k j}*}+ | convertto-json
+        public List<Storage> GetStoragesPipeline(Dictionary<string, Dictionary<string, string>> pipelineCommands)
+        {
+            string scriptToInvoke = "";
+            int numCommands = pipelineCommands.Count;
+
+            foreach (var pipeline in pipelineCommands)
             {
-                var output = BEMCLIHelper.powershell.Invoke<string>();
-                storages = JsonHelper.ConvertFromJson<Storage>(output[0]);
+                scriptToInvoke += pipeline.Key + " ";
+
+                foreach (var parameter in pipeline.Value)
+                {
+                    scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+                }
             }
-            catch (Exception e)
+
+            scriptToInvoke += "| " + _getStorageScript;
+
+            return invokeGetStorages(scriptToInvoke);
+        }
+
+        //get-bealert {-x y}+ {| get-be<> {-k j}*}+ | convertto-json
+        public List<Storage> GetStoragesByPipeline(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> storageParameters)
+        {
+            string scriptToInvoke = "";
+            int numCommands = pipelineCommands.Count;
+
+            foreach (var pipeline in pipelineCommands)
             {
-                Exception baseException = e.GetBaseException();
-                //LogUtility.LogInfoFunction("Error:" + e.Message + "Message:" + baseException.Message);
-                Console.WriteLine("Error: {0}, Message: {1}", e.Message, baseException.Message);
+                scriptToInvoke += pipeline.Key + " ";
+
+                foreach (var parameter in pipeline.Value)
+                {
+                    scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+                }
             }
 
-            BEMCLIHelper.powershell.Commands.Clear();
+            scriptToInvoke += "| " + _getStorageScript;
+            foreach (var parameter in storageParameters)
+            {
+                scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+            }
 
-            return storages;
+            return invokeGetStorages(scriptToInvoke);
         }
     }
 }

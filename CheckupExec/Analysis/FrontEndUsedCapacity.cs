@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CheckupExec.Utilities
+namespace CheckupExec.Analysis
 {
-    class Footprint
+    public class FrontEndUsedCapacity
     {
+
     }
 }
