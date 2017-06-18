@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CheckupExec.Models
 {
-    class JobHistory : IComparable<JobHistory>
+    public class JobHistory : IComparable<JobHistory>
     {
         public string Name { get; set; }
 
@@ -85,9 +85,13 @@ namespace CheckupExec.Models
         public int CompareTo(JobHistory jobHistory)
         {
             if (jobHistory.StartTime > this.StartTime)
+            {
                 return 1;
+            }
             else if (jobHistory.StartTime < this.StartTime)
+            {
                 return -1;
+            }
             return 0;
         }
     }

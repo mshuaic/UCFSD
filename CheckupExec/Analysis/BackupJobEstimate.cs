@@ -1,5 +1,6 @@
 ﻿using CheckupExec.Controllers;
 using CheckupExec.Models;
+using CheckupExec.Analysis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +19,14 @@ namespace CheckupExec.Analysis
 
         public double EstimateOfElapsedTimeSec { get; }
 
+        public double EstimateDataSizeMB { get; set; }
+
+        private string _jobId;
+
         public BackupJobEstimate(string jobId)
         {
+            _jobId = jobId;
+
             JobController jobController = new JobController();
             JobHistoryController jobHistoryController = new JobHistoryController();
 
@@ -29,21 +36,30 @@ namespace CheckupExec.Analysis
             };
             var jobHistoryPipeline = new Dictionary<string, Dictionary<string, string>>
             {
-                ["get-bejob"] = new Dictionary<string, string>()
+                ["get-bejob"] = new Dictionary<string, string>
                                 {
                                     ["Id"] = jobId
                                 }
             };
 
             var jobAsList = jobController.GetJobsBy(jobPipeline);
-            var job = jobAsList.First<Job>();
+            var job = jobAsList.First();
 
             var jobHistories = jobHistoryController.GetJobHistoriesPipeline(jobHistoryPipeline);
+            var filteredJobHistories = new List<JobHistory>();
+
+            foreach (var jobHistory in jobHistories)
+            {
+                if (Convert.ToInt32(jobHistory.JobStatus) == JobHistory.SuccessfulFinalStatus && jobHistory.PercentComplete == 100)
+                {
+                    filteredJobHistories.Add(jobHistory);
+                }
+            }
 
             JobName = job.Name;
             NextStartDate = job.NextStartDate;
-            EstimateOfJobRateMBMin = estimateJobRate(jobHistories);
-            EstimateOfElapsedTimeSec = estimateElapsedTime(jobHistories);
+            EstimateOfJobRateMBMin = estimateJobRate(filteredJobHistories);
+            EstimateOfElapsedTimeSec = estimateElapsedTime(filteredJobHistories);
         }
 
         private double estimateJobRate(List<JobHistory> jobHistories)
@@ -52,12 +68,9 @@ namespace CheckupExec.Analysis
             double sum = 0;
 
             foreach (var jobHistory in jobHistories)
-            {
-                if (Convert.ToInt32(jobHistory.JobStatus) == 9 && jobHistory.PercentComplete == 100)
-                {
-                    sum += jobHistory.JobRateMBPerMinute;
-                    count++;
-                }
+            {        
+                sum += jobHistory.JobRateMBPerMinute;
+                count++;   
             }
 
             try
@@ -73,21 +86,35 @@ namespace CheckupExec.Analysis
 
         private double estimateElapsedTime(List<JobHistory> jobHistories)
         {
-            int count = 0;
-            double sum = 0;
+            var _fc = new Forecast(this._jobId);
 
-            foreach (var jobHistory in jobHistories)
+            if (_fc.ForecastSuccessful)
             {
-                if (Convert.ToInt32(jobHistory.JobStatus) == 9 && jobHistory.PercentComplete == 100)
+                Console.WriteLine("Slope: " + _fc.FinalSlope);
+                Console.WriteLine("Intercept: " + _fc.FinalIntercept);
+                EstimateDataSizeMB = _fc.FinalIntercept + _fc.FinalSlope * this.NextStartDate.Subtract(DateTime.Now).TotalDays;
+            }
+            else
+            {
+                int count = 0;
+                double sum = 0;
+                double currentSizeGB = jobHistories.First().TotalDataSizeBytes >> 20;
+
+                jobHistories.Remove(jobHistories.First());
+
+                foreach (var jobHistory in jobHistories)
                 {
-                    sum += jobHistory.ElapsedTime.TotalSeconds;
+                    sum += (jobHistory.TotalDataSizeBytes >> 20) - currentSizeGB;
+                    currentSizeGB = jobHistory.TotalDataSizeBytes >> 20;
                     count++;
                 }
+
+                EstimateDataSizeMB = ((jobHistories[count - 1].TotalDataSizeBytes >> 20) + sum / count) / 1024;
             }
 
             try
             {
-                return sum / count;
+                return 60 * (EstimateDataSizeMB * 1024)  / EstimateOfJobRateMBMin;
             }
             catch (DivideByZeroException e)
             {

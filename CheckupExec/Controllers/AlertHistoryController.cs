@@ -8,21 +8,21 @@ using System.Threading.Tasks;
 
 namespace CheckupExec.Controllers
 {
-    class JobHistoryController
+    class AlertHistoryController
     {
-        private const string _getJobHistoryScript = "get-bejobhistory ";
+        private const string _getAlertHistoriesScript = "get-beAlertHistory ";
         private const string _converttoJsonString = "| convertto-json";
 
-        private List<JobHistory> invokeGetJobHistories(string scriptToInvoke)
+        private List<Alert> invokeGetAlertHistories(string scriptToInvoke)
         {
-            List<JobHistory> jobHistories = null;
+            List<Alert> alertHistories = null;
 
             BEMCLIHelper.powershell.AddScript(scriptToInvoke + _converttoJsonString);
 
             try
             {
                 var output = BEMCLIHelper.powershell.Invoke<string>();
-                jobHistories = (output.Count > 0) ? JsonHelper.ConvertFromJson<JobHistory>(output[0]) : null;
+                alertHistories = (output.Count > 0) ? JsonHelper.ConvertFromJson<Alert>(output[0]) : null;
             }
             catch (Exception e)
             {
@@ -33,28 +33,28 @@ namespace CheckupExec.Controllers
 
             BEMCLIHelper.powershell.Commands.Clear();
 
-            return jobHistories;
+            return alertHistories;
         }
 
-        public List<JobHistory> GetJobHistories()
+        public List<Alert> GetAlertHistories()
         {
-            return invokeGetJobHistories(_getJobHistoryScript);
+            return invokeGetAlertHistories(_getAlertHistoriesScript);
         }
 
-        public List<JobHistory> GetJobHistoriesBy(Dictionary<string, string> parameters)
+        public List<Alert> GetAlertHistoriesBy(Dictionary<string, string> parameters)
         {
-            string scriptToInvoke = _getJobHistoryScript;
+            string scriptToInvoke = _getAlertHistoriesScript;
 
             foreach (var parameter in parameters)
             {
                 scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
             }
 
-            return invokeGetJobHistories(scriptToInvoke);
+            return invokeGetAlertHistories(scriptToInvoke);
         }
 
         //get-bealert {| get-be<..> {-k j}*}+ | convertto-json
-        public List<JobHistory> GetJobHistoriesPipeline(Dictionary<string, Dictionary<string, string>> pipelineCommands)
+        public List<Alert> GetAlertHistoriesPipeline(Dictionary<string, Dictionary<string, string>> pipelineCommands)
         {
             string scriptToInvoke = "";
             int numCommands = pipelineCommands.Count;
@@ -69,13 +69,13 @@ namespace CheckupExec.Controllers
                 }
             }
 
-            scriptToInvoke += "| " + _getJobHistoryScript;
+            scriptToInvoke += "| " + _getAlertHistoriesScript;
 
-            return invokeGetJobHistories(scriptToInvoke);
+            return invokeGetAlertHistories(scriptToInvoke);
         }
 
         //get-bealert {-x y}+ {| get-be<> {-k j}*}+ | convertto-json
-        public List<JobHistory> GetJobHistoriesByPipeline(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> jobHistoryParameters)
+        public List<Alert> GetAlertHistoriesByPipeline(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> alertHistoryParameters)
         {
             string scriptToInvoke = "";
             int numCommands = pipelineCommands.Count;
@@ -90,13 +90,14 @@ namespace CheckupExec.Controllers
                 }
             }
 
-            scriptToInvoke += "| " + _getJobHistoryScript;
-            foreach (var parameter in jobHistoryParameters)
+            scriptToInvoke += "| " + _getAlertHistoriesScript;
+            foreach (var parameter in alertHistoryParameters)
             {
                 scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
             }
 
-            return invokeGetJobHistories(scriptToInvoke);
+            return invokeGetAlertHistories(scriptToInvoke);
         }
     }
 }
+

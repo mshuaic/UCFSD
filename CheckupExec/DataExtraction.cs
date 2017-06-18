@@ -25,37 +25,41 @@ namespace CheckupExec
             string serverName = "WIN-GAEP2HNEO1O";
             string userName = "Administrator";
 
-            var Alerts = new AlertController();
+            var AlertHistories = new AlertHistoryController();
 
             new BEMCLIHelper(remoteAccess, password, serverName, userName);
 
-            //if (BEMCLIHelper.powershell != null)
-            //{
-            //    //example of how you would pretty much run get-bealert -severity "warning" | convertto-json
-            //    var parameters = new Dictionary<string, string>();
-            //    parameters.Add("severity", "warning");
+            if (BEMCLIHelper.powershell != null)
+            {
+                //example of how you would pretty much run get-bealert -severity "warning" | convertto-json
+                var parameters = new Dictionary<string, string>();
+                parameters.Add("severity", "warning");
 
-            //    var alertsBySeverity = Alerts.GetAlertsBy(parameters);
+                var alertsBySeverity = AlertHistories.GetAlertHistoriesBy(parameters);
 
-            //    foreach (var alert in alertsBySeverity)
-            //        Console.WriteLine(JsonHelper.JsonSerializer<Alert>(alert));
-            //    Console.ReadLine();
-            //}
+                foreach (var alert in alertsBySeverity)
+                    Console.WriteLine(JsonHelper.JsonSerializer<Alert>(alert));
+                Console.ReadLine();
+            }
 
-            var jobController = new JobController();
-            var jobs = jobController.GetJobs();
-            var job = jobs.First();
+            //var jobController = new JobController();
+            //var jobs = jobController.GetJobs();
+            //var job = jobs.First();
 
-            var bje = new BackupJobEstimate(job.Id);
-            Console.WriteLine("Next Start Date: " + bje.NextStartDate);
-            Console.WriteLine("Job rate estimate: " + bje.EstimateOfJobRateMBMin);
-            Console.WriteLine("Elapsed time estimate (sec): " + bje.EstimateOfElapsedTimeSec);
-            Console.WriteLine("=============================");
+            //var bje = new BackupJobEstimate(job.Id);
+            //Console.WriteLine("Next Start Date: " + bje.NextStartDate);
+            //Console.WriteLine("Job rate estimate: " + bje.EstimateOfJobRateMBMin);
+            //Console.WriteLine("Elapsed time estimate (sec): " + bje.EstimateOfElapsedTimeSec);
+            //Console.WriteLine("Data Size estimate: " + bje.EstimateDataSizeMB);
+            //Console.WriteLine("=============================");
 
-            var forecast = new Forecast(job.Id);
-            Console.WriteLine("Slope: " + forecast.FinalSlope);
-            Console.WriteLine("Intercept: " + forecast.FinalIntercept);
-            Console.ReadLine();
+            //var forecast = new Forecast(job.Id);
+            //Console.WriteLine("Slope: " + forecast.FinalSlope);
+            //Console.WriteLine("Intercept: " + forecast.FinalIntercept);
+            //Console.ReadLine();
+
+            //var frontEnd = new FrontEndUsedCapacity();
+            //Console.ReadLine();
 
             BEMCLIHelper.cleanUp();
         }

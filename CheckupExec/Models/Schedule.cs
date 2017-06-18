@@ -21,16 +21,18 @@ namespace CheckupExec.Models
         {
             switch (recurrenceType)
             {
-                case 1:
+                case 16:
                     return "Yearly";
-                case 2:
+                case 8:
                     return "Monthly";
                 case 6:
                     return "Weekly";
-                case 4:
+                case 2:
                     return "Daily";
-                default:
+                case 1:
                     return "Hourly";
+                default:
+                    return "None";
             }
         }
     }

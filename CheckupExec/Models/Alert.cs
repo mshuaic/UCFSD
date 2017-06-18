@@ -1,10 +1,12 @@
 ﻿using CheckupExec.Models;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Collections;
 
-namespace CheckupExec
+namespace CheckupExec.Models
 {   
-    public class Alert
+    public class Alert : IComparable<Alert>
     {
         public string Name { get; set; }
 
@@ -158,6 +160,19 @@ namespace CheckupExec
         public static string GetSourceString(int id)
         {
             return Enum.GetName(typeof(SourceString), id);
+        }
+
+        public int CompareTo(Alert alert)
+        {
+            if (alert.Date > this.Date)
+            {
+                return 1;
+            }
+            else if (alert.Date < this.Date)
+            {
+                return -1;
+            }
+            return 0;
         }
     }
 }

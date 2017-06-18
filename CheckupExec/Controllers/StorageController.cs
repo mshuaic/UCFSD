@@ -22,7 +22,7 @@ namespace CheckupExec.Controllers
             try
             {
                 var output = BEMCLIHelper.powershell.Invoke<string>();
-                storages = JsonHelper.ConvertFromJson<Storage>(output[0]);
+                storages = (output.Count > 0) ? JsonHelper.ConvertFromJson<Storage>(output[0]) : null;
             }
             catch (Exception e)
             {

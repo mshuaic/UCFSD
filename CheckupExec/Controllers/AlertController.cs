@@ -21,7 +21,7 @@ namespace CheckupExec.Controllers
             try
             {
                 var output = BEMCLIHelper.powershell.Invoke<string>();
-                alerts = JsonHelper.ConvertFromJson<Alert>(output[0]);
+                alerts = (output.Count > 0) ? JsonHelper.ConvertFromJson<Alert>(output[0]) : null;
             }
             catch (Exception e)
             {
