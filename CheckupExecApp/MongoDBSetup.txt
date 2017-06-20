@@ -1,0 +1,16 @@
+URI Connection String:
+
+mongodb://ucfsd:ucfsd@cluster0-shard-00-00-x6wnk.mongodb.net:27017,cluster0-shard-00-01-x6wnk.mongodb.net:27017,cluster0-shard-00-02-x6wnk.mongodb.net:27017/Cluster0?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin
+
+C#/.Net Driver Example
+var client = new MongoClient("mongodb://ucfsd:ucfsd@cluster0-shard-00-00-x6wnk.mongodb.net:27017,cluster0-shard-00-01-x6wnk.mongodb.net:27017,cluster0-shard-00-02-x6wnk.mongodb.net:27017/Cluster0?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin");
+var database = client.GetDatabase("test");
+
+DataBase account:
+username: ucfsd
+passowrd: ucfsd
+
+mongoDB Atlas account:
+username: mshuaicpokemon@gmail.com
+passowrd: o0AN%b&L8msh
+
