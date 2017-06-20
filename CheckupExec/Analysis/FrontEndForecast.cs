@@ -18,11 +18,7 @@ namespace CheckupExec.Analysis
             }
         }
 
-        public long UsedCapacityBytes { get; }
-
         public long MaxCapacityBytes { get; }
-
-        public string StorageType { get; }
 
         public Dictionary<Storage, Forecast> forecasts { get; set; }
 
@@ -41,6 +37,8 @@ namespace CheckupExec.Analysis
                         _forecastsSuccessful = false;
                         break;
                     }
+
+                    MaxCapacityBytes += storageDevice.Key.TotalCapacityBytes;
                 }
             }
         }

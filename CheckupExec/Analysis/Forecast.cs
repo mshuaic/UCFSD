@@ -13,8 +13,8 @@ namespace CheckupExec.Analysis
     //To do: Recurrence values, validate, structure plotting steps and visualization, test
     public class Forecast
     {
-        private static int _maxSubsetSize = 120;
-        private static int _minSubsetSize = 5;
+        private const int _maxSubsetSize = 120;
+        private const int _minSubsetSize = 5;
 
         private bool _forecastSuccessful;
         public bool ForecastSuccessful
@@ -97,6 +97,7 @@ namespace CheckupExec.Analysis
                 var storageDeviceAsList = storageController.GetStoragesBy(storagePipeline);
                 var storageDevice = storageDeviceAsList.First();
 
+                //
                 _forecastSuccessful = (storageDevice.StorageType.Equals("0")) ? false : true;
 
                 StorageName = storageDevice.Name;
