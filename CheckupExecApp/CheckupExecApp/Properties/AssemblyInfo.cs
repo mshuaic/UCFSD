@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("CheckupExec")]
+[assembly: AssemblyTitle("CheckupExecApp")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("CheckupExec")]
+[assembly: AssemblyProduct("CheckupExecApp")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("59ec6bcd-6f42-452b-bc48-cb271f107e00")]
+[assembly: Guid("f9a78dd2-c6cc-4f90-8ed9-3cb166576d1c")]
 
 // Version information for an assembly consists of the following four values:
 //
