@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--<script src="plotly-latest.min.js"></script>-->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="mystyles.css" media="screen" />
+  <title>Checkup Exec Report</title>
+</head>
+<body>
+<h1 style="text-align:center">CheckUp Report</h1>
+
+<!--REPORT-->
+<div style="margin: auto; width: 80%;">
+  <div class="rows">
+    <div class="columns">
+      <div class="item">
+        <p>Disk C:</p>
+        <p>Free Space: 20%</p>
+        <p>Used Space: 80%</p>
+      </div>
+      <div class="item" id="pie"></div>
+    </div>
+    <div id="bar" ></div>
+  </div>
+</div>
+
+  <script src="pie.js"></script>
+  <script src="bar.js"></script>
+  <script> 
+    window.onresize = function(){ location.reload(); }
+  </script>
+</body>
+</html>
