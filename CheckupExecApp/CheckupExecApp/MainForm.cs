@@ -117,20 +117,24 @@ namespace CheckupExecApp
             string drivePath = Path.GetPathRoot(BackupJobFile.FullName);
             DriveInfo drive = new DriveInfo(drivePath);
 
+            // Percentage of drive space used/availble
+            double driveSpaceUsedPercent = Math.Round((100 * ((double)(drive.TotalSize - drive.TotalFreeSpace) / (drive.TotalSize))), 2, MidpointRounding.AwayFromZero);
+            double driveSpaceAvailablePercent = Math.Round((100 * ((double)drive.TotalFreeSpace / drive.TotalSize)), 2, MidpointRounding.AwayFromZero);
+
             // Backup Job name
             BackupJobNameLabel.Text = "Name: " + BackupJobFile.Name;
 
             // Backup Job file size
-            BackupJobSizeLabel.Text = "Backup Job Size: " + BackupJobFile.Length + " (Bytes)";
+            BackupJobSizeLabel.Text = "Backup Job File Size: " + Helpers.GetSizeSuffix(BackupJobFile.Length);
             
             // Backup Job location
             BackupJobDriveLocLabel.Text = "Drive Location: " + drivePath;
 
             // Drive used space
-            UsedSpaceLabel.Text = "Used Drive Space: " + (drive.TotalSize - drive.TotalFreeSpace) + " (Bytes)";
+            UsedSpaceLabel.Text = "Used Drive Space: " + Helpers.GetSizeSuffix((drive.TotalSize - drive.TotalFreeSpace));
 
             // Drive free space
-            FreeSpaceLabel.Text = "Available Drive Space: " + drive.TotalFreeSpace + " (Bytes)";
+            FreeSpaceLabel.Text = "Available Drive Space: " + Helpers.GetSizeSuffix(drive.TotalFreeSpace);
 
             // Backup Job status
             StatusLabel.Text = "Status: " + 0;
@@ -147,9 +151,9 @@ namespace CheckupExecApp
             // Display drive usage pie chart
             DiskInfoLabel.Text = drivePath;
             // Drive space used
-            DriveUsageChart.Series["DriveUsage"].Points.AddXY(100 * ((double)(drive.TotalSize - drive.TotalFreeSpace) / (drive.TotalSize)) + " %\nUsed", 100 * ((double)(drive.TotalSize - drive.TotalFreeSpace) / (drive.TotalSize)));
+            DriveUsageChart.Series["DriveUsage"].Points.AddXY(driveSpaceUsedPercent + "% Used", driveSpaceUsedPercent);
             // Drive space available
-            DriveUsageChart.Series["DriveUsage"].Points.AddXY(100 * ((double)drive.TotalFreeSpace / drive.TotalSize) + " %\nFree", 100 * ((double)drive.TotalFreeSpace / drive.TotalSize));
+            DriveUsageChart.Series["DriveUsage"].Points.AddXY(driveSpaceAvailablePercent + "% Free", driveSpaceAvailablePercent);
         }
 
         // Destination folder Browse button is clicked
