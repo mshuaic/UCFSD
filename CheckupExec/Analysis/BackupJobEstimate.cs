@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CheckupExec.Utilities;
 
 namespace CheckupExec.Analysis
 {
@@ -20,6 +21,18 @@ namespace CheckupExec.Analysis
         public double EstimateOfElapsedTimeSec { get; }
 
         public double EstimateDataSizeMB { get; set; }
+
+        public ForecastResults ForecastResults { get; set; }
+
+        public bool isPoolDevice { get; set; }
+
+        public string StorageName { get; }
+
+        public long UsedCapacityBytes { get; }
+
+        public long MaxCapacityBytes { get; }
+
+        public string StorageType { get; }
 
         private string _jobId;
 
@@ -42,10 +55,10 @@ namespace CheckupExec.Analysis
                                 }
             };
 
-            var jobAsList = jobController.GetJobsBy(jobPipeline);
+            var jobAsList = jobController.GetJobs(jobPipeline);
             var job = jobAsList.First();
 
-            var jobHistories = jobHistoryController.GetJobHistoriesPipeline(jobHistoryPipeline);
+            var jobHistories = jobHistoryController.GetJobHistories(jobHistoryPipeline);
             var filteredJobHistories = new List<JobHistory>();
 
             foreach (var jobHistory in jobHistories)
@@ -86,13 +99,20 @@ namespace CheckupExec.Analysis
 
         private double estimateElapsedTime(List<JobHistory> jobHistories)
         {
-            var _fc = new Forecast(this._jobId);
+            var _fc = new Forecast<JobHistory>();
 
-            if (_fc.ForecastSuccessful)
+            if (!SortingUtility<JobHistory>.isSorted(jobHistories))
             {
-                Console.WriteLine("Slope: " + _fc.FinalSlope);
-                Console.WriteLine("Intercept: " + _fc.FinalIntercept);
-                EstimateDataSizeMB = _fc.FinalIntercept + _fc.FinalSlope * this.NextStartDate.Subtract(DateTime.Now).TotalDays;
+                SortingUtility<JobHistory>.sort(jobHistories, 0, jobHistories.Count - 1);
+            }
+
+            ForecastResults = _fc.doForecast(jobHistories);
+
+            if (ForecastResults.ForecastSuccessful)
+            {
+                Console.WriteLine("Slope: " + ForecastResults.FinalSlope);
+                Console.WriteLine("Intercept: " + ForecastResults.FinalIntercept);
+                EstimateDataSizeMB = ForecastResults.FinalIntercept + ForecastResults.FinalSlope * this.NextStartDate.Subtract(DateTime.Now).TotalDays;
             }
             else
             {

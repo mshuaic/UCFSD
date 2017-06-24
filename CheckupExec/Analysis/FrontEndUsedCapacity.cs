@@ -14,10 +14,9 @@ namespace CheckupExec.Analysis
 
         public bool _forecastSuccessful { get; set; }
 
-        public FrontEndForecast Forecast { get; }
+        private FrontEndForecast _forecast { get; }
 
         private Dictionary<Storage, List<JobHistory>> _fullBackupJobInstances { get; set; }
-
 
         public FrontEndUsedCapacity()
         {
@@ -43,8 +42,8 @@ namespace CheckupExec.Analysis
                 if (!storageDevice.StorageType.Equals("0"))
                 {
                     jobHistoryPipeline["get-bestorage"]["Id"] = storageDevice.Id;
-                    var temp = jobHistoryController.GetJobHistoriesPipeline(jobHistoryPipeline);
-                    var lastFullBuJobInstance = new JobHistory();
+                    var temp = jobHistoryController.GetJobHistories(jobHistoryPipeline);
+                    var lastFullBackupJobInstance = new JobHistory();
 
                     if (temp != null)
                     { 
@@ -53,16 +52,16 @@ namespace CheckupExec.Analysis
                             if (Convert.ToInt32(jobHistory.JobStatus) == JobHistory.SuccessfulFinalStatus && jobHistory.PercentComplete == 100)
                             {
                                 _fullBackupJobInstances[storageDevice].Add(jobHistory);
-                                lastFullBuJobInstance = jobHistory;
+                                lastFullBackupJobInstance = jobHistory;
                             }
                         }
-                        TotalUsedCapacity += (double)lastFullBuJobInstance?.TotalDataSizeBytes;
-                        lastFullBuJobInstance = null;
+                        TotalUsedCapacity += (double)lastFullBackupJobInstance?.TotalDataSizeBytes;
+                        lastFullBackupJobInstance = null;
                     }
                 }
             }
 
-            Forecast = new FrontEndForecast(_fullBackupJobInstances);
+            _forecast = new FrontEndForecast(_fullBackupJobInstances);
         }
     }
 }

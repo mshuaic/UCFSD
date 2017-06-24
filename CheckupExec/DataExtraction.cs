@@ -15,15 +15,15 @@ using System.Threading.Tasks;
 
 namespace CheckupExec
 {
-    //to-do: log utility, get-* validation(?), job-data-footprint+, jobestimate, frontendcapacityuse,  
+    //to-do: make this the api class which will communicate with the front end  
     class DataExtraction
     {
         static void Main(string[] args)
         {
             bool remoteAccess = true;
             string password = "Veritas4935";
-            string serverName = "WIN-GAEP2HNEO1O";
-            string userName = "Administrator";
+            string serverName = "server";
+            string userName = "cop4600domain/Administrator";
 
             var AlertHistories = new AlertHistoryController();
 
@@ -35,7 +35,7 @@ namespace CheckupExec
                 var parameters = new Dictionary<string, string>();
                 parameters.Add("severity", "warning");
 
-                var alertsBySeverity = AlertHistories.GetAlertHistoriesBy(parameters);
+                var alertsBySeverity = AlertHistories.GetAlertHistories(parameters);
 
                 foreach (var alert in alertsBySeverity)
                     Console.WriteLine(JsonHelper.JsonSerializer<Alert>(alert));
@@ -61,6 +61,7 @@ namespace CheckupExec
             //var frontEnd = new FrontEndUsedCapacity();
             //Console.ReadLine();
 
+            //called on application close?
             BEMCLIHelper.cleanUp();
         }
 

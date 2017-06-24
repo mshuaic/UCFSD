@@ -41,7 +41,7 @@ namespace CheckupExec.Controllers
             return invokeGetAlertHistories(_getAlertHistoriesScript);
         }
 
-        public List<Alert> GetAlertHistoriesBy(Dictionary<string, string> parameters)
+        public List<Alert> GetAlertHistories(Dictionary<string, string> parameters)
         {
             string scriptToInvoke = _getAlertHistoriesScript;
 
@@ -54,7 +54,7 @@ namespace CheckupExec.Controllers
         }
 
         //get-bealert {| get-be<..> {-k j}*}+ | convertto-json
-        public List<Alert> GetAlertHistoriesPipeline(Dictionary<string, Dictionary<string, string>> pipelineCommands)
+        public List<Alert> GetAlertHistories(Dictionary<string, Dictionary<string, string>> pipelineCommands)
         {
             string scriptToInvoke = "";
             int numCommands = pipelineCommands.Count;
@@ -75,7 +75,7 @@ namespace CheckupExec.Controllers
         }
 
         //get-bealert {-x y}+ {| get-be<> {-k j}*}+ | convertto-json
-        public List<Alert> GetAlertHistoriesByPipeline(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> alertHistoryParameters)
+        public List<Alert> GetAlertHistories(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> alertHistoryParameters)
         {
             string scriptToInvoke = "";
             int numCommands = pipelineCommands.Count;

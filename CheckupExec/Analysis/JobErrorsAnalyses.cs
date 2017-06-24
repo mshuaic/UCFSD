@@ -12,20 +12,7 @@ namespace CheckupExec.Analysis
     {
         public List<JobHistory> jobHistories { get; }
 
-        public JobErrorsAnalyses()
-        {
-            var jobHistoryController = new JobHistoryController();
-
-            jobHistories.AddRange(jobHistoryController.GetJobHistories());
-
-            foreach(var jobHistory in jobHistories)
-            {
-                if (Convert.ToInt32(jobHistory.JobStatus) == JobHistory.SuccessfulFinalStatus)
-                    jobHistories.Remove(jobHistory);
-            }
-        }
-
-        public JobErrorsAnalyses(DateTime? start, DateTime? end)
+        public JobErrorsAnalyses(DateTime? start, DateTime? end, string[] jobErrorStatuses = null)
         {
             var jobHistoryController = new JobHistoryController();
 
@@ -35,7 +22,23 @@ namespace CheckupExec.Analysis
                 ["ToStartTime"] = end.ToString() ?? DateTime.Now.ToString()
             };
 
-            jobHistories.AddRange(jobHistoryController.GetJobHistoriesBy(jobPipeline));
+            if (jobErrorStatuses.Length > 0)
+            {
+                string fullString = "";
+
+                foreach (var errorstatus in jobErrorStatuses)
+                {
+                    fullString += errorstatus + ((jobErrorStatuses.ElementAt(jobErrorStatuses.Length - 1).Equals(errorstatus)) ? "" : ", ");
+                }
+
+                jobPipeline["jobstatus"] = fullString;
+
+                jobHistories.AddRange(jobHistoryController.GetJobHistories(jobPipeline));
+            }
+            else
+            {
+                jobHistories.AddRange(jobHistoryController.GetJobHistories(jobPipeline));
+            }
 
             foreach (var jobHistory in jobHistories)
             {

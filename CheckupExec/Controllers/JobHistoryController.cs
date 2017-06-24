@@ -41,7 +41,7 @@ namespace CheckupExec.Controllers
             return invokeGetJobHistories(_getJobHistoryScript);
         }
 
-        public List<JobHistory> GetJobHistoriesBy(Dictionary<string, string> parameters)
+        public List<JobHistory> GetJobHistories(Dictionary<string, string> parameters)
         {
             string scriptToInvoke = _getJobHistoryScript;
 
@@ -54,7 +54,7 @@ namespace CheckupExec.Controllers
         }
 
         //get-bealert {| get-be<..> {-k j}*}+ | convertto-json
-        public List<JobHistory> GetJobHistoriesPipeline(Dictionary<string, Dictionary<string, string>> pipelineCommands)
+        public List<JobHistory> GetJobHistories(Dictionary<string, Dictionary<string, string>> pipelineCommands)
         {
             string scriptToInvoke = "";
             int numCommands = pipelineCommands.Count;
@@ -75,7 +75,7 @@ namespace CheckupExec.Controllers
         }
 
         //get-bealert {-x y}+ {| get-be<> {-k j}*}+ | convertto-json
-        public List<JobHistory> GetJobHistoriesByPipeline(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> jobHistoryParameters)
+        public List<JobHistory> GetJobHistories(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> jobHistoryParameters)
         {
             string scriptToInvoke = "";
             int numCommands = pipelineCommands.Count;

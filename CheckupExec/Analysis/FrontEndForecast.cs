@@ -1,4 +1,5 @@
 ﻿using CheckupExec.Models;
+using CheckupExec.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,19 +21,21 @@ namespace CheckupExec.Analysis
 
         public long MaxCapacityBytes { get; }
 
-        public Dictionary<Storage, Forecast> forecasts { get; set; }
+        public Dictionary<Storage, ForecastResults> Forecasts { get; set; }
 
         public FrontEndForecast(Dictionary<Storage, List<JobHistory>> fullBackupJobInstances)
         {
             _forecastsSuccessful = true;
+            var forecast = new Forecast<JobHistory>();
+
 
             if (fullBackupJobInstances != null)
             {
                 foreach (var storageDevice in fullBackupJobInstances)
                 {
-                    forecasts[storageDevice.Key] = new Forecast(storageDevice.Key, storageDevice.Value);
+                    Forecasts[storageDevice.Key] = forecast.doForecast(storageDevice.Value);
 
-                    if (!forecasts[storageDevice.Key].ForecastSuccessful)
+                    if (!Forecasts[storageDevice.Key].ForecastSuccessful)
                     {
                         _forecastsSuccessful = false;
                         break;

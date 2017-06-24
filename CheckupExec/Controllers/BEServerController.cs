@@ -41,7 +41,7 @@ namespace CheckupExec.Controllers
             return invokeGetBEServers(_getBEServersScript);
         }
 
-        public List<BEServer> GetBEServersBy(Dictionary<string, string> parameters)
+        public List<BEServer> GetBEServers(Dictionary<string, string> parameters)
         {
             string scriptToInvoke = _getBEServersScript;
 
@@ -54,7 +54,7 @@ namespace CheckupExec.Controllers
         }
 
         //get-bealert {| get-be<..> {-k j}*}+ | convertto-json
-        public List<BEServer> GetBEServersPipeline(Dictionary<string, Dictionary<string, string>> pipelineCommands)
+        public List<BEServer> GetBEServers(Dictionary<string, Dictionary<string, string>> pipelineCommands)
         {
             string scriptToInvoke = "";
             int numCommands = pipelineCommands.Count;
@@ -75,7 +75,7 @@ namespace CheckupExec.Controllers
         }
 
         //get-bealert {-x y}+ {| get-be<> {-k j}*}+ | convertto-json
-        public List<BEServer> GetBEServersByPipeline(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> beServerParameters)
+        public List<BEServer> GetBEServers(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> beServerParameters)
         {
             string scriptToInvoke = "";
             int numCommands = pipelineCommands.Count;

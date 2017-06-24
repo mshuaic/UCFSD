@@ -8,21 +8,21 @@ using System.Threading.Tasks;
 
 namespace CheckupExec.Controllers
 {
-    class AlertController
+    class LicenseInformationController
     {
-        private const string _getAlertsScript = "get-bealert ";
+        private const string _getLicenseInformationScript = "get-belicenseinformation ";
         private const string _converttoJsonString = "| convertto-json";
 
-        private List<Alert> invokeGetAlerts(string scriptToInvoke)
+        private List<LicenseInformation> invokeGetLicenseInformation(string scriptToInvoke)
         {
-            List<Alert> alerts = null;
+            List<LicenseInformation> licenses = null;
 
             BEMCLIHelper.powershell.AddScript(scriptToInvoke + _converttoJsonString);
 
             try
             {
                 var output = BEMCLIHelper.powershell.Invoke<string>();
-                alerts = (output.Count > 0) ? JsonHelper.ConvertFromJson<Alert>(output[0]) : null;
+                licenses = (output.Count > 0) ? JsonHelper.ConvertFromJson<LicenseInformation>(output[0]) : null;
             }
             catch (Exception e)
             {
@@ -33,28 +33,28 @@ namespace CheckupExec.Controllers
 
             BEMCLIHelper.powershell.Commands.Clear();
 
-            return alerts;
+            return licenses;
         }
 
-        public List<Alert> GetAlerts()
+        public List<LicenseInformation> GetLicenses()
         {
-            return invokeGetAlerts(_getAlertsScript);
+            return invokeGetLicenseInformation(_getLicenseInformationScript);
         }
 
-        public List<Alert> GetAlerts(Dictionary<string, string> parameters)
+        public List<LicenseInformation> GetLicenses(Dictionary<string, string> parameters)
         {
-            string scriptToInvoke = _getAlertsScript;
+            string scriptToInvoke = _getLicenseInformationScript;
 
             foreach (var parameter in parameters)
             {
                 scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
             }
 
-            return invokeGetAlerts(scriptToInvoke);
+            return invokeGetLicenseInformation(scriptToInvoke);
         }
 
         //get-bealert {| get-be<..> {-k j}*}+ | convertto-json
-        public List<Alert> GetAlerts(Dictionary<string, Dictionary<string, string>> pipelineCommands)
+        public List<LicenseInformation> GetLicenses(Dictionary<string, Dictionary<string, string>> pipelineCommands)
         {
             string scriptToInvoke = "";
             int numCommands = pipelineCommands.Count;
@@ -69,15 +69,15 @@ namespace CheckupExec.Controllers
                 }
             }
 
-            scriptToInvoke += "| " + _getAlertsScript;
+            scriptToInvoke += "| " + _getLicenseInformationScript;
 
-            return invokeGetAlerts(scriptToInvoke);
+            return invokeGetLicenseInformation(scriptToInvoke);
         }
 
         //get-bealert {-x y}+ {| get-be<> {-k j}*}+ | convertto-json
-        public List<Alert> GetAlerts(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> alertParameters)
+        public List<LicenseInformation> GetLicenses(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> storageParameters)
         {
-            string scriptToInvoke = ""; 
+            string scriptToInvoke = "";
             int numCommands = pipelineCommands.Count;
 
             foreach (var pipeline in pipelineCommands)
@@ -90,13 +90,13 @@ namespace CheckupExec.Controllers
                 }
             }
 
-            scriptToInvoke += "| " + _getAlertsScript;
-            foreach (var parameter in alertParameters)
+            scriptToInvoke += "| " + _getLicenseInformationScript;
+            foreach (var parameter in storageParameters)
             {
                 scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
             }
 
-            return invokeGetAlerts(scriptToInvoke);
+            return invokeGetLicenseInformation(scriptToInvoke);
         }
     }
 }

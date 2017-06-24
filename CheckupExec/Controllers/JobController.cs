@@ -41,7 +41,7 @@ namespace CheckupExec.Controllers
             return invokeGetJobs(_getJobsScript);
         }
 
-        public List<Job> GetJobsBy(Dictionary<string, string> parameters)
+        public List<Job> GetJobs(Dictionary<string, string> parameters)
         {
             string scriptToInvoke = _getJobsScript;
 
@@ -54,7 +54,7 @@ namespace CheckupExec.Controllers
         }
 
         //get-bealert {| get-be<..> {-k j}*}+ | convertto-json
-        public List<Job> GetJobsPipeline(Dictionary<string, Dictionary<string, string>> pipelineCommands)
+        public List<Job> GetJobs(Dictionary<string, Dictionary<string, string>> pipelineCommands)
         {
             string scriptToInvoke = "";
             int numCommands = pipelineCommands.Count;
@@ -75,7 +75,7 @@ namespace CheckupExec.Controllers
         }
 
         //get-bealert {-x y}+ {| get-be<> {-k j}*}+ | convertto-json
-        public List<Job> GetJobsByPipeline(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> jobParameters)
+        public List<Job> GetJobs(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> jobParameters)
         {
             string scriptToInvoke = "";
             int numCommands = pipelineCommands.Count;

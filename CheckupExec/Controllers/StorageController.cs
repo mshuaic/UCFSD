@@ -41,7 +41,7 @@ namespace CheckupExec.Controllers
             return invokeGetStorages(_getStorageScript);
         }
 
-        public List<Storage> GetStoragesBy(Dictionary<string, string> parameters)
+        public List<Storage> GetStorages(Dictionary<string, string> parameters)
         {
             string scriptToInvoke = _getStorageScript;
 
@@ -54,7 +54,7 @@ namespace CheckupExec.Controllers
         }
 
         //get-bealert {| get-be<..> {-k j}*}+ | convertto-json
-        public List<Storage> GetStoragesPipeline(Dictionary<string, Dictionary<string, string>> pipelineCommands)
+        public List<Storage> GetStorages(Dictionary<string, Dictionary<string, string>> pipelineCommands)
         {
             string scriptToInvoke = "";
             int numCommands = pipelineCommands.Count;
@@ -75,7 +75,7 @@ namespace CheckupExec.Controllers
         }
 
         //get-bealert {-x y}+ {| get-be<> {-k j}*}+ | convertto-json
-        public List<Storage> GetStoragesByPipeline(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> storageParameters)
+        public List<Storage> GetStorages(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> storageParameters)
         {
             string scriptToInvoke = "";
             int numCommands = pipelineCommands.Count;
