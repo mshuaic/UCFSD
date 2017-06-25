@@ -12,9 +12,7 @@ namespace CheckupExec.Analysis
     {
         public double TotalUsedCapacity { get; set; }
 
-        public bool _forecastSuccessful { get; set; }
-
-        private FrontEndForecast _forecast { get; }
+        public FrontEndForecast FrontEndForecast { get; }
 
         private Dictionary<Storage, List<JobHistory>> _fullBackupJobInstances { get; set; }
 
@@ -37,6 +35,8 @@ namespace CheckupExec.Analysis
                 }
             };
 
+            var storagesAccountedFor = new List<string>();
+
             foreach (var storageDevice in storageDevices)
             {
                 if (!storageDevice.StorageType.Equals("0"))
@@ -55,13 +55,19 @@ namespace CheckupExec.Analysis
                                 lastFullBackupJobInstance = jobHistory;
                             }
                         }
-                        TotalUsedCapacity += (double)lastFullBackupJobInstance?.TotalDataSizeBytes;
+
+                        if (!storagesAccountedFor.Contains(storageDevice.Name))
+                        {
+                            TotalUsedCapacity += (double)lastFullBackupJobInstance?.TotalDataSizeBytes;
+                            storagesAccountedFor.Add(storageDevice.Name);
+                        }
+
                         lastFullBackupJobInstance = null;
                     }
                 }
             }
 
-            _forecast = new FrontEndForecast(_fullBackupJobInstances);
+            FrontEndForecast = new FrontEndForecast(_fullBackupJobInstances);
         }
     }
 }

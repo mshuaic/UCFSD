@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CheckupExec.Controllers
 {
-    class BEServerController
+    public class BEServerController
     {
         private const string _getBEServersScript = "get-bebackupexecserver ";
         private const string _converttoJsonString = "| convertto-json";

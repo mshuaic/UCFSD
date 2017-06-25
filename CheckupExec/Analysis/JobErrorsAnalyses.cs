@@ -8,42 +8,87 @@ using System.Threading.Tasks;
 
 namespace CheckupExec.Analysis
 {
-    class JobErrorsAnalyses
+    public class JobErrorsAnalyses
     {
-        public List<JobHistory> jobHistories { get; }
+        private List<JobHistory> _jobHistories { get; }
 
-        public JobErrorsAnalyses(DateTime? start, DateTime? end, string[] jobErrorStatuses = null)
+        public bool Successful { get; }
+
+        public JobErrorsAnalyses(DateTime? start, DateTime? end, List<string> jobErrorStatuses = null, List<string> jobNames = null)
         {
             var jobHistoryController = new JobHistoryController();
 
-            var jobPipeline = new Dictionary<string, string>
+            var jobHistoryPipeline = new Dictionary<string, string>
             {
                 ["FromStartTime"] = start.ToString() ?? DateTime.MinValue.ToString(),
                 ["ToStartTime"] = end.ToString() ?? DateTime.Now.ToString()
             };
 
-            if (jobErrorStatuses.Length > 0)
+            if (jobErrorStatuses.Count > 0 && jobNames.Count > 0)
+            {
+                var jobPipeline = new Dictionary<string, Dictionary<string, string>>();
+                var jobInnerPipeline = new Dictionary<string, string>();
+
+                string fullString = "";
+
+                foreach (var name in jobNames)
+                {
+                    fullString += name + ((jobNames.ElementAt(jobNames.Count - 1).Equals(name)) ? "" : ", ");
+                }
+
+                jobInnerPipeline["name"] = fullString;
+                jobPipeline["get-bejob"] = jobInnerPipeline;
+
+                fullString = "";
+
+                foreach (var errorstatus in jobErrorStatuses)
+                {
+                    fullString += errorstatus + ((jobErrorStatuses.ElementAt(jobErrorStatuses.Count - 1).Equals(errorstatus)) ? "" : ", ");
+                }
+
+                jobHistoryPipeline["jobstatus"] = fullString;
+
+                _jobHistories.AddRange(jobHistoryController.GetJobHistories(jobPipeline, jobHistoryPipeline));
+            }
+            else if (jobNames.Count > 0)
+            {
+                var jobPipeline = new Dictionary<string, Dictionary<string, string>>();
+                var jobInnerPipeline = new Dictionary<string, string>();
+
+                string fullString = "";
+
+                foreach (var name in jobNames)
+                {
+                    fullString += name + ((jobNames.ElementAt(jobNames.Count - 1).Equals(name)) ? "" : ", ");
+                }
+
+                jobInnerPipeline["name"] = fullString;
+                jobPipeline["get-bejob"] = jobInnerPipeline;
+
+                _jobHistories.AddRange(jobHistoryController.GetJobHistories(jobPipeline, jobHistoryPipeline));
+            }
+            else if (jobErrorStatuses.Count > 0)
             {
                 string fullString = "";
 
                 foreach (var errorstatus in jobErrorStatuses)
                 {
-                    fullString += errorstatus + ((jobErrorStatuses.ElementAt(jobErrorStatuses.Length - 1).Equals(errorstatus)) ? "" : ", ");
+                    fullString += errorstatus + ((jobErrorStatuses.ElementAt(jobErrorStatuses.Count - 1).Equals(errorstatus)) ? "" : ", ");
                 }
 
-                jobPipeline["jobstatus"] = fullString;
+                jobHistoryPipeline["jobstatus"] = fullString;
 
-                jobHistories.AddRange(jobHistoryController.GetJobHistories(jobPipeline));
+                _jobHistories.AddRange(jobHistoryController.GetJobHistories(jobHistoryPipeline));
             }
             else
             {
-                jobHistories.AddRange(jobHistoryController.GetJobHistories(jobPipeline));
+                _jobHistories.AddRange(jobHistoryController.GetJobHistories(jobHistoryPipeline));
             }
 
-            foreach (var jobHistory in jobHistories)
+            foreach (var jobHistory in _jobHistories)
             {
                 if (Convert.ToInt32(jobHistory.JobStatus) == JobHistory.SuccessfulFinalStatus)
-                    jobHistories.Remove(jobHistory);
+                    _jobHistories.Remove(jobHistory);
             }
         }
     }

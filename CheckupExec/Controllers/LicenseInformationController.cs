@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CheckupExec.Controllers
 {
-    class LicenseInformationController
+    public class LicenseInformationController
     {
         private const string _getLicenseInformationScript = "get-belicenseinformation ";
         private const string _converttoJsonString = "| convertto-json";

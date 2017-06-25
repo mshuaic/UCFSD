@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CheckupExec.Controllers
 {
-    class AlertController
+    public class AlertController
     {
         private const string _getAlertsScript = "get-bealert ";
         private const string _converttoJsonString = "| convertto-json";

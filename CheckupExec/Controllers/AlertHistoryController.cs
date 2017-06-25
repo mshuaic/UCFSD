@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CheckupExec.Controllers
 {
-    class AlertHistoryController
+    public class AlertHistoryController
     {
         private const string _getAlertHistoriesScript = "get-beAlertHistory ";
         private const string _converttoJsonString = "| convertto-json";

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CheckupExec.Controllers
 {
-    class JobHistoryController
+    public class JobHistoryController
     {
         private const string _getJobHistoryScript = "get-bejobhistory ";
         private const string _converttoJsonString = "| convertto-json";

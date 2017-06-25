@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace CheckupExec.Models
 {
-    class LicenseInformation
+    public class LicenseInformation
     {
-        //props of license information json string from bemcli...
         public string Name { get; set; }
 
         public string Id { get; set; }

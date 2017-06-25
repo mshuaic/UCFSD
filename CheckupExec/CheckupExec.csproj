@@ -70,7 +70,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analysis\AlertsAnalyses.cs" />
-    <Compile Include="Analysis\AllDisksForecast.cs" />
     <Compile Include="Analysis\BackupJobEstimate.cs" />
     <Compile Include="Analysis\DiskForecast.cs" />
     <Compile Include="Analysis\FrontEndForecast.cs" />
@@ -86,6 +85,7 @@
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\StorageController.cs" />
     <Compile Include="DataExtraction.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Models\Alert.cs" />
     <Compile Include="Models\BackupDefinition.cs" />
     <Compile Include="Models\BEServer.cs" />

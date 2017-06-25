@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CheckupExec.Controllers
 {
-    class JobController
+    public class JobController
     {
         private const string _getJobsScript = "get-bejob ";
         private const string _converttoJsonString = "| convertto-json";

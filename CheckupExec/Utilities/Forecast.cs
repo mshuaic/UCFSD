@@ -9,8 +9,11 @@ namespace CheckupExec.Utilities
 {
     public class Forecast<T> where T : IComparable<T>
     {
-        private const int _maxSubsetSize = 120;
-        private const int _minSubsetSize = 5;
+        private const int _maxSubsetSizeBE = 120;
+        private const int _minSubsetSizeBE = 5;
+
+        private const int _maxSubsetSizeDC = 30;
+        private const int _minSubsetSizeDC = 10;
 
         private static DateTime _currentTime = DateTime.Now;
 
@@ -54,6 +57,7 @@ namespace CheckupExec.Utilities
 
         private void runForecast(List<JobHistory> jobHistories)
         {
+            //*Would be nice to do this, but not worthwhile if the enums cannot be obtained/correlated with bemcli*
             //switch (RecurrenceType)
             //{
             //    case "Yearly":
@@ -81,13 +85,13 @@ namespace CheckupExec.Utilities
             //        return;
             //}
 
-            if (jobHistories.Count < _minSubsetSize)
+            if (jobHistories.Count < _minSubsetSizeBE)
             {
                 _forecastResults.ForecastSuccessful = false;
             }
             else
             {
-                pWLinearRegression(jobHistories, _maxSubsetSize, _minSubsetSize);
+                pWLinearRegression(jobHistories, _maxSubsetSizeBE, _minSubsetSizeBE);
 
                 if (_forecastResults.FinalSlope < 0)
                 {
@@ -99,13 +103,13 @@ namespace CheckupExec.Utilities
 
         private void runForecast(List<DiskCapacity> diskCapacities)
         {
-            if (diskCapacities.Count < _minSubsetSize)
+            if (diskCapacities.Count < _minSubsetSizeDC)
             {
                 _forecastResults.ForecastSuccessful = false;
             }
             else
             {
-                pWLinearRegression(diskCapacities, _maxSubsetSize, _minSubsetSize);
+                pWLinearRegression(diskCapacities, _maxSubsetSizeDC, _minSubsetSizeDC);
 
                 if (_forecastResults.FinalSlope < 0)
                 {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CheckupExec.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +9,15 @@ using System.Xml.Linq;
 
 namespace CheckupExec.Analysis
 {
-    class DiskForecast
+    public class DiskForecast
     {
+        public ForecastResults ForecastResults { get; set; }
+
+        public DiskForecast(string diskName)
+        {
+
+        }
+
         //same as forecast except the source of data will be the service's file and max=30, min=10
         public void doForecast()
         {

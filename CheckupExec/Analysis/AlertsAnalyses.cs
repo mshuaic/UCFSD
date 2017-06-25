@@ -12,85 +12,103 @@ namespace CheckupExec.Analysis
     //I think we need to filter by date manually for alerts
     public class AlertsAnalyses
     {
-        public List<Alert> allAlerts { get; }
+        private List<Alert> _allAlerts { get; }
 
-        public AlertsAnalyses(DateTime? start, DateTime? end, string[] jobs = null, string[] alertTypes = null)
+        public bool Successful { get; }
+
+        public AlertsAnalyses(DateTime? start, DateTime? end, List<string> jobNames = null, List<string> alertTypes = null)
         {
             var alertController = new AlertController();
             var alertHistoryController = new AlertHistoryController();
+            var jobController = new JobController();
 
             start = start ?? DateTime.MinValue;
             end = end ?? DateTime.Now;
 
+            var jobsPipeline = new Dictionary<string, string>();
             var alertsPipeline = new Dictionary<string, string>();
 
-            if (jobs.Length > 0 && alertTypes.Length > 0)
+            if (jobNames.Count > 0 && alertTypes.Count > 0)
             {
                 string fullJobString = "";
 
-                foreach (var job in jobs)
+                foreach (var job in jobNames)
                 {
-                    fullJobString += job + ((jobs.ElementAt(jobs.Length - 1).Equals(job)) ? "" : ", ");
+                    fullJobString += job + ((jobNames.ElementAt(jobNames.Count - 1).Equals(job)) ? "" : ", ");
                 }
 
-                alertsPipeline["job"] = fullJobString;
+                jobsPipeline["name"] = fullJobString;
+
+                var jobs = jobController.GetJobs(jobsPipeline);
 
                 string fullTypeString = "";
 
                 foreach (var type in alertTypes)
                 {
-                    fullTypeString += type + ((alertTypes.ElementAt(alertTypes.Length - 1).Equals(type)) ? "" : ", ");
+                    fullTypeString += type + ((alertTypes.ElementAt(alertTypes.Count - 1).Equals(type)) ? "" : ", ");
                 }
 
                 alertsPipeline["category"] = fullTypeString;
 
-                allAlerts.AddRange((IEnumerable<Alert>)alertController.GetAlerts(alertsPipeline));
-                allAlerts.AddRange(alertHistoryController.GetAlertHistories(alertsPipeline));
-            }
-            else if (jobs.Length > 0)
-            {
-                string fullJobString = "";
+                _allAlerts.AddRange(alertController.GetAlerts(alertsPipeline));
+                _allAlerts.AddRange(alertHistoryController.GetAlertHistories(alertsPipeline));
 
-                foreach (var job in jobs)
+                foreach (var alert in _allAlerts)
                 {
-                    fullJobString += job + ((jobs.ElementAt(jobs.Length - 1).Equals(job)) ? "" : ", ");
+                    if (!jobs.Exists(x => x.Id.Equals(alert.JobId)))
+                    {
+                        _allAlerts.Remove(alert);
+                    }
+                }
+            }
+            else if (jobNames.Count > 0)
+            {
+                var jobPipeline = new Dictionary<string, Dictionary<string, string>>();
+                var jobInnerPipeline = new Dictionary<string, string>();
+
+                string fullString = "";
+
+                foreach (var name in jobNames)
+                {
+                    fullString += name + ((jobNames.ElementAt(jobNames.Count - 1).Equals(name)) ? "" : ", ");
                 }
 
-                alertsPipeline["job"] = fullJobString;
+                jobInnerPipeline["name"] = fullString;
+                jobPipeline["get-bejob"] = jobInnerPipeline;
 
-                allAlerts.AddRange((IEnumerable<Alert>)alertController.GetAlerts(alertsPipeline));
-                allAlerts.AddRange(alertHistoryController.GetAlertHistories(alertsPipeline));
+                _allAlerts.AddRange(alertController.GetAlerts(jobPipeline));
+                _allAlerts.AddRange(alertHistoryController.GetAlertHistories(jobPipeline));
             }
-            else if (alertTypes.Length > 0)
+            else if (alertTypes.Count > 0)
             {
                 string fullTypeString = "";
 
                 foreach (var type in alertTypes)
                 {
-                    fullTypeString += type + ((alertTypes.ElementAt(alertTypes.Length - 1).Equals(type)) ? "" : ", ");
+                    fullTypeString += type + ((alertTypes.ElementAt(alertTypes.Count - 1).Equals(type)) ? "" : ", ");
                 }
 
                 alertsPipeline["category"] = fullTypeString;
 
-                allAlerts.AddRange((IEnumerable<Alert>)alertController.GetAlerts(alertsPipeline));
-                allAlerts.AddRange(alertHistoryController.GetAlertHistories(alertsPipeline));
+                _allAlerts.AddRange(alertController.GetAlerts(alertsPipeline));
+                _allAlerts.AddRange(alertHistoryController.GetAlertHistories(alertsPipeline));
             }
             else
             {
-                allAlerts.AddRange((IEnumerable<Alert>)alertController.GetAlerts());
-                allAlerts.AddRange(alertHistoryController.GetAlertHistories());
+                _allAlerts.AddRange(alertController.GetAlerts());
+                _allAlerts.AddRange(alertHistoryController.GetAlertHistories());
             }
 
-            if (!SortingUtility<Alert>.isSorted(allAlerts))
+            if (!SortingUtility<Alert>.isSorted(_allAlerts))
             {
-                SortingUtility<Alert>.sort(allAlerts, 0, allAlerts.Count - 1);
+                SortingUtility<Alert>.sort(_allAlerts, 0, _allAlerts.Count - 1);
             }
 
-            foreach(var alert in allAlerts)
+            foreach(var alert in _allAlerts)
             {
                 if (alert.Date < start || alert.Date > end)
                 {
-                    allAlerts.Remove(alert);
+                    _allAlerts.Remove(alert);
                 }
             }
         }

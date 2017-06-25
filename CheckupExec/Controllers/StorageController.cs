@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CheckupExec.Controllers
 {
-    class StorageController
+    public class StorageController
     {
         private const string _getStorageScript = "get-bestorage ";
         private const string _converttoJsonString = "| convertto-json";
