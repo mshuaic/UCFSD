@@ -28,8 +28,7 @@ namespace CheckupExec.Analysis
             _forecastsSuccessful = true;
             var forecast = new Forecast<JobHistory>();
 
-
-            if (fullBackupJobInstances != null)
+            if (fullBackupJobInstances != null && fullBackupJobInstances.Count > 0)
             {
                 foreach (var storageDevice in fullBackupJobInstances)
                 {

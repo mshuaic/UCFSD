@@ -101,6 +101,7 @@
     <Compile Include="Models\Storage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\BEMCLIHelper.cs" />
+    <Compile Include="Utilities\Constants.cs" />
     <Compile Include="Utilities\Forecast.cs" />
     <Compile Include="Utilities\JsonHelper.cs" />
     <Compile Include="Utilities\LogUtility.cs" />

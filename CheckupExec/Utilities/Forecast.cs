@@ -24,7 +24,7 @@ namespace CheckupExec.Utilities
             _forecastResults.ForecastSuccessful = true;
             _forecastResults.isDiskForecast = false;
 
-            if (jobHistories != null)
+            if (jobHistories != null && jobHistories.Count > 0)
             {
                 runForecast(jobHistories);
                 populatePlot(jobHistories);
@@ -42,7 +42,7 @@ namespace CheckupExec.Utilities
             _forecastResults.ForecastSuccessful = true;
             _forecastResults.isDiskForecast = false;
 
-            if (diskCapacities != null)
+            if (diskCapacities != null && diskCapacities.Count > 0)
             {
                 runForecast(diskCapacities);
                 populatePlot(diskCapacities);
@@ -93,11 +93,8 @@ namespace CheckupExec.Utilities
             {
                 pWLinearRegression(jobHistories, _maxSubsetSizeBE, _minSubsetSizeBE);
 
-                if (_forecastResults.FinalSlope < 0)
-                {
-                    //This implies that the user will never reach their capacity, which is out of place given what we're doing
-                    _forecastResults.ForecastSuccessful = false;
-                }
+                //This implies that the user will never reach their capacity, which is out of place given what we're doing
+                _forecastResults.ForecastSuccessful = (_forecastResults.FinalSlope < 0) ? false : true;
             }
         }
 
@@ -111,11 +108,8 @@ namespace CheckupExec.Utilities
             {
                 pWLinearRegression(diskCapacities, _maxSubsetSizeDC, _minSubsetSizeDC);
 
-                if (_forecastResults.FinalSlope < 0)
-                {
-                    //This implies that the user will never reach their capacity, which is out of place given what we're doing
-                    _forecastResults.ForecastSuccessful = false;
-                }
+                //This implies that the user will never reach their capacity, which is out of place given what we're doing
+                _forecastResults.ForecastSuccessful = (_forecastResults.FinalSlope < 0) ? false : true;
             }
         }
 
@@ -175,9 +169,19 @@ namespace CheckupExec.Utilities
                     sumdevyx += (devY) * (devX);
                 }
 
-                //Math.Sqrt(variance)
-                double stdevy = Math.Sqrt(sumdevy2 / (currentSubsetSize - 1));
-                double stdevx = Math.Sqrt(sumdevx2 / (currentSubsetSize - 1));
+                double stdevy = 0;
+                double stdevx = 0;
+
+                try
+                {
+                    //Math.Sqrt(variance)
+                    stdevy = Math.Sqrt(sumdevy2 / (currentSubsetSize - 1));
+                    stdevx = Math.Sqrt(sumdevx2 / (currentSubsetSize - 1));
+                }
+                catch (DivideByZeroException e)
+                {
+                    //log
+                }
 
                 double corr = 0;
 
@@ -190,9 +194,18 @@ namespace CheckupExec.Utilities
                     //log, although i don't think it can get to this point (corr = NaN if denominator == 0)
                 }
 
-                double slope = corr * (stdevy / stdevx);
-                double intercept = meany - slope * meanx;
+                double slope = 0;
+                double intercept = 0;
 
+                try
+                {
+                    slope = corr * (stdevy / stdevx);
+                    intercept = meany - slope * meanx;
+                }
+                catch (DivideByZeroException e)
+                {
+                    //log
+                }
                 if (corr > maxCorr)
                 {
                     maxCorr = corr;
@@ -265,9 +278,19 @@ namespace CheckupExec.Utilities
                     sumdevyx += (devY) * (devX);
                 }
 
-                //Math.Sqrt(variance)
-                double stdevy = Math.Sqrt(sumdevy2 / (currentSubsetSize - 1));
-                double stdevx = Math.Sqrt(sumdevx2 / (currentSubsetSize - 1));
+                double stdevy = 0;
+                double stdevx = 0;
+
+                try
+                {
+                    //Math.Sqrt(variance)
+                    stdevy = Math.Sqrt(sumdevy2 / (currentSubsetSize - 1));
+                    stdevx = Math.Sqrt(sumdevx2 / (currentSubsetSize - 1));
+                }
+                catch (DivideByZeroException e)
+                {
+                    //log
+                }
 
                 double corr = 0;
 
@@ -280,8 +303,18 @@ namespace CheckupExec.Utilities
                     //log, although i don't think it can get to this point (corr = NaN if denominator == 0)
                 }
 
-                double slope = corr * (stdevy / stdevx);
-                double intercept = meany - slope * meanx;
+                double slope = 0;
+                double intercept = 0;
+
+                try
+                {
+                    slope = corr * (stdevy / stdevx);
+                    intercept = meany - slope * meanx;
+                }
+                catch (DivideByZeroException e)
+                {
+                    //log
+                }
 
                 if (corr > maxCorr)
                 {

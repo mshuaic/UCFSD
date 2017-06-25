@@ -10,19 +10,19 @@ namespace CheckupExec.Controllers
 {
     public class JobHistoryController
     {
-        private const string _getJobHistoryScript = "get-bejobhistory ";
-        private const string _converttoJsonString = "| convertto-json";
+        private const string _getJobHistoryScript = Constants.GetJobHistories + " ";
+        private const string _converttoJsonString = "| " + Constants.JsonPipeline;
 
         private List<JobHistory> invokeGetJobHistories(string scriptToInvoke)
         {
-            List<JobHistory> jobHistories = null;
+            List<JobHistory> jobHistories = new List<JobHistory>();
 
             BEMCLIHelper.powershell.AddScript(scriptToInvoke + _converttoJsonString);
 
             try
             {
                 var output = BEMCLIHelper.powershell.Invoke<string>();
-                jobHistories = (output.Count > 0) ? JsonHelper.ConvertFromJson<JobHistory>(output[0]) : null;
+                jobHistories = (output.Count > 0) ? JsonHelper.ConvertFromJson<JobHistory>(output[0]) : jobHistories;
             }
             catch (Exception e)
             {
@@ -45,11 +45,13 @@ namespace CheckupExec.Controllers
         {
             string scriptToInvoke = _getJobHistoryScript;
 
+            parameters = parameters ?? new Dictionary<string, string>();
+
             foreach (var parameter in parameters)
             {
                 scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
             }
-
+            
             return invokeGetJobHistories(scriptToInvoke);
         }
 
@@ -58,6 +60,8 @@ namespace CheckupExec.Controllers
         {
             string scriptToInvoke = "";
             int numCommands = pipelineCommands.Count;
+
+            pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
 
             foreach (var pipeline in pipelineCommands)
             {
@@ -68,7 +72,7 @@ namespace CheckupExec.Controllers
                     scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
                 }
             }
-
+            
             scriptToInvoke += "| " + _getJobHistoryScript;
 
             return invokeGetJobHistories(scriptToInvoke);
@@ -80,6 +84,8 @@ namespace CheckupExec.Controllers
             string scriptToInvoke = "";
             int numCommands = pipelineCommands.Count;
 
+            pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
+
             foreach (var pipeline in pipelineCommands)
             {
                 scriptToInvoke += pipeline.Key + " ";
@@ -89,8 +95,11 @@ namespace CheckupExec.Controllers
                     scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
                 }
             }
-
+            
             scriptToInvoke += "| " + _getJobHistoryScript;
+
+            jobHistoryParameters = jobHistoryParameters ?? new Dictionary<string, string>();
+
             foreach (var parameter in jobHistoryParameters)
             {
                 scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";

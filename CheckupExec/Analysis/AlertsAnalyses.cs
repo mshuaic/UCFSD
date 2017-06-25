@@ -24,6 +24,8 @@ namespace CheckupExec.Analysis
 
             start = start ?? DateTime.MinValue;
             end = end ?? DateTime.Now;
+            jobNames = jobNames ?? new List<string>();
+            alertTypes = alertTypes ?? new List<string>();
 
             var jobsPipeline = new Dictionary<string, string>();
             var alertsPipeline = new Dictionary<string, string>();
@@ -50,14 +52,24 @@ namespace CheckupExec.Analysis
 
                 alertsPipeline["category"] = fullTypeString;
 
-                _allAlerts.AddRange(alertController.GetAlerts(alertsPipeline));
-                _allAlerts.AddRange(alertHistoryController.GetAlertHistories(alertsPipeline));
-
-                foreach (var alert in _allAlerts)
+                try
                 {
-                    if (!jobs.Exists(x => x.Id.Equals(alert.JobId)))
+                    _allAlerts.AddRange(alertController.GetAlerts(alertsPipeline));
+                    _allAlerts.AddRange(alertHistoryController.GetAlertHistories(alertsPipeline));
+                }
+                catch
+                {
+                    //log
+                }
+
+                if (_allAlerts.Count > 0)
+                {
+                    foreach (var alert in _allAlerts)
                     {
-                        _allAlerts.Remove(alert);
+                        if (!jobs.Exists(x => x.Id.Equals(alert.JobId)))
+                        {
+                            _allAlerts.Remove(alert);
+                        }
                     }
                 }
             }
@@ -74,10 +86,17 @@ namespace CheckupExec.Analysis
                 }
 
                 jobInnerPipeline["name"] = fullString;
-                jobPipeline["get-bejob"] = jobInnerPipeline;
+                jobPipeline[Constants.GetJobs] = jobInnerPipeline;
 
-                _allAlerts.AddRange(alertController.GetAlerts(jobPipeline));
-                _allAlerts.AddRange(alertHistoryController.GetAlertHistories(jobPipeline));
+                try
+                {
+                    _allAlerts.AddRange(alertController.GetAlerts(jobPipeline));
+                    _allAlerts.AddRange(alertHistoryController.GetAlertHistories(jobPipeline));
+                }
+                catch
+                {
+                    //log
+                }
             }
             else if (alertTypes.Count > 0)
             {
@@ -90,25 +109,39 @@ namespace CheckupExec.Analysis
 
                 alertsPipeline["category"] = fullTypeString;
 
-                _allAlerts.AddRange(alertController.GetAlerts(alertsPipeline));
-                _allAlerts.AddRange(alertHistoryController.GetAlertHistories(alertsPipeline));
+                try
+                {
+                    _allAlerts.AddRange(alertController.GetAlerts(alertsPipeline));
+                    _allAlerts.AddRange(alertHistoryController.GetAlertHistories(alertsPipeline));
+                }
+                catch
+                {
+                    //log
+                }
             }
             else
             {
-                _allAlerts.AddRange(alertController.GetAlerts());
-                _allAlerts.AddRange(alertHistoryController.GetAlertHistories());
-            }
-
-            if (!SortingUtility<Alert>.isSorted(_allAlerts))
-            {
-                SortingUtility<Alert>.sort(_allAlerts, 0, _allAlerts.Count - 1);
-            }
-
-            foreach(var alert in _allAlerts)
-            {
-                if (alert.Date < start || alert.Date > end)
+                try
                 {
-                    _allAlerts.Remove(alert);
+                    _allAlerts.AddRange(alertController.GetAlerts());
+                    _allAlerts.AddRange(alertHistoryController.GetAlertHistories());
+                }
+                catch
+                {
+                    //log
+                }
+            }
+
+            if (_allAlerts.Count > 0)
+            {                
+                SortingUtility<Alert>.sort(_allAlerts, 0, _allAlerts.Count - 1);   
+
+                foreach (var alert in _allAlerts)
+                {
+                    if (alert.Date < start || alert.Date > end)
+                    {
+                        _allAlerts.Remove(alert);
+                    }
                 }
             }
         }

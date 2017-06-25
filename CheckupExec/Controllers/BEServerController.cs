@@ -10,19 +10,19 @@ namespace CheckupExec.Controllers
 {
     public class BEServerController
     {
-        private const string _getBEServersScript = "get-bebackupexecserver ";
-        private const string _converttoJsonString = "| convertto-json";
+        private const string _getBEServersScript = Constants.GetBEServers + " ";
+        private const string _converttoJsonString = "| " + Constants.JsonPipeline;
 
         private List<BEServer> invokeGetBEServers(string scriptToInvoke)
         {
-            List<BEServer> beServers = null;
+            List<BEServer> beServers = new List<BEServer>();
 
             BEMCLIHelper.powershell.AddScript(scriptToInvoke + _converttoJsonString);
 
             try
             {
                 var output = BEMCLIHelper.powershell.Invoke<string>();
-                beServers = (output.Count > 0) ? JsonHelper.ConvertFromJson<BEServer>(output[0]) : null;
+                beServers = (output.Count > 0) ? JsonHelper.ConvertFromJson<BEServer>(output[0]) : beServers;
             }
             catch (Exception e)
             {
@@ -45,6 +45,8 @@ namespace CheckupExec.Controllers
         {
             string scriptToInvoke = _getBEServersScript;
 
+            parameters = parameters ?? new Dictionary<string, string>();
+
             foreach (var parameter in parameters)
             {
                 scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
@@ -58,6 +60,8 @@ namespace CheckupExec.Controllers
         {
             string scriptToInvoke = "";
             int numCommands = pipelineCommands.Count;
+
+            pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
 
             foreach (var pipeline in pipelineCommands)
             {
@@ -80,6 +84,8 @@ namespace CheckupExec.Controllers
             string scriptToInvoke = "";
             int numCommands = pipelineCommands.Count;
 
+            pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
+
             foreach (var pipeline in pipelineCommands)
             {
                 scriptToInvoke += pipeline.Key + " ";
@@ -91,6 +97,9 @@ namespace CheckupExec.Controllers
             }
 
             scriptToInvoke += "| " + _getBEServersScript;
+
+            beServerParameters = beServerParameters ?? new Dictionary<string, string>();
+
             foreach (var parameter in beServerParameters)
             {
                 scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";

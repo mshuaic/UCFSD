@@ -1,5 +1,6 @@
 ﻿using CheckupExec.Controllers;
 using CheckupExec.Models;
+using CheckupExec.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,34 +26,37 @@ namespace CheckupExec.Analysis
 
             var jobHistoryPipeline = new Dictionary<string, Dictionary<string, string>>
             {
-                ["get-bestorage"] = new Dictionary<string, string>
+                [Constants.GetStorages] = new Dictionary<string, string>
                 {
                     ["Id"] = ""
                 },
-                ["get-bejob"] = new Dictionary<string, string>
+                [Constants.GetJobs] = new Dictionary<string, string>
                 {
                     ["TaskType"] = "Full"
                 }
             };
 
             var storagesAccountedFor = new List<string>();
+            var lastFullBackupJobInstance = new JobHistory();
 
-            foreach (var storageDevice in storageDevices)
+            if (storageDevices.Count > 0)
             {
-                if (!storageDevice.StorageType.Equals("0"))
+                foreach (var storageDevice in storageDevices)
                 {
-                    jobHistoryPipeline["get-bestorage"]["Id"] = storageDevice.Id;
-                    var temp = jobHistoryController.GetJobHistories(jobHistoryPipeline);
-                    var lastFullBackupJobInstance = new JobHistory();
+                    if (!storageDevice.StorageType.Equals("0"))
+                    {
+                        jobHistoryPipeline[Constants.GetStorages]["Id"] = storageDevice.Id;
+                        var temp = jobHistoryController.GetJobHistories(jobHistoryPipeline);
 
-                    if (temp != null)
-                    { 
-                        foreach (var jobHistory in temp)
+                        if (temp.Count > 0)
                         {
-                            if (Convert.ToInt32(jobHistory.JobStatus) == JobHistory.SuccessfulFinalStatus && jobHistory.PercentComplete == 100)
+                            foreach (var jobHistory in temp)
                             {
-                                _fullBackupJobInstances[storageDevice].Add(jobHistory);
-                                lastFullBackupJobInstance = jobHistory;
+                                if (Convert.ToInt32(jobHistory.JobStatus) == JobHistory.SuccessfulFinalStatus && jobHistory.PercentComplete == 100)
+                                {
+                                    _fullBackupJobInstances[storageDevice].Add(jobHistory);
+                                    lastFullBackupJobInstance = jobHistory;
+                                }
                             }
                         }
 

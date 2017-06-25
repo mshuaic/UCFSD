@@ -10,6 +10,8 @@ namespace CheckupExec.Utilities
     {
         public static bool isSorted(List<T> objects)
         {
+            objects = objects ?? new List<T>();
+
             int count = objects.Count;
             for (int i = 0; i < count - 1; i++)
             {
@@ -18,10 +20,21 @@ namespace CheckupExec.Utilities
                     return false;
                 }
             }
+
             return true;
         }
 
         public static void sort(List<T> objects, int left, int right)
+        {
+            objects = objects ?? new List<T>();
+
+            if (!isSorted(objects))
+            {
+                qsort(objects, left, right);
+            }
+        }
+
+        private static void qsort(List<T> objects, int left, int right)
         {
             int i = left, j = right;
             T pivot = objects[(left + right) / 2];

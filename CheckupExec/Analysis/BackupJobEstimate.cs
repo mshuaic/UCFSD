@@ -49,98 +49,114 @@ namespace CheckupExec.Analysis
             };
             var jobHistoryPipeline = new Dictionary<string, Dictionary<string, string>>
             {
-                ["get-bejob"] = new Dictionary<string, string>
-                                {
-                                    ["Id"] = jobId
-                                }
+                [Constants.GetJobs] = new Dictionary<string, string>
+                                      {
+                                          ["Id"] = jobId
+                                      }
             };
 
             var jobAsList = jobController.GetJobs(jobPipeline);
-            var job = jobAsList.First();
+            var job = (jobAsList.Count > 0) ? jobAsList.First() : null;
 
             var jobHistories = jobHistoryController.GetJobHistories(jobHistoryPipeline);
             var filteredJobHistories = new List<JobHistory>();
 
-            foreach (var jobHistory in jobHistories)
+            if (jobHistories.Count > 0)
             {
-                if (Convert.ToInt32(jobHistory.JobStatus) == JobHistory.SuccessfulFinalStatus && jobHistory.PercentComplete == 100)
+                foreach (var jobHistory in jobHistories)
                 {
-                    filteredJobHistories.Add(jobHistory);
+                    if (Convert.ToInt32(jobHistory.JobStatus) == JobHistory.SuccessfulFinalStatus && jobHistory.PercentComplete == 100)
+                    {
+                        filteredJobHistories.Add(jobHistory);
+                    }
                 }
             }
 
-            JobName = job.Name;
-            NextStartDate = job.NextStartDate;
-            EstimateOfJobRateMBMin = estimateJobRate(filteredJobHistories);
-            EstimateOfElapsedTimeSec = estimateElapsedTime(filteredJobHistories);
+            if (filteredJobHistories.Count > 0)
+            {
+                JobName = job.Name;
+                NextStartDate = job.NextStartDate;
+                EstimateOfJobRateMBMin = estimateJobRate(filteredJobHistories);
+                EstimateOfElapsedTimeSec = estimateElapsedTime(filteredJobHistories);
+            }
         }
 
         private double estimateJobRate(List<JobHistory> jobHistories)
         {
-            int count = 0;
-            double sum = 0;
-
-            foreach (var jobHistory in jobHistories)
-            {        
-                sum += jobHistory.JobRateMBPerMinute;
-                count++;   
-            }
-
-            try
+            if (jobHistories.Count > 0)
             {
-                return sum / count;
+                int count = 0;
+                double sum = 0;
+
+                foreach (var jobHistory in jobHistories)
+                {
+                    sum += jobHistory.JobRateMBPerMinute;
+                    count++;
+                }
+
+                try
+                {
+                    return sum / count;
+                }
+                catch (DivideByZeroException e)
+                {
+                    //log utility divide by zero encountered because the job has no successful job histories
+                    return -1;
+                }
             }
-            catch (DivideByZeroException e)
-            {
-                //log utility divide by zero encountered because the job has no successful job histories
-                return -1;
-            }
+
+            return -1;
         }
 
         private double estimateElapsedTime(List<JobHistory> jobHistories)
         {
-            var _fc = new Forecast<JobHistory>();
-
-            if (!SortingUtility<JobHistory>.isSorted(jobHistories))
+            if (jobHistories.Count > 0)
             {
+                var _fc = new Forecast<JobHistory>();
+    
                 SortingUtility<JobHistory>.sort(jobHistories, 0, jobHistories.Count - 1);
-            }
 
-            ForecastResults = _fc.doForecast(jobHistories);
+                ForecastResults = _fc.doForecast(jobHistories);
 
-            if (ForecastResults.ForecastSuccessful)
-            {
-                Console.WriteLine("Slope: " + ForecastResults.FinalSlope);
-                Console.WriteLine("Intercept: " + ForecastResults.FinalIntercept);
-                EstimateDataSizeMB = ForecastResults.FinalIntercept + ForecastResults.FinalSlope * this.NextStartDate.Subtract(DateTime.Now).TotalDays;
-            }
-            else
-            {
-                int count = 0;
-                double sum = 0;
-                double currentSizeGB = jobHistories.First().TotalDataSizeBytes >> 20;
-
-                jobHistories.Remove(jobHistories.First());
-
-                foreach (var jobHistory in jobHistories)
+                if (ForecastResults.ForecastSuccessful)
                 {
-                    sum += (jobHistory.TotalDataSizeBytes >> 20) - currentSizeGB;
-                    currentSizeGB = jobHistory.TotalDataSizeBytes >> 20;
-                    count++;
+                    //Console.WriteLine("Slope: " + ForecastResults.FinalSlope);
+                    //Console.WriteLine("Intercept: " + ForecastResults.FinalIntercept);
+                    EstimateDataSizeMB = ForecastResults.FinalIntercept + ForecastResults.FinalSlope * NextStartDate.Subtract(DateTime.Now).TotalDays;
+                }
+                else
+                {
+                    int count = 0;
+                    double sum = 0;
+                    double currentSizeGB = jobHistories.First().TotalDataSizeBytes >> 20;
+
+                    jobHistories.Remove(jobHistories.First());
+
+                    if (jobHistories.Count > 0)
+                    {
+                        foreach (var jobHistory in jobHistories)
+                        {
+                            sum += (jobHistory.TotalDataSizeBytes >> 20) - currentSizeGB;
+                            currentSizeGB = jobHistory.TotalDataSizeBytes >> 20;
+                            count++;
+                        }
+                    }
+
+                    EstimateDataSizeMB = ((jobHistories[count - 1].TotalDataSizeBytes >> 20) + sum / count) / 1024;
                 }
 
-                EstimateDataSizeMB = ((jobHistories[count - 1].TotalDataSizeBytes >> 20) + sum / count) / 1024;
+                try
+                {
+                    return 60 * (EstimateDataSizeMB * 1024) / EstimateOfJobRateMBMin;
+                }
+                catch (DivideByZeroException e)
+                {
+                    //log utility divide by zero encountered because the job has no successful job histories
+                    return -1;
+                }
             }
 
-            try
-            {
-                return 60 * (EstimateDataSizeMB * 1024)  / EstimateOfJobRateMBMin;
-            }
-            catch (DivideByZeroException e)
-            {
-                //log utility divide by zero encountered because the job has no successful job histories
-                return -1;
-            }
+            return -1;
         }
     }
 }

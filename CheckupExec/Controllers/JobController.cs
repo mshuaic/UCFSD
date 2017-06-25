@@ -10,19 +10,19 @@ namespace CheckupExec.Controllers
 {
     public class JobController
     {
-        private const string _getJobsScript = "get-bejob ";
-        private const string _converttoJsonString = "| convertto-json";
+        private const string _getJobsScript = Constants.GetJobs + " ";
+        private const string _converttoJsonString = "| " + Constants.JsonPipeline;
 
         private List<Job> invokeGetJobs(string scriptToInvoke)
         {
-            List<Job> jobs = null;
+            List<Job> jobs = new List<Job>();
 
             BEMCLIHelper.powershell.AddScript(scriptToInvoke + _converttoJsonString);
 
             try
             {
                 var output = BEMCLIHelper.powershell.Invoke<string>();
-                jobs = (output.Count > 0) ? JsonHelper.ConvertFromJson<Job>(output[0]) : null;
+                jobs = (output.Count > 0) ? JsonHelper.ConvertFromJson<Job>(output[0]) : jobs;
             }
             catch (Exception e)
             {
@@ -45,6 +45,8 @@ namespace CheckupExec.Controllers
         {
             string scriptToInvoke = _getJobsScript;
 
+            parameters = parameters ?? new Dictionary<string, string>();
+
             foreach (var parameter in parameters)
             {
                 scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
@@ -59,6 +61,8 @@ namespace CheckupExec.Controllers
             string scriptToInvoke = "";
             int numCommands = pipelineCommands.Count;
 
+            pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
+
             foreach (var pipeline in pipelineCommands)
             {
                 scriptToInvoke += pipeline.Key + " ";
@@ -68,7 +72,7 @@ namespace CheckupExec.Controllers
                     scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
                 }
             }
-
+            
             scriptToInvoke += "| " + _getJobsScript;
 
             return invokeGetJobs(scriptToInvoke);
@@ -80,6 +84,8 @@ namespace CheckupExec.Controllers
             string scriptToInvoke = "";
             int numCommands = pipelineCommands.Count;
 
+            pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
+
             foreach (var pipeline in pipelineCommands)
             {
                 scriptToInvoke += pipeline.Key + " ";
@@ -89,8 +95,11 @@ namespace CheckupExec.Controllers
                     scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
                 }
             }
-
+            
             scriptToInvoke += "| " + _getJobsScript;
+
+            jobParameters = jobParameters ?? new Dictionary<string, string>();
+
             foreach (var parameter in jobParameters)
             {
                 scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";

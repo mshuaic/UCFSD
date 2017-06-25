@@ -10,19 +10,19 @@ namespace CheckupExec.Controllers
 {
     public class StorageController
     {
-        private const string _getStorageScript = "get-bestorage ";
-        private const string _converttoJsonString = "| convertto-json";
+        private const string _getStorageScript = Constants.GetStorages + " ";
+        private const string _converttoJsonString = "| " + Constants.JsonPipeline;
 
         private List<Storage> invokeGetStorages(string scriptToInvoke)
         {
-            List<Storage> storages = null;
+            List<Storage> storages = new List<Storage>();
 
             BEMCLIHelper.powershell.AddScript(scriptToInvoke + _converttoJsonString);
 
             try
             {
                 var output = BEMCLIHelper.powershell.Invoke<string>();
-                storages = (output.Count > 0) ? JsonHelper.ConvertFromJson<Storage>(output[0]) : null;
+                storages = (output.Count > 0) ? JsonHelper.ConvertFromJson<Storage>(output[0]) : storages;
             }
             catch (Exception e)
             {
@@ -45,11 +45,13 @@ namespace CheckupExec.Controllers
         {
             string scriptToInvoke = _getStorageScript;
 
+            parameters = parameters ?? new Dictionary<string, string>();
+
             foreach (var parameter in parameters)
             {
                 scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
             }
-
+            
             return invokeGetStorages(scriptToInvoke);
         }
 
@@ -58,6 +60,8 @@ namespace CheckupExec.Controllers
         {
             string scriptToInvoke = "";
             int numCommands = pipelineCommands.Count;
+
+            pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
 
             foreach (var pipeline in pipelineCommands)
             {
@@ -68,7 +72,7 @@ namespace CheckupExec.Controllers
                     scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
                 }
             }
-
+            
             scriptToInvoke += "| " + _getStorageScript;
 
             return invokeGetStorages(scriptToInvoke);
@@ -80,6 +84,8 @@ namespace CheckupExec.Controllers
             string scriptToInvoke = "";
             int numCommands = pipelineCommands.Count;
 
+            pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
+
             foreach (var pipeline in pipelineCommands)
             {
                 scriptToInvoke += pipeline.Key + " ";
@@ -89,13 +95,16 @@ namespace CheckupExec.Controllers
                     scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
                 }
             }
-
+            
             scriptToInvoke += "| " + _getStorageScript;
+
+            storageParameters = storageParameters ?? new Dictionary<string, string>();
+
             foreach (var parameter in storageParameters)
             {
                 scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
             }
-
+        
             return invokeGetStorages(scriptToInvoke);
         }
     }

@@ -10,19 +10,19 @@ namespace CheckupExec.Controllers
 {
     public class AlertController
     {
-        private const string _getAlertsScript = "get-bealert ";
-        private const string _converttoJsonString = "| convertto-json";
+        private const string _getAlertsScript = Constants.GetAlerts + " ";
+        private const string _converttoJsonString = "| " + Constants.JsonPipeline;
 
         private List<Alert> invokeGetAlerts(string scriptToInvoke)
         {
-            List<Alert> alerts = null;
+            List<Alert> alerts = new List<Alert>();
 
             BEMCLIHelper.powershell.AddScript(scriptToInvoke + _converttoJsonString);
 
             try
             {
                 var output = BEMCLIHelper.powershell.Invoke<string>();
-                alerts = (output.Count > 0) ? JsonHelper.ConvertFromJson<Alert>(output[0]) : null;
+                alerts = (output.Count > 0) ? JsonHelper.ConvertFromJson<Alert>(output[0]) : alerts;
             }
             catch (Exception e)
             {
@@ -45,6 +45,8 @@ namespace CheckupExec.Controllers
         {
             string scriptToInvoke = _getAlertsScript;
 
+            parameters = parameters ?? new Dictionary<string, string>();
+            
             foreach (var parameter in parameters)
             {
                 scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
@@ -59,6 +61,8 @@ namespace CheckupExec.Controllers
             string scriptToInvoke = "";
             int numCommands = pipelineCommands.Count;
 
+            pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
+
             foreach (var pipeline in pipelineCommands)
             {
                 scriptToInvoke += pipeline.Key + " ";
@@ -68,7 +72,7 @@ namespace CheckupExec.Controllers
                     scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
                 }
             }
-
+            
             scriptToInvoke += "| " + _getAlertsScript;
 
             return invokeGetAlerts(scriptToInvoke);
@@ -80,6 +84,8 @@ namespace CheckupExec.Controllers
             string scriptToInvoke = ""; 
             int numCommands = pipelineCommands.Count;
 
+            pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
+            
             foreach (var pipeline in pipelineCommands)
             {
                 scriptToInvoke += pipeline.Key + " ";
@@ -91,11 +97,14 @@ namespace CheckupExec.Controllers
             }
 
             scriptToInvoke += "| " + _getAlertsScript;
+
+            alertParameters = alertParameters ?? new Dictionary<string, string>();
+
             foreach (var parameter in alertParameters)
             {
                 scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
             }
-
+            
             return invokeGetAlerts(scriptToInvoke);
         }
     }

@@ -61,9 +61,12 @@ namespace CheckupExec
 
             _storageDevices = sc.GetStorages();
 
-            foreach (var storageDevice in _storageDevices)
+            if (_storageDevices != null && _storageDevices.Count > 0)
             {
-                names.Add(storageDevice.Name);
+                foreach (var storageDevice in _storageDevices)
+                {
+                    names.Add(storageDevice.Name);
+                }
             }
 
             return names;
@@ -79,7 +82,7 @@ namespace CheckupExec
             var jc = new JobController();
             var names = new List<string>();
 
-            if (storageDeviceNames.Count > 0)
+            if (storageDeviceNames != null && storageDeviceNames.Count > 0)
             {
                 var jobParams = new Dictionary<string, string>
                 {
@@ -97,18 +100,24 @@ namespace CheckupExec
 
                 _jobs = jc.GetJobs(jobParams);
 
-                foreach (var job in _jobs)
+                if (_jobs != null && _jobs.Count > 0)
                 {
-                    names.Add(job.Name);
+                    foreach (var job in _jobs)
+                    {
+                        names.Add(job.Name);
+                    }
                 }
             }
             else
             {
                 _jobs = jc.GetJobs();
 
-                foreach (var job in _jobs)
+                if (_jobs != null && _jobs.Count > 0)
                 {
-                    names.Add(job.Name);
+                    foreach (var job in _jobs)
+                    {
+                        names.Add(job.Name);
+                    }
                 }
             }
 
@@ -127,7 +136,7 @@ namespace CheckupExec
 
             var usedCapacity = feuc.TotalUsedCapacity;
 
-            if (feuc.FrontEndForecast.ForecastsSuccessful)
+            if (feuc.FrontEndForecast != null && feuc.FrontEndForecast.ForecastsSuccessful)
             {
                 var fullPlot = new Dictionary<double, double>();
                 double fullSlope = 0;
@@ -165,7 +174,7 @@ namespace CheckupExec
         {
             var buJobEstimates = new List<BackupJobEstimate>();
 
-            if (jobNames.Count > 0)
+            if (jobNames!= null && jobNames.Count > 0)
             {
                 var jobIds = new List<string>();
 
@@ -176,13 +185,16 @@ namespace CheckupExec
 
                 var forecastResults = new Dictionary<BackupJobEstimate, ForecastResults>();
 
-                foreach (var jobId in jobIds)
+                if (jobIds.Count > 0)
                 {
-                    var buje = new BackupJobEstimate(jobId);
+                    foreach (var jobId in jobIds)
+                    {
+                        var buje = new BackupJobEstimate(jobId);
 
-                    buJobEstimates.Add(buje);
+                        buJobEstimates.Add(buje);
 
-                    forecastResults[buje] = buje.ForecastResults;
+                        forecastResults[buje] = buje.ForecastResults;
+                    }
                 }
 
                 //pass to report generator
@@ -193,13 +205,16 @@ namespace CheckupExec
             {
                 var forecastResults = new Dictionary<BackupJobEstimate, ForecastResults>();
 
-                foreach (var job in _jobs)
+                if (_jobs != null && _jobs.Count > 0)
                 {
-                    var buje = new BackupJobEstimate(job.Id);
+                    foreach (var job in _jobs)
+                    {
+                        var buje = new BackupJobEstimate(job.Id);
 
-                    buJobEstimates.Add(buje);
+                        buJobEstimates.Add(buje);
 
-                    forecastResults[buje] = buje.ForecastResults;
+                        forecastResults[buje] = buje.ForecastResults;
+                    }
                 }
 
                 //pass to report generator
@@ -217,7 +232,7 @@ namespace CheckupExec
         /// <returns>True if successful, false if not.</returns>
         public bool DiskAnalysis(List<string> diskNames)
         {
-            if (diskNames.Count >= 0)
+            if (diskNames != null && diskNames.Count >= 0)
             {
                 var forecastResults = new Dictionary<string, DiskForecast>();
 

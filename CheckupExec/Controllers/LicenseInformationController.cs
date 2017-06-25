@@ -10,19 +10,19 @@ namespace CheckupExec.Controllers
 {
     public class LicenseInformationController
     {
-        private const string _getLicenseInformationScript = "get-belicenseinformation ";
-        private const string _converttoJsonString = "| convertto-json";
+        private const string _getLicenseInformationScript = Constants.GetLicenses + " ";
+        private const string _converttoJsonString = "| " + Constants.JsonPipeline;
 
         private List<LicenseInformation> invokeGetLicenseInformation(string scriptToInvoke)
         {
-            List<LicenseInformation> licenses = null;
+            List<LicenseInformation> licenses = new List<LicenseInformation>();
 
             BEMCLIHelper.powershell.AddScript(scriptToInvoke + _converttoJsonString);
 
             try
             {
                 var output = BEMCLIHelper.powershell.Invoke<string>();
-                licenses = (output.Count > 0) ? JsonHelper.ConvertFromJson<LicenseInformation>(output[0]) : null;
+                licenses = (output.Count > 0) ? JsonHelper.ConvertFromJson<LicenseInformation>(output[0]) : licenses;
             }
             catch (Exception e)
             {
@@ -45,11 +45,13 @@ namespace CheckupExec.Controllers
         {
             string scriptToInvoke = _getLicenseInformationScript;
 
+            parameters = parameters ?? new Dictionary<string, string>();
+
             foreach (var parameter in parameters)
             {
                 scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
             }
-
+            
             return invokeGetLicenseInformation(scriptToInvoke);
         }
 
@@ -59,6 +61,8 @@ namespace CheckupExec.Controllers
             string scriptToInvoke = "";
             int numCommands = pipelineCommands.Count;
 
+            pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
+
             foreach (var pipeline in pipelineCommands)
             {
                 scriptToInvoke += pipeline.Key + " ";
@@ -68,17 +72,19 @@ namespace CheckupExec.Controllers
                     scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
                 }
             }
-
+            
             scriptToInvoke += "| " + _getLicenseInformationScript;
 
             return invokeGetLicenseInformation(scriptToInvoke);
         }
 
         //get-bealert {-x y}+ {| get-be<> {-k j}*}+ | convertto-json
-        public List<LicenseInformation> GetLicenses(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> storageParameters)
+        public List<LicenseInformation> GetLicenses(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> licenseParameters)
         {
             string scriptToInvoke = "";
             int numCommands = pipelineCommands.Count;
+
+            pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
 
             foreach (var pipeline in pipelineCommands)
             {
@@ -89,13 +95,16 @@ namespace CheckupExec.Controllers
                     scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
                 }
             }
-
+            
             scriptToInvoke += "| " + _getLicenseInformationScript;
-            foreach (var parameter in storageParameters)
+
+            licenseParameters = licenseParameters ?? new Dictionary<string, string>();
+
+            foreach (var parameter in licenseParameters)
             {
                 scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
             }
-
+            
             return invokeGetLicenseInformation(scriptToInvoke);
         }
     }

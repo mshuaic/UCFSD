@@ -1,5 +1,6 @@
 ﻿using CheckupExec.Controllers;
 using CheckupExec.Models;
+using CheckupExec.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,8 @@ namespace CheckupExec.Analysis
                 ["FromStartTime"] = start.ToString() ?? DateTime.MinValue.ToString(),
                 ["ToStartTime"] = end.ToString() ?? DateTime.Now.ToString()
             };
+            jobErrorStatuses = jobErrorStatuses ?? new List<string>();
+            jobNames = jobNames ?? new List<string>();
 
             if (jobErrorStatuses.Count > 0 && jobNames.Count > 0)
             {
@@ -37,7 +40,7 @@ namespace CheckupExec.Analysis
                 }
 
                 jobInnerPipeline["name"] = fullString;
-                jobPipeline["get-bejob"] = jobInnerPipeline;
+                jobPipeline[Constants.GetJobs] = jobInnerPipeline;
 
                 fullString = "";
 
@@ -48,7 +51,14 @@ namespace CheckupExec.Analysis
 
                 jobHistoryPipeline["jobstatus"] = fullString;
 
-                _jobHistories.AddRange(jobHistoryController.GetJobHistories(jobPipeline, jobHistoryPipeline));
+                try
+                {
+                    _jobHistories.AddRange(jobHistoryController.GetJobHistories(jobPipeline, jobHistoryPipeline));
+                }
+                catch
+                {
+                    //log
+                }
             }
             else if (jobNames.Count > 0)
             {
@@ -63,9 +73,16 @@ namespace CheckupExec.Analysis
                 }
 
                 jobInnerPipeline["name"] = fullString;
-                jobPipeline["get-bejob"] = jobInnerPipeline;
+                jobPipeline[Constants.GetJobs] = jobInnerPipeline;
 
-                _jobHistories.AddRange(jobHistoryController.GetJobHistories(jobPipeline, jobHistoryPipeline));
+                try
+                {
+                    _jobHistories.AddRange(jobHistoryController.GetJobHistories(jobPipeline, jobHistoryPipeline));
+                }
+                catch
+                {
+                    //log
+                }
             }
             else if (jobErrorStatuses.Count > 0)
             {
@@ -78,17 +95,34 @@ namespace CheckupExec.Analysis
 
                 jobHistoryPipeline["jobstatus"] = fullString;
 
-                _jobHistories.AddRange(jobHistoryController.GetJobHistories(jobHistoryPipeline));
+                try
+                {
+                    _jobHistories.AddRange(jobHistoryController.GetJobHistories(jobHistoryPipeline));
+                }
+                catch
+                {
+                    //log
+                }
             }
             else
             {
-                _jobHistories.AddRange(jobHistoryController.GetJobHistories(jobHistoryPipeline));
+                try
+                {
+                    _jobHistories.AddRange(jobHistoryController.GetJobHistories(jobHistoryPipeline));
+                }
+                catch
+                {
+                    //log
+                }
             }
 
-            foreach (var jobHistory in _jobHistories)
+            if (_jobHistories.Count > 0)
             {
-                if (Convert.ToInt32(jobHistory.JobStatus) == JobHistory.SuccessfulFinalStatus)
-                    _jobHistories.Remove(jobHistory);
+                foreach (var jobHistory in _jobHistories)
+                {
+                    if (Convert.ToInt32(jobHistory.JobStatus) == JobHistory.SuccessfulFinalStatus)
+                        _jobHistories.Remove(jobHistory);
+                }
             }
         }
     }

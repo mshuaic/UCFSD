@@ -10,7 +10,6 @@ namespace CheckupExec.Utilities
 {
     class BEMCLIHelper
     {
-
         public static WSManConnectionInfo connectionInfo = null;
         public static Runspace runspace = null;
         public static PowerShell powershell = null;
@@ -42,7 +41,7 @@ namespace CheckupExec.Utilities
                     powershell = PowerShell.Create();
 
                     powershell.Runspace = runspace;
-                    powershell.AddScript("import-module bemcli");
+                    powershell.AddScript(Constants.ImportBEMCLI);
                     powershell.Invoke();
                     powershell.Commands.Clear();
                 }
@@ -66,7 +65,7 @@ namespace CheckupExec.Utilities
                     powershell = PowerShell.Create();
 
                     powershell.Runspace = runspace;
-                    powershell.AddScript("import-module bemcli");
+                    powershell.AddScript(Constants.ImportBEMCLI);
                     powershell.Invoke();
                     powershell.Commands.Clear();
                 }
@@ -86,22 +85,17 @@ namespace CheckupExec.Utilities
 
         public static void cleanUp()
         {
-            if (runspace != null && powershell != null)
+            try
             {
-                try
-                {
-                    runspace.Close();
-                    powershell.Dispose();
-                }
-                catch (Exception e)
-                {
-                    Exception baseException = e.GetBaseException();
-                    //LogUtility.LogInfoFunction("Error:" + e.Message + "Message:" + baseException.Message);
-                    Console.WriteLine("Error: {0}, Message: {1}", e.Message, baseException.Message);
-                }
-
+                runspace.Close();
+                powershell.Dispose();
             }
-
+            catch (Exception e)
+            {
+                Exception baseException = e.GetBaseException();
+                //LogUtility.LogInfoFunction("Error:" + e.Message + "Message:" + baseException.Message);
+                Console.WriteLine("Error: {0}, Message: {1}", e.Message, baseException.Message);
+            }
         }
     }
 }
