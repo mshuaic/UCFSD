@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DiskCapacities count="8" ServerName="DESKTOP-RR3FG58">
+  <DiskCapacityInstance Date="2017-06-25 03:30:15-04:00">
+    <Disk Name="C:\" VolumeLabel="">
+      <AvailableFreeSpace>142986530816</AvailableFreeSpace>
+      <TotalFreeSpace>142986530816</TotalFreeSpace>
+      <TotalSize>255466663936</TotalSize>
+    </Disk>
+    <Disk Name="D:\" VolumeLabel="">
+      <AvailableFreeSpace>20472225792</AvailableFreeSpace>
+      <TotalFreeSpace>20472225792</TotalFreeSpace>
+      <TotalSize>120031539200</TotalSize>
+    </Disk>
+    <Disk Name="E:\" VolumeLabel="">
+      <AvailableFreeSpace>231009017856</AvailableFreeSpace>
+      <TotalFreeSpace>231009017856</TotalFreeSpace>
+      <TotalSize>1000202240000</TotalSize>
+    </Disk>
+  </DiskCapacityInstance>
+  <DiskCapacityInstance Date="2017-06-25 03:30:16-04:00">
+    <Disk Name="C:\" VolumeLabel="">
+      <AvailableFreeSpace>142986530816</AvailableFreeSpace>
+      <TotalFreeSpace>142986530816</TotalFreeSpace>
+      <TotalSize>255466663936</TotalSize>
+    </Disk>
+    <Disk Name="D:\" VolumeLabel="">
+      <AvailableFreeSpace>20472225792</AvailableFreeSpace>
+      <TotalFreeSpace>20472225792</TotalFreeSpace>
+      <TotalSize>120031539200</TotalSize>
+    </Disk>
+    <Disk Name="E:\" VolumeLabel="">
+      <AvailableFreeSpace>231009017856</AvailableFreeSpace>
+      <TotalFreeSpace>231009017856</TotalFreeSpace>
+      <TotalSize>1000202240000</TotalSize>
+    </Disk>
+  </DiskCapacityInstance>
+  <DiskCapacityInstance Date="2017-06-25 03:30:17-04:00">
+    <Disk Name="C:\" VolumeLabel="">
+      <AvailableFreeSpace>142986530816</AvailableFreeSpace>
+      <TotalFreeSpace>142986530816</TotalFreeSpace>
+      <TotalSize>255466663936</TotalSize>
+    </Disk>
+    <Disk Name="D:\" VolumeLabel="">
+      <AvailableFreeSpace>20472221696</AvailableFreeSpace>
+      <TotalFreeSpace>20472221696</TotalFreeSpace>
+      <TotalSize>120031539200</TotalSize>
+    </Disk>
+    <Disk Name="E:\" VolumeLabel="">
+      <AvailableFreeSpace>231009017856</AvailableFreeSpace>
+      <TotalFreeSpace>231009017856</TotalFreeSpace>
+      <TotalSize>1000202240000</TotalSize>
+    </Disk>
+  </DiskCapacityInstance>
+  <DiskCapacityInstance Date="2017-06-25 03:30:18-04:00">
+    <Disk Name="C:\" VolumeLabel="">
+      <AvailableFreeSpace>142986481664</AvailableFreeSpace>
+      <TotalFreeSpace>142986481664</TotalFreeSpace>
+      <TotalSize>255466663936</TotalSize>
+    </Disk>
+    <Disk Name="D:\" VolumeLabel="">
+      <AvailableFreeSpace>20472221696</AvailableFreeSpace>
+      <TotalFreeSpace>20472221696</TotalFreeSpace>
+      <TotalSize>120031539200</TotalSize>
+    </Disk>
+    <Disk Name="E:\" VolumeLabel="">
+      <AvailableFreeSpace>231009017856</AvailableFreeSpace>
+      <TotalFreeSpace>231009017856</TotalFreeSpace>
+      <TotalSize>1000202240000</TotalSize>
+    </Disk>
+  </DiskCapacityInstance>
+  <DiskCapacityInstance Date="2017-06-25 03:30:19-04:00">
+    <Disk Name="C:\" VolumeLabel="">
+      <AvailableFreeSpace>142986481664</AvailableFreeSpace>
+      <TotalFreeSpace>142986481664</TotalFreeSpace>
+      <TotalSize>255466663936</TotalSize>
+    </Disk>
+    <Disk Name="D:\" VolumeLabel="">
+      <AvailableFreeSpace>20472221696</AvailableFreeSpace>
+      <TotalFreeSpace>20472221696</TotalFreeSpace>
+      <TotalSize>120031539200</TotalSize>
+    </Disk>
+    <Disk Name="E:\" VolumeLabel="">
+      <AvailableFreeSpace>231009017856</AvailableFreeSpace>
+      <TotalFreeSpace>231009017856</TotalFreeSpace>
+      <TotalSize>1000202240000</TotalSize>
+    </Disk>
+  </DiskCapacityInstance>
+  <DiskCapacityInstance Date="2017-06-25 03:30:20-04:00">
+    <Disk Name="C:\" VolumeLabel="">
+      <AvailableFreeSpace>142986481664</AvailableFreeSpace>
+      <TotalFreeSpace>142986481664</TotalFreeSpace>
+      <TotalSize>255466663936</TotalSize>
+    </Disk>
+    <Disk Name="D:\" VolumeLabel="">
+      <AvailableFreeSpace>20472221696</AvailableFreeSpace>
+      <TotalFreeSpace>20472221696</TotalFreeSpace>
+      <TotalSize>120031539200</TotalSize>
+    </Disk>
+    <Disk Name="E:\" VolumeLabel="">
+      <AvailableFreeSpace>231009017856</AvailableFreeSpace>
+      <TotalFreeSpace>231009017856</TotalFreeSpace>
+      <TotalSize>1000202240000</TotalSize>
+    </Disk>
+  </DiskCapacityInstance>
+  <DiskCapacityInstance Date="2017-06-25 03:30:21-04:00">
+    <Disk Name="C:\" VolumeLabel="">
+      <AvailableFreeSpace>142986481664</AvailableFreeSpace>
+      <TotalFreeSpace>142986481664</TotalFreeSpace>
+      <TotalSize>255466663936</TotalSize>
+    </Disk>
+    <Disk Name="D:\" VolumeLabel="">
+      <AvailableFreeSpace>20472217600</AvailableFreeSpace>
+      <TotalFreeSpace>20472217600</TotalFreeSpace>
+      <TotalSize>120031539200</TotalSize>
+    </Disk>
+    <Disk Name="E:\" VolumeLabel="">
+      <AvailableFreeSpace>231009017856</AvailableFreeSpace>
+      <TotalFreeSpace>231009017856</TotalFreeSpace>
+      <TotalSize>1000202240000</TotalSize>
+    </Disk>
+  </DiskCapacityInstance>
+  <DiskCapacityInstance Date="2017-06-25 03:30:22-04:00">
+    <Disk Name="C:\" VolumeLabel="">
+      <AvailableFreeSpace>142986481664</AvailableFreeSpace>
+      <TotalFreeSpace>142986481664</TotalFreeSpace>
+      <TotalSize>255466663936</TotalSize>
+    </Disk>
+    <Disk Name="D:\" VolumeLabel="">
+      <AvailableFreeSpace>20472217600</AvailableFreeSpace>
+      <TotalFreeSpace>20472217600</TotalFreeSpace>
+      <TotalSize>120031539200</TotalSize>
+    </Disk>
+    <Disk Name="E:\" VolumeLabel="">
+      <AvailableFreeSpace>231009017856</AvailableFreeSpace>
+      <TotalFreeSpace>231009017856</TotalFreeSpace>
+      <TotalSize>1000202240000</TotalSize>
+    </Disk>
+  </DiskCapacityInstance>
+</DiskCapacities>
