@@ -49,7 +49,7 @@ namespace CheckupExec.Controllers
 
             foreach (var parameter in parameters)
             {
-                scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
+                scriptToInvoke += "-" + parameter.Key + " '" + parameter.Value + "' ";
             }
 
             return invokeGetBEServers(scriptToInvoke);
@@ -69,11 +69,13 @@ namespace CheckupExec.Controllers
 
                 foreach (var parameter in pipeline.Value)
                 {
-                    scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+                    scriptToInvoke += " -" + parameter.Key + " '" + parameter.Value + "' ";
                 }
+
+                scriptToInvoke += "| ";
             }
 
-            scriptToInvoke += "| " + _getBEServersScript;
+            scriptToInvoke += _getBEServersScript;
 
             return invokeGetBEServers(scriptToInvoke);
         }
@@ -92,17 +94,19 @@ namespace CheckupExec.Controllers
 
                 foreach (var parameter in pipeline.Value)
                 {
-                    scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+                    scriptToInvoke += " -" + parameter.Key + " '" + parameter.Value + "' ";
                 }
+
+                scriptToInvoke += "| ";
             }
 
-            scriptToInvoke += "| " + _getBEServersScript;
+            scriptToInvoke += _getBEServersScript;
 
             beServerParameters = beServerParameters ?? new Dictionary<string, string>();
 
             foreach (var parameter in beServerParameters)
             {
-                scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+                scriptToInvoke += " -" + parameter.Key + " '" + parameter.Value + "' ";
             }
 
             return invokeGetBEServers(scriptToInvoke);

@@ -176,7 +176,7 @@ namespace CheckupExec
                     fullSlope += forecast.Value.FinalSlope;
                     fullIntercept += forecast.Value.FinalIntercept;
                 }
-
+                
                 //call report generator method for frontend and pass in ^
 
                 //foreach (var pointList in fullPlot)

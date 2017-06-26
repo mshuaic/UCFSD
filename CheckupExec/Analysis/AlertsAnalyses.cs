@@ -34,7 +34,7 @@ namespace CheckupExec.Analysis
 
                 foreach (var job in jobNames)
                 {
-                    fullJobString += "'" + job + "'" + ((jobNames.ElementAt(jobNames.Count - 1).Equals(job)) ? "" : ", ");
+                    fullJobString += job + ((jobNames.ElementAt(jobNames.Count - 1).Equals(job)) ? "" : ", ");
                 }
 
                 jobsPipeline["name"] = fullJobString;
@@ -45,7 +45,7 @@ namespace CheckupExec.Analysis
 
                 foreach (var type in alertTypes)
                 {
-                    fullTypeString += "'" + type + "'" + ((alertTypes.ElementAt(alertTypes.Count - 1).Equals(type)) ? "" : ", ");
+                    fullTypeString += type + ((alertTypes.ElementAt(alertTypes.Count - 1).Equals(type)) ? "" : ", ");
                 }
 
                 alertsPipeline["category"] = fullTypeString;
@@ -80,7 +80,7 @@ namespace CheckupExec.Analysis
 
                 foreach (var name in jobNames)
                 {
-                    fullString += "'" + name + "'" + ((jobNames.ElementAt(jobNames.Count - 1).Equals(name)) ? "" : ", ");
+                    fullString += name + ((jobNames.ElementAt(jobNames.Count - 1).Equals(name)) ? "" : ", ");
                 }
 
                 jobInnerPipeline["name"] = fullString;
@@ -102,7 +102,7 @@ namespace CheckupExec.Analysis
 
                 foreach (var type in alertTypes)
                 {
-                    fullTypeString += "'" + type + "'" + ((alertTypes.ElementAt(alertTypes.Count - 1).Equals(type)) ? "" : ", ");
+                    fullTypeString += type + ((alertTypes.ElementAt(alertTypes.Count - 1).Equals(type)) ? "" : ", ");
                 }
 
                 alertsPipeline["category"] = fullTypeString;

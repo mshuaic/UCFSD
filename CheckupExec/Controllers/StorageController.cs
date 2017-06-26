@@ -49,7 +49,7 @@ namespace CheckupExec.Controllers
 
             foreach (var parameter in parameters)
             {
-                scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
+                scriptToInvoke += "-" + parameter.Key + " '" + parameter.Value + "' ";
             }
             
             return invokeGetStorages(scriptToInvoke);
@@ -69,11 +69,13 @@ namespace CheckupExec.Controllers
 
                 foreach (var parameter in pipeline.Value)
                 {
-                    scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+                    scriptToInvoke += " -" + parameter.Key + " '" + parameter.Value + "' ";
                 }
+
+                scriptToInvoke += "| ";
             }
-            
-            scriptToInvoke += "| " + _getStorageScript;
+
+            scriptToInvoke += _getStorageScript;
 
             return invokeGetStorages(scriptToInvoke);
         }
@@ -92,17 +94,19 @@ namespace CheckupExec.Controllers
 
                 foreach (var parameter in pipeline.Value)
                 {
-                    scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+                    scriptToInvoke += " -" + parameter.Key + " '" + parameter.Value + "' ";
                 }
+
+                scriptToInvoke += "| ";
             }
-            
-            scriptToInvoke += "| " + _getStorageScript;
+
+            scriptToInvoke += _getStorageScript;
 
             storageParameters = storageParameters ?? new Dictionary<string, string>();
 
             foreach (var parameter in storageParameters)
             {
-                scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+                scriptToInvoke += " -" + parameter.Key + " '" + parameter.Value + "' ";
             }
         
             return invokeGetStorages(scriptToInvoke);

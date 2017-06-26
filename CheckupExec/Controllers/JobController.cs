@@ -49,7 +49,7 @@ namespace CheckupExec.Controllers
 
             foreach (var parameter in parameters)
             {
-                scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
+                scriptToInvoke += "-" + parameter.Key + " '" + parameter.Value + "' ";
             }
 
             return invokeGetJobs(scriptToInvoke);
@@ -69,11 +69,13 @@ namespace CheckupExec.Controllers
 
                 foreach (var parameter in pipeline.Value)
                 {
-                    scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+                    scriptToInvoke += " -" + parameter.Key + " '" + parameter.Value + "' ";
                 }
+
+                scriptToInvoke += "| ";
             }
-            
-            scriptToInvoke += "| " + _getJobsScript;
+
+            scriptToInvoke += _getJobsScript;
 
             return invokeGetJobs(scriptToInvoke);
         }
@@ -92,17 +94,19 @@ namespace CheckupExec.Controllers
 
                 foreach (var parameter in pipeline.Value)
                 {
-                    scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+                    scriptToInvoke += " -" + parameter.Key + " '" + parameter.Value + "' ";
                 }
+
+                scriptToInvoke += "| ";
             }
-            
-            scriptToInvoke += "| " + _getJobsScript;
+
+            scriptToInvoke += _getJobsScript;
 
             jobParameters = jobParameters ?? new Dictionary<string, string>();
 
             foreach (var parameter in jobParameters)
             {
-                scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+                scriptToInvoke += " -" + parameter.Key + " '" + parameter.Value + "' ";
             }
 
             return invokeGetJobs(scriptToInvoke);

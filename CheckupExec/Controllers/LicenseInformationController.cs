@@ -49,7 +49,7 @@ namespace CheckupExec.Controllers
 
             foreach (var parameter in parameters)
             {
-                scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
+                scriptToInvoke += "-" + parameter.Key + " '" + parameter.Value + "' ";
             }
             
             return invokeGetLicenseInformation(scriptToInvoke);
@@ -69,11 +69,13 @@ namespace CheckupExec.Controllers
 
                 foreach (var parameter in pipeline.Value)
                 {
-                    scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+                    scriptToInvoke += " -" + parameter.Key + " '" + parameter.Value + "' ";
                 }
+
+                scriptToInvoke += "| ";
             }
-            
-            scriptToInvoke += "| " + _getLicenseInformationScript;
+
+            scriptToInvoke += _getLicenseInformationScript;
 
             return invokeGetLicenseInformation(scriptToInvoke);
         }
@@ -92,17 +94,19 @@ namespace CheckupExec.Controllers
 
                 foreach (var parameter in pipeline.Value)
                 {
-                    scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+                    scriptToInvoke += " -" + parameter.Key + " '" + parameter.Value + "' ";
                 }
+
+                scriptToInvoke += "| ";
             }
-            
-            scriptToInvoke += "| " + _getLicenseInformationScript;
+
+            scriptToInvoke += _getLicenseInformationScript;
 
             licenseParameters = licenseParameters ?? new Dictionary<string, string>();
 
             foreach (var parameter in licenseParameters)
             {
-                scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+                scriptToInvoke += " -" + parameter.Key + " '" + parameter.Value + "' ";
             }
             
             return invokeGetLicenseInformation(scriptToInvoke);

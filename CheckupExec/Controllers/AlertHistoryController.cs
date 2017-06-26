@@ -49,7 +49,7 @@ namespace CheckupExec.Controllers
 
             foreach (var parameter in parameters)
             {
-                scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
+                scriptToInvoke += "-" + parameter.Key + " '" + parameter.Value + "' ";
             }
             
             return invokeGetAlertHistories(scriptToInvoke);
@@ -69,11 +69,13 @@ namespace CheckupExec.Controllers
 
                 foreach (var parameter in pipeline.Value)
                 {
-                    scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+                    scriptToInvoke += " -" + parameter.Key + " '" + parameter.Value + "' ";
                 }
+
+                scriptToInvoke += "| ";
             }
-            
-            scriptToInvoke += "| " + _getAlertHistoriesScript;
+
+            scriptToInvoke += _getAlertHistoriesScript;
 
             return invokeGetAlertHistories(scriptToInvoke);
         }
@@ -92,17 +94,19 @@ namespace CheckupExec.Controllers
 
                 foreach (var parameter in pipeline.Value)
                 {
-                    scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+                    scriptToInvoke += " -" + parameter.Key + " '" + parameter.Value + "' ";
                 }
+
+                scriptToInvoke += "| ";
             }
-            
-            scriptToInvoke += "| " + _getAlertHistoriesScript;
+
+            scriptToInvoke += _getAlertHistoriesScript;
 
             alertHistoryParameters = alertHistoryParameters ?? new Dictionary<string, string>();
 
             foreach (var parameter in alertHistoryParameters)
             {
-                scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+                scriptToInvoke += " -" + parameter.Key + " '" + parameter.Value + "' ";
             }
             
             return invokeGetAlertHistories(scriptToInvoke);
