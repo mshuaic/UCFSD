@@ -17,12 +17,9 @@ namespace CheckupExec.Analysis
 
         private Dictionary<Storage, List<JobHistory>> _fullBackupJobInstances { get; set; }
 
-        public FrontEndUsedCapacity()
+        public FrontEndUsedCapacity(List<Storage> storageDevices)
         {
-            var storageController = new StorageController();
-            var jobHistoryController = new JobHistoryController();
-
-            var storageDevices = storageController.GetStorages();
+            _fullBackupJobInstances = new Dictionary<Storage, List<JobHistory>>();
 
             var jobHistoryPipeline = new Dictionary<string, Dictionary<string, string>>
             {
@@ -43,13 +40,16 @@ namespace CheckupExec.Analysis
             {
                 foreach (var storageDevice in storageDevices)
                 {
-                    if (!storageDevice.StorageType.Equals("0"))
+                    // || true for testing with our sets
+                    if (!storageDevice.StorageType.Equals("0") || true)
                     {
-                        jobHistoryPipeline[Constants.GetStorages]["Id"] = storageDevice.Id;
-                        var temp = jobHistoryController.GetJobHistories(jobHistoryPipeline);
+                        jobHistoryPipeline[Constants.GetStorages]["Id"] = "'" + storageDevice.Id + "'";
+                        var temp = DataExtraction.JobHistoryController.GetJobHistories(jobHistoryPipeline);
 
                         if (temp.Count > 0)
                         {
+                            _fullBackupJobInstances[storageDevice] = new List<JobHistory>();
+
                             foreach (var jobHistory in temp)
                             {
                                 if (Convert.ToInt32(jobHistory.JobStatus) == JobHistory.SuccessfulFinalStatus && jobHistory.PercentComplete == 100)
@@ -58,12 +58,12 @@ namespace CheckupExec.Analysis
                                     lastFullBackupJobInstance = jobHistory;
                                 }
                             }
-                        }
 
-                        if (!storagesAccountedFor.Contains(storageDevice.Name))
-                        {
-                            TotalUsedCapacity += (double)lastFullBackupJobInstance?.TotalDataSizeBytes;
-                            storagesAccountedFor.Add(storageDevice.Name);
+                            if (!storagesAccountedFor.Contains(storageDevice.Name))
+                            {
+                                TotalUsedCapacity += (double)((lastFullBackupJobInstance?.TotalDataSizeBytes) >> 20) / 1024;
+                                storagesAccountedFor.Add(storageDevice.Name);
+                            }
                         }
 
                         lastFullBackupJobInstance = null;

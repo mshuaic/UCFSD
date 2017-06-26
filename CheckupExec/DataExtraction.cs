@@ -17,6 +17,18 @@ namespace CheckupExec
         /// </summary>
         public bool PowershellInstanceCreated { get; }
 
+        public static AlertController AlertController { get; set; }
+
+        public static AlertHistoryController AlertHistoryController { get; set; }
+
+        public static JobController JobController { get; set; }
+
+        public static JobHistoryController JobHistoryController { get; set; }
+
+        public static LicenseInformationController LicenseInformationController { get; set; }
+
+        public static StorageController StorageController { get; set; }
+
         private List<Storage> _storageDevices { get; set; }
 
         private List<Job> _jobs { get; set; }
@@ -43,6 +55,18 @@ namespace CheckupExec
             if (BEMCLIHelper.powershell != null)
             {
                 PowershellInstanceCreated = true;
+
+                AlertController = new AlertController();
+
+                AlertHistoryController = new AlertHistoryController();
+
+                JobController = new JobController();
+
+                JobHistoryController = new JobHistoryController();
+
+                LicenseInformationController = new LicenseInformationController();
+
+                StorageController = new StorageController();
             }
             else
             {
@@ -56,10 +80,9 @@ namespace CheckupExec
         /// <returns>List of strings representing storage device names.</returns>
         public List<string> GetStorageDeviceNames()
         {
-            var sc = new StorageController();
             var names = new List<string>();
 
-            _storageDevices = sc.GetStorages();
+            _storageDevices = StorageController.GetStorages();
 
             if (_storageDevices != null && _storageDevices.Count > 0)
             {
@@ -79,7 +102,6 @@ namespace CheckupExec
         /// <returns>List of strings representing job names.</returns>
         public List<string> GetJobNames(List<string> storageDeviceNames)
         {
-            var jc = new JobController();
             var names = new List<string>();
 
             if (storageDeviceNames != null && storageDeviceNames.Count > 0)
@@ -93,12 +115,12 @@ namespace CheckupExec
 
                 foreach (var name in storageDeviceNames)
                 {
-                    fullNamesString += name + ((storageDeviceNames.ElementAt(name.Length - 1).Equals(name)) ? "" : ", ");
+                    fullNamesString += "'" + name + "'" + ((storageDeviceNames.ElementAt(storageDeviceNames.Count - 1).Equals(name)) ? "" : ", ");
                 }
 
                 jobParams["storage"] = fullNamesString;
 
-                _jobs = jc.GetJobs(jobParams);
+                _jobs = JobController.GetJobs(jobParams);
 
                 if (_jobs != null && _jobs.Count > 0)
                 {
@@ -110,7 +132,7 @@ namespace CheckupExec
             }
             else
             {
-                _jobs = jc.GetJobs();
+                _jobs = JobController.GetJobs();
 
                 if (_jobs != null && _jobs.Count > 0)
                 {
@@ -132,13 +154,14 @@ namespace CheckupExec
         {
             //usedcapacity, plots into one dict, slopes into one, intercepts into one, 
 
-            var feuc = new FrontEndUsedCapacity();
+            var feuc = new FrontEndUsedCapacity(_storageDevices);
 
             var usedCapacity = feuc.TotalUsedCapacity;
 
-            if (feuc.FrontEndForecast != null && feuc.FrontEndForecast.ForecastsSuccessful)
+            // || true to test with our sets
+            if (feuc.FrontEndForecast.ForecastsSuccessful || true)
             {
-                var fullPlot = new Dictionary<double, double>();
+                var fullPlot = new Dictionary<double, List<double>>();
                 double fullSlope = 0;
                 double fullIntercept = 0;
 
@@ -155,6 +178,18 @@ namespace CheckupExec
                 }
 
                 //call report generator method for frontend and pass in ^
+
+                //foreach (var pointList in fullPlot)
+                //{
+                //    foreach (var point in pointList.Value)
+                //    {
+                //        Console.WriteLine("(" + pointList.Key + ", " + point + ")");
+                //    }
+                //}
+
+                //Console.WriteLine("Slope: " + fullSlope);
+                //Console.WriteLine("Intercept: " + fullIntercept);
+                
 
                 return true;
             }
@@ -198,6 +233,22 @@ namespace CheckupExec
                 }
 
                 //pass to report generator
+
+                //foreach (var fr in forecastResults)
+                //{
+                //    Console.WriteLine(fr.Key);
+
+                //    foreach (var pointList in fr.Value.plot)
+                //    {
+                //        foreach (var point in pointList.Value)
+                //        {
+                //            Console.WriteLine("(" + pointList.Key + ", " + point + ")");
+                //        }
+                //    }
+
+                //    Console.WriteLine("Slope: " + fr.Value.FinalSlope);
+                //    Console.WriteLine("Intercept: " + fr.Value.FinalIntercept);
+                //}
 
                 return true;
             }

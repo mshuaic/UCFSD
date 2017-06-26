@@ -71,9 +71,11 @@ namespace CheckupExec.Controllers
                 {
                     scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
                 }
+
+                scriptToInvoke += "| ";
             }
-            
-            scriptToInvoke += "| " + _getJobHistoryScript;
+
+            scriptToInvoke += _getJobHistoryScript;
 
             return invokeGetJobHistories(scriptToInvoke);
         }
@@ -94,9 +96,11 @@ namespace CheckupExec.Controllers
                 {
                     scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
                 }
+
+                scriptToInvoke += "| ";
             }
-            
-            scriptToInvoke += "| " + _getJobHistoryScript;
+
+            scriptToInvoke += _getJobHistoryScript;
 
             jobHistoryParameters = jobHistoryParameters ?? new Dictionary<string, string>();
 

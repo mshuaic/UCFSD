@@ -36,35 +36,31 @@ namespace CheckupExec.Utilities
 
         private static void qsort(List<T> objects, int left, int right)
         {
-            int i = left, j = right;
-            T pivot = objects[(left + right) / 2];
+            int pivot = 0;
 
-            while (i <= j)
+            if (left < right)
             {
-                while (objects[i].CompareTo(pivot) < 0)
+                pivot = partition(objects, left, right);
+                qsort(objects, left, pivot - 1);
+                qsort(objects, pivot + 1, right);
+            }
+        }
+
+        private static int partition(List<T> objects, int left, int right)
+        {
+            var pivot = objects[(left + right) / 2];
+            int i = left - 1;
+
+            for (int j = left; j < right - 1; j++)
+            {
+                if (objects[j].CompareTo(pivot) <= 0)
                 {
                     i++;
-                }
-                while (objects[j].CompareTo(pivot) > 0)
-                {
-                    j--;
-                }
-                if (i <= j)
-                {
                     swap(objects[i], objects[j]);
-                    i++;
-                    j--;
                 }
             }
-
-            if (left < j)
-            {
-                sort(objects, left, j);
-            }
-            if (i < right)
-            {
-                sort(objects, i, right);
-            }
+            swap(objects[i + 1], objects[right]);
+            return i + 1;
         }
 
         private static void swap(T a, T b)

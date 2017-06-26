@@ -18,7 +18,7 @@ namespace CheckupExec.Utilities
 
         public const string GetBEServers      = "get-bebackupexecserver";
 
-        public const string GetJobs           = "get-bejobs";
+        public const string GetJobs           = "get-bejob";
 
         public const string GetJobHistories   = "get-bejobhistory";
 

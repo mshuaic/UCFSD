@@ -40,9 +40,6 @@ namespace CheckupExec.Analysis
         {
             _jobId = jobId;
 
-            JobController jobController = new JobController();
-            JobHistoryController jobHistoryController = new JobHistoryController();
-
             var jobPipeline = new Dictionary<string, string>
             {
                 ["Id"] = jobId
@@ -55,10 +52,10 @@ namespace CheckupExec.Analysis
                                       }
             };
 
-            var jobAsList = jobController.GetJobs(jobPipeline);
+            var jobAsList = DataExtraction.JobController.GetJobs(jobPipeline);
             var job = (jobAsList.Count > 0) ? jobAsList.First() : null;
 
-            var jobHistories = jobHistoryController.GetJobHistories(jobHistoryPipeline);
+            var jobHistories = DataExtraction.JobHistoryController.GetJobHistories(jobHistoryPipeline);
             var filteredJobHistories = new List<JobHistory>();
 
             if (jobHistories.Count > 0)

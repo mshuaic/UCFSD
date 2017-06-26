@@ -18,10 +18,6 @@ namespace CheckupExec.Analysis
 
         public AlertsAnalyses(DateTime? start, DateTime? end, List<string> jobNames = null, List<string> alertTypes = null)
         {
-            var alertController = new AlertController();
-            var alertHistoryController = new AlertHistoryController();
-            var jobController = new JobController();
-
             start = start ?? DateTime.MinValue;
             end = end ?? DateTime.Now;
             jobNames = jobNames ?? new List<string>();
@@ -30,32 +26,34 @@ namespace CheckupExec.Analysis
             var jobsPipeline = new Dictionary<string, string>();
             var alertsPipeline = new Dictionary<string, string>();
 
+            _allAlerts = new List<Alert>();
+
             if (jobNames.Count > 0 && alertTypes.Count > 0)
             {
                 string fullJobString = "";
 
                 foreach (var job in jobNames)
                 {
-                    fullJobString += job + ((jobNames.ElementAt(jobNames.Count - 1).Equals(job)) ? "" : ", ");
+                    fullJobString += "'" + job + "'" + ((jobNames.ElementAt(jobNames.Count - 1).Equals(job)) ? "" : ", ");
                 }
 
                 jobsPipeline["name"] = fullJobString;
 
-                var jobs = jobController.GetJobs(jobsPipeline);
+                var jobs = DataExtraction.JobController.GetJobs(jobsPipeline);
 
                 string fullTypeString = "";
 
                 foreach (var type in alertTypes)
                 {
-                    fullTypeString += type + ((alertTypes.ElementAt(alertTypes.Count - 1).Equals(type)) ? "" : ", ");
+                    fullTypeString += "'" + type + "'" + ((alertTypes.ElementAt(alertTypes.Count - 1).Equals(type)) ? "" : ", ");
                 }
 
                 alertsPipeline["category"] = fullTypeString;
 
                 try
                 {
-                    _allAlerts.AddRange(alertController.GetAlerts(alertsPipeline));
-                    _allAlerts.AddRange(alertHistoryController.GetAlertHistories(alertsPipeline));
+                    _allAlerts.AddRange(DataExtraction.AlertController.GetAlerts(alertsPipeline));
+                    _allAlerts.AddRange(DataExtraction.AlertHistoryController.GetAlertHistories(alertsPipeline));
                 }
                 catch
                 {
@@ -82,7 +80,7 @@ namespace CheckupExec.Analysis
 
                 foreach (var name in jobNames)
                 {
-                    fullString += name + ((jobNames.ElementAt(jobNames.Count - 1).Equals(name)) ? "" : ", ");
+                    fullString += "'" + name + "'" + ((jobNames.ElementAt(jobNames.Count - 1).Equals(name)) ? "" : ", ");
                 }
 
                 jobInnerPipeline["name"] = fullString;
@@ -90,8 +88,8 @@ namespace CheckupExec.Analysis
 
                 try
                 {
-                    _allAlerts.AddRange(alertController.GetAlerts(jobPipeline));
-                    _allAlerts.AddRange(alertHistoryController.GetAlertHistories(jobPipeline));
+                    _allAlerts.AddRange(DataExtraction.AlertController.GetAlerts(jobPipeline));
+                    _allAlerts.AddRange(DataExtraction.AlertHistoryController.GetAlertHistories(jobPipeline));
                 }
                 catch
                 {
@@ -104,15 +102,15 @@ namespace CheckupExec.Analysis
 
                 foreach (var type in alertTypes)
                 {
-                    fullTypeString += type + ((alertTypes.ElementAt(alertTypes.Count - 1).Equals(type)) ? "" : ", ");
+                    fullTypeString += "'" + type + "'" + ((alertTypes.ElementAt(alertTypes.Count - 1).Equals(type)) ? "" : ", ");
                 }
 
                 alertsPipeline["category"] = fullTypeString;
 
                 try
                 {
-                    _allAlerts.AddRange(alertController.GetAlerts(alertsPipeline));
-                    _allAlerts.AddRange(alertHistoryController.GetAlertHistories(alertsPipeline));
+                    _allAlerts.AddRange(DataExtraction.AlertController.GetAlerts(alertsPipeline));
+                    _allAlerts.AddRange(DataExtraction.AlertHistoryController.GetAlertHistories(alertsPipeline));
                 }
                 catch
                 {
@@ -123,8 +121,8 @@ namespace CheckupExec.Analysis
             {
                 try
                 {
-                    _allAlerts.AddRange(alertController.GetAlerts());
-                    _allAlerts.AddRange(alertHistoryController.GetAlertHistories());
+                    _allAlerts.AddRange(DataExtraction.AlertController.GetAlerts());
+                    _allAlerts.AddRange(DataExtraction.AlertHistoryController.GetAlertHistories());
                 }
                 catch
                 {

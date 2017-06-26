@@ -19,12 +19,14 @@ namespace CheckupExec.Analysis
             }
         }
 
-        public long MaxCapacityBytes { get; }
+        public double MaxCapacity { get; }
 
         public Dictionary<Storage, ForecastResults> Forecasts { get; set; }
 
         public FrontEndForecast(Dictionary<Storage, List<JobHistory>> fullBackupJobInstances)
         {
+            Forecasts = new Dictionary<Storage, ForecastResults>();
+
             _forecastsSuccessful = true;
             var forecast = new Forecast<JobHistory>();
 
@@ -40,7 +42,7 @@ namespace CheckupExec.Analysis
                         break;
                     }
 
-                    MaxCapacityBytes += storageDevice.Key.TotalCapacityBytes;
+                    MaxCapacity += (double)(storageDevice.Key.TotalCapacityBytes >> 20) / 1024;
                 }
             }
         }

@@ -23,23 +23,27 @@ namespace CheckupExec
             bool remoteAccess = true;
             string password = "Veritas4935";
             string serverName = "server";
-            string userName = "cop4600domain/Administrator";
+            string userName = "Administrator";
 
-            var AlertHistories = new AlertHistoryController();
+            var de = new DataExtraction(remoteAccess, password, serverName, userName);
 
-            new BEMCLIHelper(remoteAccess, password, serverName, userName);
-
-            if (BEMCLIHelper.powershell != null)
+            if (de.PowershellInstanceCreated)
             {
-                //example of how you would pretty much run get-bealert -severity "warning" | convertto-json
-                var parameters = new Dictionary<string, string>();
-                parameters.Add("severity", "warning");
+                var storageNames = de.GetStorageDeviceNames();
 
-                var alertsBySeverity = AlertHistories.GetAlertHistories(parameters);
+                foreach (var name in storageNames)
+                {
+                    Console.WriteLine(name);
+                }
 
-                foreach (var alert in alertsBySeverity)
-                    Console.WriteLine(JsonHelper.JsonSerializer(alert));
-                Console.ReadLine();
+                var jobNames = de.GetJobNames(storageNames);
+
+                foreach (var name in jobNames)
+                {
+                    Console.WriteLine(name);
+                }
+
+                de.FrontEndAnalysis();
             }
 
             //var jobController = new JobController();

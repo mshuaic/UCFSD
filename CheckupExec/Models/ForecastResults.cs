@@ -12,7 +12,7 @@ namespace CheckupExec.Models
 
         public bool ForecastSuccessful { get; set; }
 
-        public Dictionary<double, double> plot;
+        public Dictionary<double, List<double>> plot;
 
         public double FinalSlope { get; set; }
 

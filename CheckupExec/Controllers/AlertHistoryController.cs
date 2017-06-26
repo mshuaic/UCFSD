@@ -18,7 +18,7 @@ namespace CheckupExec.Controllers
             List<Alert> alertHistories = new List<Alert>();
 
             BEMCLIHelper.powershell.AddScript(scriptToInvoke + _converttoJsonString);
-
+            
             try
             {
                 var output = BEMCLIHelper.powershell.Invoke<string>();

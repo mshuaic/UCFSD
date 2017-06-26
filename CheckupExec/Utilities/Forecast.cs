@@ -23,6 +23,7 @@ namespace CheckupExec.Utilities
         {
             _forecastResults.ForecastSuccessful = true;
             _forecastResults.isDiskForecast = false;
+            _forecastResults.plot = new Dictionary<double, List<double>>();
 
             if (jobHistories != null && jobHistories.Count > 0)
             {
@@ -85,7 +86,8 @@ namespace CheckupExec.Utilities
             //        return;
             //}
 
-            if (jobHistories.Count < _minSubsetSizeBE)
+            // || false for testing with our sets
+            if (jobHistories.Count >= _minSubsetSizeBE || false)
             {
                 _forecastResults.ForecastSuccessful = false;
             }
@@ -100,7 +102,7 @@ namespace CheckupExec.Utilities
 
         private void runForecast(List<DiskCapacity> diskCapacities)
         {
-            if (diskCapacities.Count < _minSubsetSizeDC)
+            if (diskCapacities.Count >= _minSubsetSizeDC)
             {
                 _forecastResults.ForecastSuccessful = false;
             }
@@ -117,7 +119,7 @@ namespace CheckupExec.Utilities
         {
             int recentIndex = jobHistories.Count - 1;
             int finalSubsetSize = minSubsetSize;
-            int currentSubsetSize = minSubsetSize;
+            int currentSubsetSize = 2;// minSubsetSize;
             int boundaryIndex = recentIndex - currentSubsetSize + 1;
 
             double maxCorr = Double.MinValue;
@@ -336,7 +338,11 @@ namespace CheckupExec.Utilities
         {
             foreach (var jobHistory in jobHistories)
             {
-                _forecastResults.plot[jobHistory.StartTime.Date.Subtract(_currentTime.Date).TotalDays] = (double)(jobHistory.TotalDataSizeBytes << 20) / 1024;
+                if (!_forecastResults.plot.ContainsKey(jobHistory.StartTime.Date.Subtract(_currentTime.Date).TotalDays))
+                {
+                    _forecastResults.plot[jobHistory.StartTime.Date.Subtract(_currentTime.Date).TotalDays] = new List<double>();
+                }
+                _forecastResults.plot[jobHistory.StartTime.Date.Subtract(_currentTime.Date).TotalDays].Add((double)(jobHistory.TotalDataSizeBytes >> 20) / 1024);
             }
         }
 
@@ -344,7 +350,11 @@ namespace CheckupExec.Utilities
         {
             foreach (var diskCapacity in diskCapacities)
             {
-                _forecastResults.plot[diskCapacity.Date.Date.Subtract(_currentTime.Date).TotalDays] = (double)(diskCapacity.Bytes << 20) / 1024;
+                if (!_forecastResults.plot.ContainsKey(diskCapacity.Date.Date.Subtract(_currentTime.Date).TotalDays))
+                {
+                    _forecastResults.plot[diskCapacity.Date.Date.Subtract(_currentTime.Date).TotalDays] = new List<double>();
+                }
+                _forecastResults.plot[diskCapacity.Date.Date.Subtract(_currentTime.Date).TotalDays].Add((double)(diskCapacity.Bytes >> 20) / 1024);
             }
         }
 

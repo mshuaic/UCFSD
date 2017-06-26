@@ -17,8 +17,6 @@ namespace CheckupExec.Analysis
 
         public JobErrorsAnalyses(DateTime? start, DateTime? end, List<string> jobErrorStatuses = null, List<string> jobNames = null)
         {
-            var jobHistoryController = new JobHistoryController();
-
             var jobHistoryPipeline = new Dictionary<string, string>
             {
                 ["FromStartTime"] = start.ToString() ?? DateTime.MinValue.ToString(),
@@ -53,7 +51,7 @@ namespace CheckupExec.Analysis
 
                 try
                 {
-                    _jobHistories.AddRange(jobHistoryController.GetJobHistories(jobPipeline, jobHistoryPipeline));
+                    _jobHistories.AddRange(DataExtraction.JobHistoryController.GetJobHistories(jobPipeline, jobHistoryPipeline));
                 }
                 catch
                 {
@@ -77,7 +75,7 @@ namespace CheckupExec.Analysis
 
                 try
                 {
-                    _jobHistories.AddRange(jobHistoryController.GetJobHistories(jobPipeline, jobHistoryPipeline));
+                    _jobHistories.AddRange(DataExtraction.JobHistoryController.GetJobHistories(jobPipeline, jobHistoryPipeline));
                 }
                 catch
                 {
@@ -97,7 +95,7 @@ namespace CheckupExec.Analysis
 
                 try
                 {
-                    _jobHistories.AddRange(jobHistoryController.GetJobHistories(jobHistoryPipeline));
+                    _jobHistories.AddRange(DataExtraction.JobHistoryController.GetJobHistories(jobHistoryPipeline));
                 }
                 catch
                 {
@@ -108,7 +106,7 @@ namespace CheckupExec.Analysis
             {
                 try
                 {
-                    _jobHistories.AddRange(jobHistoryController.GetJobHistories(jobHistoryPipeline));
+                    _jobHistories.AddRange(DataExtraction.JobHistoryController.GetJobHistories(jobHistoryPipeline));
                 }
                 catch
                 {
@@ -116,7 +114,7 @@ namespace CheckupExec.Analysis
                 }
             }
 
-            if (_jobHistories.Count > 0)
+            if (_jobHistories != null && _jobHistories.Count > 0)
             {
                 foreach (var jobHistory in _jobHistories)
                 {
