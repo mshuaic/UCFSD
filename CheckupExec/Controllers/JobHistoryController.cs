@@ -49,7 +49,7 @@ namespace CheckupExec.Controllers
 
             foreach (var parameter in parameters)
             {
-                scriptToInvoke += "-" + parameter.Key + " '" + parameter.Value + "' ";
+                scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
             }
             
             return invokeGetJobHistories(scriptToInvoke);
@@ -69,7 +69,7 @@ namespace CheckupExec.Controllers
 
                 foreach (var parameter in pipeline.Value)
                 {
-                    scriptToInvoke += " -" + parameter.Key + " '" + parameter.Value + "' ";
+                    scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
                 }
 
                 scriptToInvoke += "| ";
@@ -94,7 +94,7 @@ namespace CheckupExec.Controllers
 
                 foreach (var parameter in pipeline.Value)
                 {
-                    scriptToInvoke += " -" + parameter.Key + " '" + parameter.Value + "' ";
+                    scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
                 }
 
                 scriptToInvoke += "| ";
@@ -106,7 +106,7 @@ namespace CheckupExec.Controllers
 
             foreach (var parameter in jobHistoryParameters)
             {
-                scriptToInvoke += " -" + parameter.Key + " '" + parameter.Value + "' ";
+                scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
             }
 
             return invokeGetJobHistories(scriptToInvoke);

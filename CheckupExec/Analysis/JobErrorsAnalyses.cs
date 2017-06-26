@@ -15,12 +15,14 @@ namespace CheckupExec.Analysis
 
         public bool Successful { get; }
 
-        public JobErrorsAnalyses(DateTime? start, DateTime? end, List<string> jobErrorStatuses = null, List<string> jobNames = null)
+        public JobErrorsAnalyses(DateTime? start = null, DateTime? end = null, List<string> jobErrorStatuses = null, List<string> jobNames = null)
         {
+            _jobHistories = new List<JobHistory>();
+
             var jobHistoryPipeline = new Dictionary<string, string>
             {
-                ["FromStartTime"] = start.ToString() ?? DateTime.MinValue.ToString(),
-                ["ToStartTime"] = end.ToString() ?? DateTime.Now.ToString()
+                ["FromStartTime"] = (start == null) ? "'" + DateTime.MinValue.Date.ToString() + "'" : "'" + start.ToString() + "'",
+                ["ToStartTime"] = (end == null) ? "'" + DateTime.Now.Date.ToString() + "'" : "'" + end.ToString() + "'"
             };
             jobErrorStatuses = jobErrorStatuses ?? new List<string>();
             jobNames = jobNames ?? new List<string>();
@@ -34,7 +36,7 @@ namespace CheckupExec.Analysis
 
                 foreach (var name in jobNames)
                 {
-                    fullString += name + ((jobNames.ElementAt(jobNames.Count - 1).Equals(name)) ? "" : ", ");
+                    fullString += "'" + name + "'" + ((jobNames.ElementAt(jobNames.Count - 1).Equals(name)) ? "" : ", ");
                 }
 
                 jobInnerPipeline["name"] = fullString;
@@ -44,7 +46,7 @@ namespace CheckupExec.Analysis
 
                 foreach (var errorstatus in jobErrorStatuses)
                 {
-                    fullString += errorstatus + ((jobErrorStatuses.ElementAt(jobErrorStatuses.Count - 1).Equals(errorstatus)) ? "" : ", ");
+                    fullString += "'" + errorstatus + "'" + ((jobErrorStatuses.ElementAt(jobErrorStatuses.Count - 1).Equals(errorstatus)) ? "" : ", ");
                 }
 
                 jobHistoryPipeline["jobstatus"] = fullString;
@@ -67,7 +69,7 @@ namespace CheckupExec.Analysis
 
                 foreach (var name in jobNames)
                 {
-                    fullString += name + ((jobNames.ElementAt(jobNames.Count - 1).Equals(name)) ? "" : ", ");
+                    fullString += "'" + name + "'" + ((jobNames.ElementAt(jobNames.Count - 1).Equals(name)) ? "" : ", ");
                 }
 
                 jobInnerPipeline["name"] = fullString;
@@ -88,7 +90,7 @@ namespace CheckupExec.Analysis
 
                 foreach (var errorstatus in jobErrorStatuses)
                 {
-                    fullString += errorstatus + ((jobErrorStatuses.ElementAt(jobErrorStatuses.Count - 1).Equals(errorstatus)) ? "" : ", ");
+                    fullString += "'" + errorstatus + "'" + ((jobErrorStatuses.ElementAt(jobErrorStatuses.Count - 1).Equals(errorstatus)) ? "" : ", ");
                 }
 
                 jobHistoryPipeline["jobstatus"] = fullString;
@@ -114,12 +116,19 @@ namespace CheckupExec.Analysis
                 }
             }
 
+            var filteredJobHistories = new List<JobHistory>();
+
             if (_jobHistories != null && _jobHistories.Count > 0)
             {
                 foreach (var jobHistory in _jobHistories)
                 {
                     if (Convert.ToInt32(jobHistory.JobStatus) == JobHistory.SuccessfulFinalStatus)
-                        _jobHistories.Remove(jobHistory);
+                        filteredJobHistories.Add(jobHistory);
+                }
+
+                foreach (var jobHistory in filteredJobHistories)
+                {
+                    _jobHistories.Remove(jobHistory);
                 }
             }
         }

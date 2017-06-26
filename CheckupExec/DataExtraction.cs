@@ -329,7 +329,7 @@ namespace CheckupExec
         /// <param name="end">Optional. End date of time window.</param>
         /// <param name="errorStatuses">Optional. Final error statuses of job instances we should look for. If empty, all are checked.</param>
         /// <returns>True if successful, false if not.</returns>
-        public bool JobErrorsAnaylysis(List<string> jobNames = null, List<string> errorStatuses = null, DateTime? start = null, DateTime? end = null)
+        public bool JobErrorsAnalysis(List<string> jobNames = null, List<string> errorStatuses = null, DateTime? start = null, DateTime? end = null)
         {
             var jobErrorsAnalysis = new JobErrorsAnalyses(start, end, errorStatuses, jobNames);
 

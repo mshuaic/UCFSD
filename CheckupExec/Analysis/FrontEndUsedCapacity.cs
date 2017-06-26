@@ -43,7 +43,7 @@ namespace CheckupExec.Analysis
                     // || true for testing with our sets
                     if (!storageDevice.StorageType.Equals("0") || true)
                     {
-                        jobHistoryPipeline[Constants.GetStorages]["Id"] = storageDevice.Id;
+                        jobHistoryPipeline[Constants.GetStorages]["Id"] = "'" + storageDevice.Id + "'";
                         var temp = DataExtraction.JobHistoryController.GetJobHistories(jobHistoryPipeline);
 
                         if (temp.Count > 0)

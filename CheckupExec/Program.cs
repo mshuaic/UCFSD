@@ -43,7 +43,9 @@ namespace CheckupExec
                     Console.WriteLine(name);
                 }
 
-                de.FrontEndAnalysis();
+                de.AlertsAnalysis(jobNames);
+                Console.WriteLine("Done.");
+                Console.ReadLine();
             }
 
             //var jobController = new JobController();
