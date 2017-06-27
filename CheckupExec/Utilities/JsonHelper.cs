@@ -30,13 +30,15 @@ namespace CheckupExec.Utilities
                 return result;
             }
         }
- 
+        
+        //string -> model
         public static T JsonDeserialize<T>(string jsonString)
         {
             //LogUtility.LogInfoFunction("Entered JsonDeserialize.");
             return JsonConvert.DeserializeObject<T>(jsonString);
         }
  
+        //string <- model
         public static string JsonSerializer<T>(T dataObject)
         {
             //LogUtility.LogInfoFunction("Entered JsonSerializer.");

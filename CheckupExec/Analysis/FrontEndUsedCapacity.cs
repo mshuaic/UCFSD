@@ -1,5 +1,6 @@
 ﻿using CheckupExec.Controllers;
 using CheckupExec.Models;
+using CheckupExec.Models.AnalysisModels;
 using CheckupExec.Utilities;
 using System;
 using System.Collections.Generic;
@@ -15,11 +16,11 @@ namespace CheckupExec.Analysis
 
         public FrontEndForecast FrontEndForecast { get; }
 
-        private Dictionary<Storage, List<JobHistory>> _fullBackupJobInstances { get; set; }
+        private List<FullBackupJobInstance> _fullBackupJobInstances { get; set; }
 
         public FrontEndUsedCapacity(List<Storage> storageDevices)
         {
-            _fullBackupJobInstances = new Dictionary<Storage, List<JobHistory>>();
+            _fullBackupJobInstances = new List<FullBackupJobInstance>();
 
             var jobHistoryPipeline = new Dictionary<string, Dictionary<string, string>>
             {
@@ -33,31 +34,38 @@ namespace CheckupExec.Analysis
                 }
             };
 
-            var storagesAccountedFor = new List<string>();
+            var storagesAccountedFor      = new List<string>();
             var lastFullBackupJobInstance = new JobHistory();
 
+            //if we have storages, and they are not a pool of devices, set up the list _fullBackupJobInstances with { storage: List<JobHistory> }'s
+            //then pass this list to FrontendForecast
             if (storageDevices.Count > 0)
             {
-                foreach (var storageDevice in storageDevices)
+                foreach (Storage storageDevice in storageDevices)
                 {
                     // || true for testing with our sets
                     if (!storageDevice.StorageType.Equals("0") || true)
                     {
                         jobHistoryPipeline[Constants.GetStorages]["Id"] = "'" + storageDevice.Id + "'";
+
                         var temp = DataExtraction.JobHistoryController.GetJobHistories(jobHistoryPipeline);
 
                         if (temp.Count > 0)
                         {
-                            _fullBackupJobInstances[storageDevice] = new List<JobHistory>();
+                            var fullBackupJobInstance = new FullBackupJobInstance { Storage = storageDevice };
 
-                            foreach (var jobHistory in temp)
+                            fullBackupJobInstance.JobHistories = new List<JobHistory>();
+
+                            foreach (JobHistory jobHistory in temp)
                             {
                                 if (Convert.ToInt32(jobHistory.JobStatus) == JobHistory.SuccessfulFinalStatus && jobHistory.PercentComplete == 100)
                                 {
-                                    _fullBackupJobInstances[storageDevice].Add(jobHistory);
+                                    fullBackupJobInstance.JobHistories.Add(jobHistory);
                                     lastFullBackupJobInstance = jobHistory;
                                 }
                             }
+
+                            _fullBackupJobInstances.Add(fullBackupJobInstance);
 
                             if (!storagesAccountedFor.Contains(storageDevice.Name))
                             {

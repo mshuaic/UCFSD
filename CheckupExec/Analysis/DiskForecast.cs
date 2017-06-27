@@ -9,6 +9,7 @@ using System.Xml.Linq;
 
 namespace CheckupExec.Analysis
 {
+    //to-do......
     public class DiskForecast
     {
         public ForecastResults ForecastResults { get; set; }
@@ -21,7 +22,7 @@ namespace CheckupExec.Analysis
         //same as forecast except the source of data will be the service's file and max=30, min=10
         public void doForecast()
         {
-            var diskCapacities = from root in XDocument.Load("../../xml.txt").Elements()
+            IEnumerable<XElement> diskCapacities = from root in XDocument.Load("../../xml.txt").Elements()
                                  select root;
 
             foreach (var dc in diskCapacities)

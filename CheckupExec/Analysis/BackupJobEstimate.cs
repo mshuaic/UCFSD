@@ -36,6 +36,7 @@ namespace CheckupExec.Analysis
 
         private string _jobId;
 
+        //get all job instances and filter by 1) successful and 2) fully completed, then run analysis on those job instances 
         public BackupJobEstimate(string jobId)
         {
             _jobId = jobId;
@@ -53,14 +54,14 @@ namespace CheckupExec.Analysis
             };
 
             var jobAsList = DataExtraction.JobController.GetJobs(jobPipeline);
-            var job = (jobAsList.Count > 0) ? jobAsList.First() : null;
+            Job job       = (jobAsList.Count > 0) ? jobAsList.First() : null;
 
-            var jobHistories = DataExtraction.JobHistoryController.GetJobHistories(jobHistoryPipeline);
+            var jobHistories         = DataExtraction.JobHistoryController.GetJobHistories(jobHistoryPipeline);
             var filteredJobHistories = new List<JobHistory>();
 
             if (jobHistories.Count > 0)
             {
-                foreach (var jobHistory in jobHistories)
+                foreach (JobHistory jobHistory in jobHistories)
                 {
                     if (Convert.ToInt32(jobHistory.JobStatus) == JobHistory.SuccessfulFinalStatus && jobHistory.PercentComplete == 100)
                     {
@@ -71,21 +72,22 @@ namespace CheckupExec.Analysis
 
             if (filteredJobHistories.Count > 0)
             {
-                JobName = job.Name;
-                NextStartDate = job.NextStartDate;
-                EstimateOfJobRateMBMin = estimateJobRate(filteredJobHistories);
+                JobName                  = job.Name;
+                NextStartDate            = job.NextStartDate;
+                EstimateOfJobRateMBMin   = estimateJobRate(filteredJobHistories);
                 EstimateOfElapsedTimeSec = estimateElapsedTime(filteredJobHistories);
             }
         }
 
+        //job estimate is the average rate of all previous filtered job instances
         private double estimateJobRate(List<JobHistory> jobHistories)
         {
             if (jobHistories.Count > 0)
             {
-                int count = 0;
+                int count  = 0;
                 double sum = 0;
 
-                foreach (var jobHistory in jobHistories)
+                foreach (JobHistory jobHistory in jobHistories)
                 {
                     sum += jobHistory.JobRateMBPerMinute;
                     count++;
@@ -105,6 +107,8 @@ namespace CheckupExec.Analysis
             return -1;
         }
 
+        //elapsedtime is estimated by applying estimaterate to estimatedatasize. data size is estimated by attempting to forecast the job; however
+        //if this fails, it is estimated by adding on the average size increase between previous instances to the most recent instance's data size
         private double estimateElapsedTime(List<JobHistory> jobHistories)
         {
             if (jobHistories.Count > 0)
@@ -123,7 +127,7 @@ namespace CheckupExec.Analysis
                 }
                 else
                 {
-                    int count = 0;
+                    int count  = 0;
                     double sum = 0;
                     double currentSizeGB = jobHistories.First().TotalDataSizeBytes >> 20;
 
@@ -131,7 +135,7 @@ namespace CheckupExec.Analysis
 
                     if (jobHistories.Count > 0)
                     {
-                        foreach (var jobHistory in jobHistories)
+                        foreach (JobHistory jobHistory in jobHistories)
                         {
                             sum += (jobHistory.TotalDataSizeBytes >> 20) - currentSizeGB;
                             currentSizeGB = jobHistory.TotalDataSizeBytes >> 20;

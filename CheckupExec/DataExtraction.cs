@@ -1,6 +1,7 @@
 ﻿using CheckupExec.Analysis;
 using CheckupExec.Controllers;
 using CheckupExec.Models;
+using CheckupExec.Models.AnalysisModels;
 using CheckupExec.Utilities;
 using System;
 using System.Collections.Generic;
@@ -54,19 +55,19 @@ namespace CheckupExec
 
             if (BEMCLIHelper.powershell != null)
             {
-                PowershellInstanceCreated = true;
+                PowershellInstanceCreated    = true;
 
-                AlertController = new AlertController();
+                AlertController              = new AlertController();
 
-                AlertHistoryController = new AlertHistoryController();
+                AlertHistoryController       = new AlertHistoryController();
 
-                JobController = new JobController();
+                JobController                = new JobController();
 
-                JobHistoryController = new JobHistoryController();
+                JobHistoryController         = new JobHistoryController();
 
                 LicenseInformationController = new LicenseInformationController();
 
-                StorageController = new StorageController();
+                StorageController            = new StorageController();
             }
             else
             {
@@ -82,11 +83,12 @@ namespace CheckupExec
         {
             var names = new List<string>();
 
+            //retrieve storage devices and return their names
             _storageDevices = StorageController.GetStorages();
 
             if (_storageDevices != null && _storageDevices.Count > 0)
             {
-                foreach (var storageDevice in _storageDevices)
+                foreach (Storage storageDevice in _storageDevices)
                 {
                     names.Add(storageDevice.Name);
                 }
@@ -104,6 +106,7 @@ namespace CheckupExec
         {
             var names = new List<string>();
 
+            //if we have storagedevices, retrieve the full backup jobs of those devices and return the names of those retrieved
             if (storageDeviceNames != null && storageDeviceNames.Count > 0)
             {
                 var jobParams = new Dictionary<string, string>
@@ -113,7 +116,7 @@ namespace CheckupExec
 
                 var fullNamesString = "";
 
-                foreach (var name in storageDeviceNames)
+                foreach (string name in storageDeviceNames)
                 {
                     fullNamesString += "'" + name + "'" + ((storageDeviceNames.ElementAt(storageDeviceNames.Count - 1).Equals(name)) ? "" : ", ");
                 }
@@ -124,7 +127,7 @@ namespace CheckupExec
 
                 if (_jobs != null && _jobs.Count > 0)
                 {
-                    foreach (var job in _jobs)
+                    foreach (Job job in _jobs)
                     {
                         names.Add(job.Name);
                     }
@@ -136,7 +139,7 @@ namespace CheckupExec
 
                 if (_jobs != null && _jobs.Count > 0)
                 {
-                    foreach (var job in _jobs)
+                    foreach (Job job in _jobs)
                     {
                         names.Add(job.Name);
                     }
@@ -152,29 +155,35 @@ namespace CheckupExec
         /// <returns>True if successful, false if not.</returns>
         public bool FrontEndAnalysis()
         {
-            //usedcapacity, plots into one dict, slopes into one, intercepts into one, 
-
+            //run frontendanalysis
             var feuc = new FrontEndUsedCapacity(_storageDevices);
 
+            var maxCapacity = feuc.FrontEndForecast.MaxCapacity;
             var usedCapacity = feuc.TotalUsedCapacity;
 
             // || true to test with our sets
+            //front end analysis has already been run, so here we check if it was successful
+            //if it was, organize the data so it can be concisely passed to report generator
             if (feuc.FrontEndForecast.ForecastsSuccessful || true)
             {
-                var fullPlot = new Dictionary<double, List<double>>();
-                double fullSlope = 0;
+                var fullPlot         = new List<PlotPoint>();
+                double fullSlope     = 0;
                 double fullIntercept = 0;
 
-                //feuc.frontendforecast.forecasts are Dictionary<storage, forecastresults>
-                foreach (var forecast in feuc.FrontEndForecast.Forecasts)
+                //
+                foreach (FE_Forecast forecast in feuc.FrontEndForecast.Forecasts)
                 {
-                    foreach (var point in forecast.Value.plot)
+                    foreach (PlotPoint point in forecast.ForecastResults.plot)
                     {
-                        fullPlot.Add(point.Key, point.Value);
+                        fullPlot.Add( new PlotPoint
+                        {
+                            days = point.days,
+                            GB = point.GB
+                        });
                     }
 
-                    fullSlope += forecast.Value.FinalSlope;
-                    fullIntercept += forecast.Value.FinalIntercept;
+                    fullSlope     += forecast.ForecastResults.FinalSlope;
+                    fullIntercept += forecast.ForecastResults.FinalIntercept;
                 }
                 
                 //call report generator method for frontend and pass in ^
@@ -209,26 +218,23 @@ namespace CheckupExec
         {
             var buJobEstimates = new List<BackupJobEstimate>();
 
+            //if we have a subset of total jobs passed to us, for each of these run backupjobestimate on it and add to a list for report generator
             if (jobNames!= null && jobNames.Count > 0)
             {
                 var jobIds = new List<string>();
 
-                foreach (var jobName in jobNames)
+                foreach (string jobName in jobNames)
                 {
                     jobIds.Add(_jobs.ElementAt(_jobs.FindIndex(x => x.Name.Equals(jobName))).Id);
                 }
 
-                var forecastResults = new Dictionary<BackupJobEstimate, ForecastResults>();
-
                 if (jobIds.Count > 0)
                 {
-                    foreach (var jobId in jobIds)
+                    foreach (string jobId in jobIds)
                     {
                         var buje = new BackupJobEstimate(jobId);
 
                         buJobEstimates.Add(buje);
-
-                        forecastResults[buje] = buje.ForecastResults;
                     }
                 }
 
@@ -252,19 +258,16 @@ namespace CheckupExec
 
                 return true;
             }
+            //if no subset is passed, do the same thing but for every job
             else if (jobNames != null)
             {
-                var forecastResults = new Dictionary<BackupJobEstimate, ForecastResults>();
-
                 if (_jobs != null && _jobs.Count > 0)
                 {
-                    foreach (var job in _jobs)
+                    foreach (Job job in _jobs)
                     {
                         var buje = new BackupJobEstimate(job.Id);
 
                         buJobEstimates.Add(buje);
-
-                        forecastResults[buje] = buje.ForecastResults;
                     }
                 }
 
@@ -283,15 +286,22 @@ namespace CheckupExec
         /// <returns>True if successful, false if not.</returns>
         public bool DiskAnalysis(List<string> diskNames)
         {
+            var fc = new Forecast<DiskCapacity>();
+
+            //if we have disks passed to us, run a DiskAnalysis on each of them and add each to a list for passing to report generator
             if (diskNames != null && diskNames.Count >= 0)
             {
-                var forecastResults = new Dictionary<string, DiskForecast>();
+                var diskAnalyses = new List<DiskForecastModel>();
 
-                foreach (var diskName in diskNames)
+                foreach (string diskName in diskNames)
                 {
-                    var dc = new DiskForecast(diskName);
+                    var dc = new DiskForecastModel
+                    {
+                        DiskName     = diskName,
+                        DiskForecast = new DiskForecast(diskName)
+                    };
 
-                    forecastResults[diskName] = dc;
+                    diskAnalyses.Add(dc);
                 }
 
                 //pass to report generator
@@ -312,6 +322,7 @@ namespace CheckupExec
         /// <returns>True if successful, false if not.</returns>
         public bool AlertsAnalysis(List<string> jobNames = null, List<string> types = null, DateTime? start = null, DateTime? end = null)
         {
+            //run AlertsAnalysis with given params
             var alertsAnalysis = new AlertsAnalyses(start, end, jobNames, types);
 
             //pass to report generator
@@ -331,6 +342,7 @@ namespace CheckupExec
         /// <returns>True if successful, false if not.</returns>
         public bool JobErrorsAnalysis(List<string> jobNames = null, List<string> errorStatuses = null, DateTime? start = null, DateTime? end = null)
         {
+            //run JobErrorsAnalysis with given params
             var jobErrorsAnalysis = new JobErrorsAnalyses(start, end, errorStatuses, jobNames);
 
             //pass to report generator
@@ -338,6 +350,11 @@ namespace CheckupExec
             if (jobErrorsAnalysis.Successful)
                 return true;
             return false;
+        }
+
+        public bool CleanUp()
+        {
+            return BEMCLIHelper.CleanUp();
         }
     }
 }

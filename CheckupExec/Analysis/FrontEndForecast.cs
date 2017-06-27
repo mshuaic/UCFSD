@@ -1,4 +1,5 @@
 ﻿using CheckupExec.Models;
+using CheckupExec.Models.AnalysisModels;
 using CheckupExec.Utilities;
 using System;
 using System.Collections.Generic;
@@ -21,28 +22,35 @@ namespace CheckupExec.Analysis
 
         public double MaxCapacity { get; }
 
-        public Dictionary<Storage, ForecastResults> Forecasts { get; set; }
+        public List<FE_Forecast> Forecasts { get; set; }
 
-        public FrontEndForecast(Dictionary<Storage, List<JobHistory>> fullBackupJobInstances)
+        public FrontEndForecast(List<FullBackupJobInstance> fullBackupJobInstances)
         {
-            Forecasts = new Dictionary<Storage, ForecastResults>();
-
             _forecastsSuccessful = true;
-            var forecast = new Forecast<JobHistory>();
 
+            Forecasts    = new List<FE_Forecast>();
+            var fc = new Forecast<JobHistory>();
+
+            //for each element, create an element in Forecasts like { storage: ForecastResults } and compute maxcapacity available between all storage devices
+            //being backed up fully
             if (fullBackupJobInstances != null && fullBackupJobInstances.Count > 0)
             {
-                foreach (var storageDevice in fullBackupJobInstances)
+                foreach (FullBackupJobInstance fullBackupJobInstance in fullBackupJobInstances)
                 {
-                    Forecasts[storageDevice.Key] = forecast.doForecast(storageDevice.Value);
-
-                    if (!Forecasts[storageDevice.Key].ForecastSuccessful)
+                    var forecast = new FE_Forecast
+                    {
+                        Storage         = fullBackupJobInstance.Storage,
+                        ForecastResults = fc.doForecast(fullBackupJobInstance.JobHistories)
+                    };
+                    
+                    if (!forecast.ForecastResults.ForecastSuccessful)
                     {
                         _forecastsSuccessful = false;
                         break;
                     }
 
-                    MaxCapacity += (double)(storageDevice.Key.TotalCapacityBytes >> 20) / 1024;
+                    Forecasts.Add(forecast);
+                    MaxCapacity += (double)(fullBackupJobInstance.Storage.TotalCapacityBytes >> 20) / 1024;
                 }
             }
         }

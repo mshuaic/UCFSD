@@ -10,7 +10,7 @@ namespace CheckupExec.Controllers
 {
     public class BEServerController
     {
-        private const string _getBEServersScript = Constants.GetBEServers + " ";
+        private const string _getBEServersScript  = Constants.GetBEServers + " ";
         private const string _converttoJsonString = "| " + Constants.JsonPipeline;
 
         private List<BEServer> invokeGetBEServers(string scriptToInvoke)
@@ -22,7 +22,7 @@ namespace CheckupExec.Controllers
             try
             {
                 var output = BEMCLIHelper.powershell.Invoke<string>();
-                beServers = (output.Count > 0) ? JsonHelper.ConvertFromJson<BEServer>(output[0]) : beServers;
+                beServers  = (output.Count > 0) ? JsonHelper.ConvertFromJson<BEServer>(output[0]) : beServers;
             }
             catch (Exception e)
             {
@@ -47,7 +47,7 @@ namespace CheckupExec.Controllers
 
             parameters = parameters ?? new Dictionary<string, string>();
 
-            foreach (var parameter in parameters)
+            foreach (KeyValuePair<string, string> parameter in parameters)
             {
                 scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
             }
@@ -59,15 +59,16 @@ namespace CheckupExec.Controllers
         public List<BEServer> GetBEServers(Dictionary<string, Dictionary<string, string>> pipelineCommands)
         {
             string scriptToInvoke = "";
+
             int numCommands = pipelineCommands.Count;
 
             pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
 
-            foreach (var pipeline in pipelineCommands)
+            foreach (KeyValuePair<string, Dictionary<string, string>> pipeline in pipelineCommands)
             {
                 scriptToInvoke += pipeline.Key + " ";
 
-                foreach (var parameter in pipeline.Value)
+                foreach (KeyValuePair<string, string> parameter in pipeline.Value)
                 {
                     scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
                 }
@@ -84,15 +85,16 @@ namespace CheckupExec.Controllers
         public List<BEServer> GetBEServers(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> beServerParameters)
         {
             string scriptToInvoke = "";
+
             int numCommands = pipelineCommands.Count;
 
             pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
 
-            foreach (var pipeline in pipelineCommands)
+            foreach (KeyValuePair<string, Dictionary<string, string>> pipeline in pipelineCommands)
             {
                 scriptToInvoke += pipeline.Key + " ";
 
-                foreach (var parameter in pipeline.Value)
+                foreach (KeyValuePair<string, string> parameter in pipeline.Value)
                 {
                     scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
                 }
@@ -104,7 +106,7 @@ namespace CheckupExec.Controllers
 
             beServerParameters = beServerParameters ?? new Dictionary<string, string>();
 
-            foreach (var parameter in beServerParameters)
+            foreach (KeyValuePair<string, string> parameter in beServerParameters)
             {
                 scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
             }

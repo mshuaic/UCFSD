@@ -20,6 +20,7 @@ namespace CheckupExec
     {
         static void Main(string[] args)
         {
+            //remote bool and server credentials [since remote]
             bool remoteAccess = true;
             string password = "Veritas4935";
             string serverName = "server";
@@ -29,6 +30,7 @@ namespace CheckupExec
 
             if (de.PowershellInstanceCreated)
             {
+                //get storage device names
                 var storageNames = de.GetStorageDeviceNames();
 
                 foreach (var name in storageNames)
@@ -36,6 +38,7 @@ namespace CheckupExec
                     Console.WriteLine(name);
                 }
 
+                //get job names for all storage devices (passed in list would be whatever was checked)
                 var jobNames = de.GetJobNames(storageNames);
 
                 foreach (var name in jobNames)
@@ -43,7 +46,10 @@ namespace CheckupExec
                     Console.WriteLine(name);
                 }
 
-                de.AlertsAnalysis(jobNames);
+                //whatever report is ran by the user
+                de.FrontEndAnalysis();
+                //dispose our runspace and powershell instances
+                de.CleanUp();
                 Console.WriteLine("Done.");
                 Console.ReadLine();
             }
@@ -68,7 +74,6 @@ namespace CheckupExec
             //Console.ReadLine();
 
             //called on application close?
-            BEMCLIHelper.cleanUp();
         }
 
     }

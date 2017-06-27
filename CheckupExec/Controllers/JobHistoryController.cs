@@ -21,7 +21,7 @@ namespace CheckupExec.Controllers
 
             try
             {
-                var output = BEMCLIHelper.powershell.Invoke<string>();
+                var output   = BEMCLIHelper.powershell.Invoke<string>();
                 jobHistories = (output.Count > 0) ? JsonHelper.ConvertFromJson<JobHistory>(output[0]) : jobHistories;
             }
             catch (Exception e)
@@ -47,7 +47,7 @@ namespace CheckupExec.Controllers
 
             parameters = parameters ?? new Dictionary<string, string>();
 
-            foreach (var parameter in parameters)
+            foreach (KeyValuePair<string, string> parameter in parameters)
             {
                 scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
             }
@@ -59,15 +59,16 @@ namespace CheckupExec.Controllers
         public List<JobHistory> GetJobHistories(Dictionary<string, Dictionary<string, string>> pipelineCommands)
         {
             string scriptToInvoke = "";
+
             int numCommands = pipelineCommands.Count;
 
             pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
 
-            foreach (var pipeline in pipelineCommands)
+            foreach (KeyValuePair<string, Dictionary<string, string>> pipeline in pipelineCommands)
             {
                 scriptToInvoke += pipeline.Key + " ";
 
-                foreach (var parameter in pipeline.Value)
+                foreach (KeyValuePair<string, string> parameter in pipeline.Value)
                 {
                     scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
                 }
@@ -84,15 +85,16 @@ namespace CheckupExec.Controllers
         public List<JobHistory> GetJobHistories(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> jobHistoryParameters)
         {
             string scriptToInvoke = "";
+
             int numCommands = pipelineCommands.Count;
 
             pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
 
-            foreach (var pipeline in pipelineCommands)
+            foreach (KeyValuePair<string, Dictionary<string, string>> pipeline in pipelineCommands)
             {
                 scriptToInvoke += pipeline.Key + " ";
 
-                foreach (var parameter in pipeline.Value)
+                foreach (KeyValuePair<string, string> parameter in pipeline.Value)
                 {
                     scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
                 }
@@ -104,7 +106,7 @@ namespace CheckupExec.Controllers
 
             jobHistoryParameters = jobHistoryParameters ?? new Dictionary<string, string>();
 
-            foreach (var parameter in jobHistoryParameters)
+            foreach (KeyValuePair<string, string> parameter in jobHistoryParameters)
             {
                 scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
             }

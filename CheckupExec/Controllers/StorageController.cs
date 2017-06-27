@@ -10,7 +10,7 @@ namespace CheckupExec.Controllers
 {
     public class StorageController
     {
-        private const string _getStorageScript = Constants.GetStorages + " ";
+        private const string _getStorageScript    = Constants.GetStorages + " ";
         private const string _converttoJsonString = "| " + Constants.JsonPipeline;
 
         private List<Storage> invokeGetStorages(string scriptToInvoke)
@@ -22,7 +22,7 @@ namespace CheckupExec.Controllers
             try
             {
                 var output = BEMCLIHelper.powershell.Invoke<string>();
-                storages = (output.Count > 0) ? JsonHelper.ConvertFromJson<Storage>(output[0]) : storages;
+                storages   = (output.Count > 0) ? JsonHelper.ConvertFromJson<Storage>(output[0]) : storages;
             }
             catch (Exception e)
             {
@@ -47,7 +47,7 @@ namespace CheckupExec.Controllers
 
             parameters = parameters ?? new Dictionary<string, string>();
 
-            foreach (var parameter in parameters)
+            foreach (KeyValuePair<string, string> parameter in parameters)
             {
                 scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
             }
@@ -59,15 +59,16 @@ namespace CheckupExec.Controllers
         public List<Storage> GetStorages(Dictionary<string, Dictionary<string, string>> pipelineCommands)
         {
             string scriptToInvoke = "";
+
             int numCommands = pipelineCommands.Count;
 
             pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
 
-            foreach (var pipeline in pipelineCommands)
+            foreach (KeyValuePair<string, Dictionary<string, string>> pipeline in pipelineCommands)
             {
                 scriptToInvoke += pipeline.Key + " ";
 
-                foreach (var parameter in pipeline.Value)
+                foreach (KeyValuePair<string, string> parameter in pipeline.Value)
                 {
                     scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
                 }
@@ -84,15 +85,16 @@ namespace CheckupExec.Controllers
         public List<Storage> GetStorages(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> storageParameters)
         {
             string scriptToInvoke = "";
+
             int numCommands = pipelineCommands.Count;
 
             pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
 
-            foreach (var pipeline in pipelineCommands)
+            foreach (KeyValuePair<string, Dictionary<string, string>> pipeline in pipelineCommands)
             {
                 scriptToInvoke += pipeline.Key + " ";
 
-                foreach (var parameter in pipeline.Value)
+                foreach (KeyValuePair<string, string> parameter in pipeline.Value)
                 {
                     scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
                 }
@@ -104,7 +106,7 @@ namespace CheckupExec.Controllers
 
             storageParameters = storageParameters ?? new Dictionary<string, string>();
 
-            foreach (var parameter in storageParameters)
+            foreach (KeyValuePair<string, string> parameter in storageParameters)
             {
                 scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
             }

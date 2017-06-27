@@ -11,7 +11,7 @@ namespace CheckupExec.Controllers
     public class LicenseInformationController
     {
         private const string _getLicenseInformationScript = Constants.GetLicenses + " ";
-        private const string _converttoJsonString = "| " + Constants.JsonPipeline;
+        private const string _converttoJsonString         = "| " + Constants.JsonPipeline;
 
         private List<LicenseInformation> invokeGetLicenseInformation(string scriptToInvoke)
         {
@@ -22,7 +22,7 @@ namespace CheckupExec.Controllers
             try
             {
                 var output = BEMCLIHelper.powershell.Invoke<string>();
-                licenses = (output.Count > 0) ? JsonHelper.ConvertFromJson<LicenseInformation>(output[0]) : licenses;
+                licenses   = (output.Count > 0) ? JsonHelper.ConvertFromJson<LicenseInformation>(output[0]) : licenses;
             }
             catch (Exception e)
             {
@@ -47,7 +47,7 @@ namespace CheckupExec.Controllers
 
             parameters = parameters ?? new Dictionary<string, string>();
 
-            foreach (var parameter in parameters)
+            foreach (KeyValuePair<string, string> parameter in parameters)
             {
                 scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
             }
@@ -59,15 +59,16 @@ namespace CheckupExec.Controllers
         public List<LicenseInformation> GetLicenses(Dictionary<string, Dictionary<string, string>> pipelineCommands)
         {
             string scriptToInvoke = "";
+
             int numCommands = pipelineCommands.Count;
 
             pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
 
-            foreach (var pipeline in pipelineCommands)
+            foreach (KeyValuePair<string, Dictionary<string, string>> pipeline in pipelineCommands)
             {
                 scriptToInvoke += pipeline.Key + " ";
 
-                foreach (var parameter in pipeline.Value)
+                foreach (KeyValuePair<string, string> parameter in pipeline.Value)
                 {
                     scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
                 }
@@ -84,15 +85,16 @@ namespace CheckupExec.Controllers
         public List<LicenseInformation> GetLicenses(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> licenseParameters)
         {
             string scriptToInvoke = "";
+
             int numCommands = pipelineCommands.Count;
 
             pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
 
-            foreach (var pipeline in pipelineCommands)
+            foreach (KeyValuePair<string, Dictionary<string, string>> pipeline in pipelineCommands)
             {
                 scriptToInvoke += pipeline.Key + " ";
 
-                foreach (var parameter in pipeline.Value)
+                foreach (KeyValuePair<string, string> parameter in pipeline.Value)
                 {
                     scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
                 }
@@ -104,7 +106,7 @@ namespace CheckupExec.Controllers
 
             licenseParameters = licenseParameters ?? new Dictionary<string, string>();
 
-            foreach (var parameter in licenseParameters)
+            foreach (KeyValuePair<string, string> parameter in licenseParameters)
             {
                 scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
             }

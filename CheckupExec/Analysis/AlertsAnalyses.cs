@@ -9,21 +9,21 @@ using System.Threading.Tasks;
 
 namespace CheckupExec.Analysis
 {
-    //I think we need to filter by date manually for alerts
     public class AlertsAnalyses
     {
         private List<Alert> _allAlerts { get; }
 
         public bool Successful { get; }
 
+        //All this is doing right now is getting alerts depending on the params passed
         public AlertsAnalyses(DateTime? start = null, DateTime? end = null, List<string> jobNames = null, List<string> alertTypes = null)
         {
-            start = start ?? DateTime.MinValue;
-            end = end ?? DateTime.Now;
-            jobNames = jobNames ?? new List<string>();
+            start      = start ?? DateTime.MinValue;
+            end        = end ?? DateTime.Now;
+            jobNames   = jobNames ?? new List<string>();
             alertTypes = alertTypes ?? new List<string>();
 
-            var jobsPipeline = new Dictionary<string, string>();
+            var jobsPipeline   = new Dictionary<string, string>();
             var alertsPipeline = new Dictionary<string, string>();
 
             _allAlerts = new List<Alert>();
@@ -32,7 +32,7 @@ namespace CheckupExec.Analysis
             {
                 string fullJobString = "";
 
-                foreach (var job in jobNames)
+                foreach (string job in jobNames)
                 {
                     fullJobString += "'" + job + "'" + ((jobNames.ElementAt(jobNames.Count - 1).Equals(job)) ? "" : ", ");
                 }
@@ -43,7 +43,7 @@ namespace CheckupExec.Analysis
 
                 string fullTypeString = "";
 
-                foreach (var type in alertTypes)
+                foreach (string type in alertTypes)
                 {
                     fullTypeString += "'" + type + "'" + ((alertTypes.ElementAt(alertTypes.Count - 1).Equals(type)) ? "" : ", ");
                 }
@@ -62,7 +62,7 @@ namespace CheckupExec.Analysis
 
                 if (_allAlerts.Count > 0)
                 {
-                    foreach (var alert in _allAlerts)
+                    foreach (Alert alert in _allAlerts)
                     {
                         if (!jobs.Exists(x => x.Id.Equals(alert.JobId)))
                         {
@@ -78,7 +78,7 @@ namespace CheckupExec.Analysis
 
                 string fullString = "";
 
-                foreach (var name in jobNames)
+                foreach (string name in jobNames)
                 {
                     fullString += "'" + name + "'" + ((jobNames.ElementAt(jobNames.Count - 1).Equals(name)) ? "" : ", ");
                 }
@@ -100,7 +100,7 @@ namespace CheckupExec.Analysis
             {
                 string fullTypeString = "";
 
-                foreach (var type in alertTypes)
+                foreach (string type in alertTypes)
                 {
                     fullTypeString += "'" + type + "'" + ((alertTypes.ElementAt(alertTypes.Count - 1).Equals(type)) ? "" : ", ");
                 }
@@ -134,7 +134,7 @@ namespace CheckupExec.Analysis
             {                
                 SortingUtility<Alert>.sort(_allAlerts, 0, _allAlerts.Count - 1);   
 
-                foreach (var alert in _allAlerts)
+                foreach (Alert alert in _allAlerts)
                 {
                     if (alert.Date < start || alert.Date > end)
                     {

@@ -15,6 +15,7 @@ namespace CheckupExec.Analysis
 
         public bool Successful { get; }
 
+        //All this is doing right now is getting job histories depending on the params passed
         public JobErrorsAnalyses(DateTime? start = null, DateTime? end = null, List<string> jobErrorStatuses = null, List<string> jobNames = null)
         {
             _jobHistories = new List<JobHistory>();
@@ -25,26 +26,26 @@ namespace CheckupExec.Analysis
                 ["ToStartTime"] = (end == null) ? "'" + DateTime.Now.Date.ToString() + "'" : "'" + end.ToString() + "'"
             };
             jobErrorStatuses = jobErrorStatuses ?? new List<string>();
-            jobNames = jobNames ?? new List<string>();
+            jobNames         = jobNames ?? new List<string>();
 
             if (jobErrorStatuses.Count > 0 && jobNames.Count > 0)
             {
-                var jobPipeline = new Dictionary<string, Dictionary<string, string>>();
+                var jobPipeline      = new Dictionary<string, Dictionary<string, string>>();
                 var jobInnerPipeline = new Dictionary<string, string>();
 
                 string fullString = "";
 
-                foreach (var name in jobNames)
+                foreach (string name in jobNames)
                 {
                     fullString += "'" + name + "'" + ((jobNames.ElementAt(jobNames.Count - 1).Equals(name)) ? "" : ", ");
                 }
 
-                jobInnerPipeline["name"] = fullString;
+                jobInnerPipeline["name"]       = fullString;
                 jobPipeline[Constants.GetJobs] = jobInnerPipeline;
 
                 fullString = "";
 
-                foreach (var errorstatus in jobErrorStatuses)
+                foreach (string errorstatus in jobErrorStatuses)
                 {
                     fullString += "'" + errorstatus + "'" + ((jobErrorStatuses.ElementAt(jobErrorStatuses.Count - 1).Equals(errorstatus)) ? "" : ", ");
                 }
@@ -62,17 +63,17 @@ namespace CheckupExec.Analysis
             }
             else if (jobNames.Count > 0)
             {
-                var jobPipeline = new Dictionary<string, Dictionary<string, string>>();
+                var jobPipeline      = new Dictionary<string, Dictionary<string, string>>();
                 var jobInnerPipeline = new Dictionary<string, string>();
 
                 string fullString = "";
 
-                foreach (var name in jobNames)
+                foreach (string name in jobNames)
                 {
                     fullString += "'" + name + "'" + ((jobNames.ElementAt(jobNames.Count - 1).Equals(name)) ? "" : ", ");
                 }
 
-                jobInnerPipeline["name"] = fullString;
+                jobInnerPipeline["name"]       = fullString;
                 jobPipeline[Constants.GetJobs] = jobInnerPipeline;
 
                 try
@@ -88,7 +89,7 @@ namespace CheckupExec.Analysis
             {
                 string fullString = "";
 
-                foreach (var errorstatus in jobErrorStatuses)
+                foreach (string errorstatus in jobErrorStatuses)
                 {
                     fullString += "'" + errorstatus + "'" + ((jobErrorStatuses.ElementAt(jobErrorStatuses.Count - 1).Equals(errorstatus)) ? "" : ", ");
                 }
@@ -120,13 +121,13 @@ namespace CheckupExec.Analysis
 
             if (_jobHistories != null && _jobHistories.Count > 0)
             {
-                foreach (var jobHistory in _jobHistories)
+                foreach (JobHistory jobHistory in _jobHistories)
                 {
                     if (Convert.ToInt32(jobHistory.JobStatus) == JobHistory.SuccessfulFinalStatus)
                         filteredJobHistories.Add(jobHistory);
                 }
 
-                foreach (var jobHistory in filteredJobHistories)
+                foreach (JobHistory jobHistory in filteredJobHistories)
                 {
                     _jobHistories.Remove(jobHistory);
                 }

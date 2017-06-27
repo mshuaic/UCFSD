@@ -11,7 +11,7 @@ namespace CheckupExec.Controllers
     public class AlertHistoryController
     {
         private const string _getAlertHistoriesScript = Constants.GetAlertHistories + " ";
-        private const string _converttoJsonString = "| " + Constants.JsonPipeline;
+        private const string _converttoJsonString     = "| " + Constants.JsonPipeline;
 
         private List<Alert> invokeGetAlertHistories(string scriptToInvoke)
         {
@@ -21,7 +21,7 @@ namespace CheckupExec.Controllers
             
             try
             {
-                var output = BEMCLIHelper.powershell.Invoke<string>();
+                var output     = BEMCLIHelper.powershell.Invoke<string>();
                 alertHistories = (output.Count > 0) ? JsonHelper.ConvertFromJson<Alert>(output[0]) : alertHistories;
             }
             catch (Exception e)
@@ -47,7 +47,7 @@ namespace CheckupExec.Controllers
 
             parameters = parameters ?? new Dictionary<string, string>();
 
-            foreach (var parameter in parameters)
+            foreach (KeyValuePair<string, string> parameter in parameters)
             {
                 scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
             }
@@ -59,15 +59,16 @@ namespace CheckupExec.Controllers
         public List<Alert> GetAlertHistories(Dictionary<string, Dictionary<string, string>> pipelineCommands)
         {
             string scriptToInvoke = "";
+
             int numCommands = pipelineCommands.Count;
 
             pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
 
-            foreach (var pipeline in pipelineCommands)
+            foreach (KeyValuePair<string, Dictionary<string, string>> pipeline in pipelineCommands)
             {
                 scriptToInvoke += pipeline.Key + " ";
 
-                foreach (var parameter in pipeline.Value)
+                foreach (KeyValuePair<string, string> parameter in pipeline.Value)
                 {
                     scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
                 }
@@ -84,11 +85,12 @@ namespace CheckupExec.Controllers
         public List<Alert> GetAlertHistories(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> alertHistoryParameters)
         {
             string scriptToInvoke = "";
+
             int numCommands = pipelineCommands.Count;
 
             pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
 
-            foreach (var pipeline in pipelineCommands)
+            foreach (KeyValuePair<string, Dictionary<string, string>> pipeline in pipelineCommands)
             {
                 scriptToInvoke += pipeline.Key + " ";
 
@@ -104,7 +106,7 @@ namespace CheckupExec.Controllers
 
             alertHistoryParameters = alertHistoryParameters ?? new Dictionary<string, string>();
 
-            foreach (var parameter in alertHistoryParameters)
+            foreach (KeyValuePair<string, string> parameter in alertHistoryParameters)
             {
                 scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
             }

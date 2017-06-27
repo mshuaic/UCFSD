@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CheckupExec.Models.AnalysisModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ namespace CheckupExec.Models
 
         public bool ForecastSuccessful { get; set; }
 
-        public Dictionary<double, List<double>> plot;
+        public List<PlotPoint> plot;
 
         public double FinalSlope { get; set; }
 

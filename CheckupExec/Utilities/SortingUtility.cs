@@ -24,6 +24,7 @@ namespace CheckupExec.Utilities
             return true;
         }
 
+        //standard quicksort is used
         public static void sort(List<T> objects, int left, int right)
         {
             objects = objects ?? new List<T>();

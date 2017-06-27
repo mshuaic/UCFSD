@@ -1,4 +1,5 @@
 ﻿using CheckupExec.Models;
+using CheckupExec.Models.AnalysisModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,11 +8,14 @@ using System.Threading.Tasks;
 
 namespace CheckupExec.Utilities
 {
+    //really only generic enough for JobHistories and DiskCapacities
     public class Forecast<T> where T : IComparable<T>
     {
+        //JobHistories subset 
         private const int _maxSubsetSizeBE = 120;
         private const int _minSubsetSizeBE = 5;
 
+        //DiskCapacities subset
         private const int _maxSubsetSizeDC = 30;
         private const int _minSubsetSizeDC = 10;
 
@@ -22,8 +26,8 @@ namespace CheckupExec.Utilities
         public ForecastResults doForecast(List<JobHistory> jobHistories)
         {
             _forecastResults.ForecastSuccessful = true;
-            _forecastResults.isDiskForecast = false;
-            _forecastResults.plot = new Dictionary<double, List<double>>();
+            _forecastResults.isDiskForecast     = false;
+            _forecastResults.plot               = new List<PlotPoint>();
 
             if (jobHistories != null && jobHistories.Count > 0)
             {
@@ -41,7 +45,8 @@ namespace CheckupExec.Utilities
         public ForecastResults doForecast(List<DiskCapacity> diskCapacities)
         {
             _forecastResults.ForecastSuccessful = true;
-            _forecastResults.isDiskForecast = false;
+            _forecastResults.isDiskForecast     = true;
+            _forecastResults.plot = new List<PlotPoint>();
 
             if (diskCapacities != null && diskCapacities.Count > 0)
             {
@@ -87,6 +92,7 @@ namespace CheckupExec.Utilities
             //}
 
             // || false for testing with our sets
+            //if we meet minimum subset rqmnts, run forecast
             if (jobHistories.Count >= _minSubsetSizeBE || false)
             {
                 _forecastResults.ForecastSuccessful = false;
@@ -102,6 +108,7 @@ namespace CheckupExec.Utilities
 
         private void runForecast(List<DiskCapacity> diskCapacities)
         {
+            //if we meet minimum subset rqmnts, run forecast
             if (diskCapacities.Count >= _minSubsetSizeDC)
             {
                 _forecastResults.ForecastSuccessful = false;
@@ -115,12 +122,15 @@ namespace CheckupExec.Utilities
             }
         }
 
+        //piecewise simple linear regression (method of ord least squares) is run on each subset starting at minimum and incrementing by 
+        //one instance of JobHistory until we 1) run out of instances or 2) reach maximum subset size. 
+        //Ultimately, the subset that had the highest pearson correlation is chosen (slope and intercept).
         private void pWLinearRegression(List<JobHistory> jobHistories, int maxSubsetSize, int minSubsetSize)
         {
-            int recentIndex = jobHistories.Count - 1;
-            int finalSubsetSize = minSubsetSize;
+            int recentIndex       = jobHistories.Count - 1;
+            int finalSubsetSize   = minSubsetSize;
             int currentSubsetSize = 2;// minSubsetSize;
-            int boundaryIndex = recentIndex - currentSubsetSize + 1;
+            int boundaryIndex     = recentIndex - currentSubsetSize + 1;
 
             double maxCorr = Double.MinValue;
             double sumy = 0, sumx = 0;
@@ -153,8 +163,8 @@ namespace CheckupExec.Utilities
                     //log
                 }
 
-                double sumdevy = 0, sumdevy2 = 0;
-                double sumdevx = 0, sumdevx2 = 0;
+                double sumdevy  = 0, sumdevy2 = 0;
+                double sumdevx  = 0, sumdevx2 = 0;
                 double sumdevyx = 0;
 
                 for (int i = recentIndex; i >= boundaryIndex && i >= 0; i--)
@@ -196,12 +206,12 @@ namespace CheckupExec.Utilities
                     //log, although i don't think it can get to this point (corr = NaN if denominator == 0)
                 }
 
-                double slope = 0;
+                double slope     = 0;
                 double intercept = 0;
 
                 try
                 {
-                    slope = corr * (stdevy / stdevx);
+                    slope     = corr * (stdevy / stdevx);
                     intercept = meany - slope * meanx;
                 }
                 catch (DivideByZeroException e)
@@ -210,9 +220,9 @@ namespace CheckupExec.Utilities
                 }
                 if (corr > maxCorr)
                 {
-                    maxCorr = corr;
-                    finalSubsetSize = currentSubsetSize;
-                    candidateSlope = slope;
+                    maxCorr            = corr;
+                    finalSubsetSize    = currentSubsetSize;
+                    candidateSlope     = slope;
                     candidateIntercept = intercept;
                 }
 
@@ -220,16 +230,19 @@ namespace CheckupExec.Utilities
                 currentSubsetSize++;
             }
 
-            _forecastResults.FinalSlope = candidateSlope;
+            _forecastResults.FinalSlope     = candidateSlope;
             _forecastResults.FinalIntercept = candidateIntercept;
         }
 
+        //piecewise simple linear regression (method of ord least squares) is run on each subset starting at minimum and incrementing by 
+        //one instance of DiskCapacity until we 1) run out of instances or 2) reach maximum subset size. 
+        //Ultimately, the subset that had the highest pearson correlation is chosen (slope and intercept).
         private void pWLinearRegression(List<DiskCapacity> diskCapacities, int maxSubsetSize, int minSubsetSize)
         {
-            int recentIndex = diskCapacities.Count - 1;
-            int finalSubsetSize = minSubsetSize;
+            int recentIndex       = diskCapacities.Count - 1;
+            int finalSubsetSize   = minSubsetSize;
             int currentSubsetSize = minSubsetSize;
-            int boundaryIndex = recentIndex - currentSubsetSize + 1;
+            int boundaryIndex     = recentIndex - currentSubsetSize + 1;
 
             double maxCorr = Double.MinValue;
             double sumy = 0, sumx = 0;
@@ -262,8 +275,8 @@ namespace CheckupExec.Utilities
                     //log
                 }
 
-                double sumdevy = 0, sumdevy2 = 0;
-                double sumdevx = 0, sumdevx2 = 0;
+                double sumdevy  = 0, sumdevy2 = 0;
+                double sumdevx  = 0, sumdevx2 = 0;
                 double sumdevyx = 0;
 
                 for (int i = recentIndex; i >= boundaryIndex && i >= 0; i--)
@@ -305,12 +318,12 @@ namespace CheckupExec.Utilities
                     //log, although i don't think it can get to this point (corr = NaN if denominator == 0)
                 }
 
-                double slope = 0;
+                double slope     = 0;
                 double intercept = 0;
 
                 try
                 {
-                    slope = corr * (stdevy / stdevx);
+                    slope     = corr * (stdevy / stdevx);
                     intercept = meany - slope * meanx;
                 }
                 catch (DivideByZeroException e)
@@ -320,9 +333,9 @@ namespace CheckupExec.Utilities
 
                 if (corr > maxCorr)
                 {
-                    maxCorr = corr;
-                    finalSubsetSize = currentSubsetSize;
-                    candidateSlope = slope;
+                    maxCorr            = corr;
+                    finalSubsetSize    = currentSubsetSize;
+                    candidateSlope     = slope;
                     candidateIntercept = intercept;
                 }
 
@@ -330,31 +343,33 @@ namespace CheckupExec.Utilities
                 currentSubsetSize++;
             }
 
-            _forecastResults.FinalSlope = candidateSlope;
+            _forecastResults.FinalSlope     = candidateSlope;
             _forecastResults.FinalIntercept = candidateIntercept;
         }
 
+        //generate our plot will ALL instances (this is for visualization)
         private void populatePlot(List<JobHistory> jobHistories)
         {
-            foreach (var jobHistory in jobHistories)
+            foreach (JobHistory jobHistory in jobHistories)
             {
-                if (!_forecastResults.plot.ContainsKey(jobHistory.StartTime.Date.Subtract(_currentTime.Date).TotalDays))
+                _forecastResults.plot.Add(new PlotPoint
                 {
-                    _forecastResults.plot[jobHistory.StartTime.Date.Subtract(_currentTime.Date).TotalDays] = new List<double>();
-                }
-                _forecastResults.plot[jobHistory.StartTime.Date.Subtract(_currentTime.Date).TotalDays].Add((double)(jobHistory.TotalDataSizeBytes >> 20) / 1024);
+                    days = jobHistory.StartTime.Date.Subtract(_currentTime.Date).TotalDays,
+                    GB   = (double)(jobHistory.TotalDataSizeBytes >> 20) / 1024
+                });
             }
         }
 
+        //generate our plot with ALL instances (this is for visualization)
         private void populatePlot(List<DiskCapacity> diskCapacities)
         {
             foreach (var diskCapacity in diskCapacities)
             {
-                if (!_forecastResults.plot.ContainsKey(diskCapacity.Date.Date.Subtract(_currentTime.Date).TotalDays))
+                _forecastResults.plot.Add(new PlotPoint
                 {
-                    _forecastResults.plot[diskCapacity.Date.Date.Subtract(_currentTime.Date).TotalDays] = new List<double>();
-                }
-                _forecastResults.plot[diskCapacity.Date.Date.Subtract(_currentTime.Date).TotalDays].Add((double)(diskCapacity.Bytes >> 20) / 1024);
+                    days = diskCapacity.Date.Date.Subtract(_currentTime.Date).TotalDays,
+                    GB   = (double)(diskCapacity.Bytes >> 20) / 1024
+                });
             }
         }
 

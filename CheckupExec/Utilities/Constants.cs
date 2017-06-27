@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace CheckupExec.Utilities
 {
+    //constant bemcli commands held in one place
     public static class Constants
     {
         public const string ImportBEMCLI      = "import-module bemcli";
