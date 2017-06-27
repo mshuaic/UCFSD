@@ -178,7 +178,7 @@ namespace CheckupExec
                     {
                         fullPlot.Add( new PlotPoint
                         {
-                            days = point.days,
+                            Days = point.Days,
                             GB = point.GB
                         });
                     }
@@ -208,28 +208,28 @@ namespace CheckupExec
                 report.DaysTo50 = ((maxCapacity * .5) - fullIntercept) / fullSlope;
                 report.ForecastPoints.Add(new PlotPoint
                 {
-                    days = report.DaysTo50,
+                    Days = report.DaysTo50,
                     GB = (maxCapacity * .5)
                 });
 
                 report.DaysTo75 = ((maxCapacity * .75) - fullIntercept) / fullSlope;
                 report.ForecastPoints.Add(new PlotPoint
                 {
-                    days = report.DaysTo75,
+                    Days = report.DaysTo75,
                     GB = (maxCapacity * .75)
                 });
 
                 report.DaysTo90 = ((maxCapacity * .9) - fullIntercept) / fullSlope;
                 report.ForecastPoints.Add(new PlotPoint
                 {
-                    days = report.DaysTo90,
+                    Days = report.DaysTo90,
                     GB = (maxCapacity * .9)
                 });
 
                 report.DaysToFull = (maxCapacity - fullIntercept) / fullSlope;
                 report.ForecastPoints.Add(new PlotPoint
                 {
-                    days = report.DaysToFull,
+                    Days = report.DaysToFull,
                     GB = (maxCapacity)
                 });
 
@@ -237,6 +237,9 @@ namespace CheckupExec
                 {
                     report.StorageDevices.Add(fe_forecast.Storage);
                 }
+
+                report.MaxCapacity = maxCapacity;
+                report.UsedCapacity = usedCapacity;
 
                 //pass to report
 

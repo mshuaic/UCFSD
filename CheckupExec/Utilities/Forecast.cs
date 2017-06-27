@@ -360,7 +360,7 @@ namespace CheckupExec.Utilities
             {
                 _forecastResults.plot.Add(new PlotPoint
                 {
-                    days = jobHistory.StartTime.Date.Subtract(_currentTime.Date).TotalDays,
+                    Days = jobHistory.StartTime.Date.Subtract(_currentTime.Date).TotalDays,
                     GB   = (double)(jobHistory.TotalDataSizeBytes >> 20) / 1024
                 });
             }
@@ -373,7 +373,7 @@ namespace CheckupExec.Utilities
             {
                 _forecastResults.plot.Add(new PlotPoint
                 {
-                    days = diskCapacity.Date.Date.Subtract(_currentTime.Date).TotalDays,
+                    Days = diskCapacity.Date.Date.Subtract(_currentTime.Date).TotalDays,
                     GB   = (double)(diskCapacity.Bytes >> 20) / 1024
                 });
             }

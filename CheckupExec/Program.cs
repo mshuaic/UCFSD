@@ -75,7 +75,7 @@ namespace CheckupExec
 
             foreach (var point in fr.plot)
             {
-                Console.WriteLine("(" + point.days + ", " + point.GB + ")");
+                Console.WriteLine("(" + point.Days + ", " + point.GB + ")");
             }
             Console.WriteLine(fr.FinalSlope);
             Console.WriteLine(fr.FinalIntercept);

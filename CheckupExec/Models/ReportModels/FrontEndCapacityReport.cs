@@ -15,6 +15,10 @@ namespace CheckupExec.Models.ReportModels
 
         public List<Storage> StorageDevices { get; set; }
 
+        public double MaxCapacity { get; set; }
+
+        public double UsedCapacity { get; set; }
+
         public double DaysTo50 { get; set; }
 
         public double DaysTo75 { get; set; }
