@@ -2,6 +2,7 @@
 using CheckupExec.Controllers;
 using CheckupExec.Models;
 using CheckupExec.Models.AnalysisModels;
+using CheckupExec.Models.ReportModels;
 using CheckupExec.Utilities;
 using System;
 using System.Collections.Generic;
@@ -153,7 +154,7 @@ namespace CheckupExec
         /// Runs FrontendUsedCapacity and FrontendForecast. No parameters are needed since this is a full analysis of the server.
         /// </summary>
         /// <returns>True if successful, false if not.</returns>
-        public bool FrontEndAnalysis()
+        public bool FrontEndAnalysis(string reportPath)
         {
             //run frontendanalysis
             var feuc = new FrontEndUsedCapacity(_storageDevices);
@@ -171,7 +172,7 @@ namespace CheckupExec
                 double fullIntercept = 0;
 
                 //
-                foreach (FE_Forecast forecast in feuc.FrontEndForecast.Forecasts)
+                foreach (FE_Forecast forecast in feuc.FrontEndForecast.FE_Forecasts)
                 {
                     foreach (PlotPoint point in forecast.ForecastResults.plot)
                     {
@@ -185,7 +186,7 @@ namespace CheckupExec
                     fullSlope     += forecast.ForecastResults.FinalSlope;
                     fullIntercept += forecast.ForecastResults.FinalIntercept;
                 }
-                
+
                 //call report generator method for frontend and pass in ^
 
                 //foreach (var pointList in fullPlot)
@@ -198,7 +199,46 @@ namespace CheckupExec
 
                 //Console.WriteLine("Slope: " + fullSlope);
                 //Console.WriteLine("Intercept: " + fullIntercept);
-                
+                var report = new FrontEndCapacityReport();
+
+                report.HistoricalPoints = fullPlot;
+
+                report.ForecastPoints = new List<PlotPoint>();
+
+                report.DaysTo50 = ((maxCapacity * .5) - fullIntercept) / fullSlope;
+                report.ForecastPoints.Add(new PlotPoint
+                {
+                    days = report.DaysTo50,
+                    GB = (maxCapacity * .5)
+                });
+
+                report.DaysTo75 = ((maxCapacity * .75) - fullIntercept) / fullSlope;
+                report.ForecastPoints.Add(new PlotPoint
+                {
+                    days = report.DaysTo75,
+                    GB = (maxCapacity * .75)
+                });
+
+                report.DaysTo90 = ((maxCapacity * .9) - fullIntercept) / fullSlope;
+                report.ForecastPoints.Add(new PlotPoint
+                {
+                    days = report.DaysTo90,
+                    GB = (maxCapacity * .9)
+                });
+
+                report.DaysToFull = (maxCapacity - fullIntercept) / fullSlope;
+                report.ForecastPoints.Add(new PlotPoint
+                {
+                    days = report.DaysToFull,
+                    GB = (maxCapacity)
+                });
+
+                foreach (FE_Forecast fe_forecast in feuc.FrontEndForecast.FE_Forecasts)
+                {
+                    report.StorageDevices.Add(fe_forecast.Storage);
+                }
+
+                //pass to report
 
                 return true;
             }
@@ -214,7 +254,7 @@ namespace CheckupExec
         /// </summary>
         /// <param name="jobNames">List of jobNames which have been chosen by the user.</param>
         /// <returns>True if successful, false if not.</returns>
-        public bool BackupJobsAnalysis(List<string> jobNames)
+        public bool BackupJobsAnalysis(List<string> jobNames, string reportPath)
         {
             var buJobEstimates = new List<BackupJobEstimate>();
 
@@ -284,12 +324,12 @@ namespace CheckupExec
         /// </summary>
         /// <param name="diskNames">List containing the names of the disks to run the report on.</param>
         /// <returns>True if successful, false if not.</returns>
-        public bool DiskAnalysis(List<string> diskNames, string path)
+        public bool DiskAnalysis(List<string> diskNames, string diskPath, string reportPath)
         {
             //if we have disks passed to us, run a DiskAnalysis on each of them and add each to a list for passing to report generator
             if (diskNames != null && diskNames.Count >= 0)
             {
-                var diskAnalyses = new DiskForecast(diskNames, path).DiskForecastModels;
+                var diskAnalyses = new DiskForecast(diskNames, diskPath).DiskForecastModels;
 
                 //pass to report generator
 
@@ -307,7 +347,7 @@ namespace CheckupExec
         /// <param name="end">Optional. End date of time window.</param>
         /// <param name="types">Optional. Alert categories to check for.</param>
         /// <returns>True if successful, false if not.</returns>
-        public bool AlertsAnalysis(List<string> jobNames = null, List<string> types = null, DateTime? start = null, DateTime? end = null)
+        public bool AlertsAnalysis(string reportPath, List<string> jobNames, List<string> types, DateTime? start = null, DateTime? end = null)
         {
             //run AlertsAnalysis with given params
             var alertsAnalysis = new AlertsAnalyses(start, end, jobNames, types);
@@ -327,7 +367,7 @@ namespace CheckupExec
         /// <param name="end">Optional. End date of time window.</param>
         /// <param name="errorStatuses">Optional. Final error statuses of job instances we should look for. If empty, all are checked.</param>
         /// <returns>True if successful, false if not.</returns>
-        public bool JobErrorsAnalysis(List<string> jobNames = null, List<string> errorStatuses = null, DateTime? start = null, DateTime? end = null)
+        public bool JobErrorsAnalysis(string reportPath, List<string> jobNames, List<string> errorStatuses, DateTime? start = null, DateTime? end = null)
         {
             //run JobErrorsAnalysis with given params
             var jobErrorsAnalysis = new JobErrorsAnalyses(start, end, errorStatuses, jobNames);

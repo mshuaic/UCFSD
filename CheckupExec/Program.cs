@@ -20,61 +20,88 @@ namespace CheckupExec
     {
         static void Main(string[] args)
         {
-            //remote bool and server credentials [since remote]
-            bool remoteAccess = true;
-            string password = "Veritas4935";
-            string serverName = "server";
-            string userName = "Administrator";
+            //    //remote bool and server credentials [since remote]
+            //    bool remoteAccess = true;
+            //    string password = "Veritas4935";
+            //    string serverName = "server";
+            //    string userName = "Administrator";
 
-            var de = new DataExtraction(remoteAccess, password, serverName, userName);
+            //    var de = new DataExtraction(remoteAccess, password, serverName, userName);
 
-            if (de.PowershellInstanceCreated)
+            //    if (de.PowershellInstanceCreated)
+            //    {
+            //        //get storage device names
+            //        var storageNames = de.GetStorageDeviceNames();
+
+            //        foreach (var name in storageNames)
+            //        {
+            //            Console.WriteLine(name);
+            //        }
+
+            //        //get job names for all storage devices (passed in list would be whatever was checked)
+            //        var jobNames = de.GetJobNames(storageNames);
+
+            //        foreach (var name in jobNames)
+            //        {
+            //            Console.WriteLine(name);
+            //        }
+
+            //        //whatever report is ran by the user
+            //        de.FrontEndAnalysis();
+            //        //dispose our runspace and powershell instances
+            //        de.CleanUp();
+            //        Console.WriteLine("Done.");
+            //        Console.ReadLine();
+            //    }
+
+            var instances = new List<JobHistory>();
+            Random j = new Random();
+            long bytes = 10000000000;
+
+            for (int i = 0, k = 999; i < 1000; i++, k--)
             {
-                //get storage device names
-                var storageNames = de.GetStorageDeviceNames();
+                bytes = bytes + j.Next(-100000, 10000000);
 
-                foreach (var name in storageNames)
+                instances.Add(new JobHistory
                 {
-                    Console.WriteLine(name);
-                }
-
-                //get job names for all storage devices (passed in list would be whatever was checked)
-                var jobNames = de.GetJobNames(storageNames);
-
-                foreach (var name in jobNames)
-                {
-                    Console.WriteLine(name);
-                }
-
-                //whatever report is ran by the user
-                de.FrontEndAnalysis();
-                //dispose our runspace and powershell instances
-                de.CleanUp();
-                Console.WriteLine("Done.");
-                Console.ReadLine();
+                    TotalDataSizeBytes = bytes,
+                    StartTime = DateTime.Now.Date.AddDays(-k)
+                });
             }
 
-            //var jobController = new JobController();
-            //var jobs = jobController.GetJobs();
-            //var job = jobs.First();
+            var fc = new Forecast<JobHistory>();
 
-            //var bje = new BackupJobEstimate(job.Id);
-            //Console.WriteLine("Next Start Date: " + bje.NextStartDate);
-            //Console.WriteLine("Job rate estimate: " + bje.EstimateOfJobRateMBMin);
-            //Console.WriteLine("Elapsed time estimate (sec): " + bje.EstimateOfElapsedTimeSec);
-            //Console.WriteLine("Data Size estimate: " + bje.EstimateDataSizeMB);
-            //Console.WriteLine("=============================");
+            var fr = fc.doForecast(instances);
 
-            //var forecast = new Forecast(job.Id);
-            //Console.WriteLine("Slope: " + forecast.FinalSlope);
-            //Console.WriteLine("Intercept: " + forecast.FinalIntercept);
-            //Console.ReadLine();
+            foreach (var point in fr.plot)
+            {
+                Console.WriteLine("(" + point.days + ", " + point.GB + ")");
+            }
+            Console.WriteLine(fr.FinalSlope);
+            Console.WriteLine(fr.FinalIntercept);
 
-            //var frontEnd = new FrontEndUsedCapacity();
-            //Console.ReadLine();
+        //    //var jobController = new JobController();
+        //    //var jobs = jobController.GetJobs();
+        //    //var job = jobs.First();
 
-            //called on application close?
+        //    //var bje = new BackupJobEstimate(job.Id);
+        //    //Console.WriteLine("Next Start Date: " + bje.NextStartDate);
+        //    //Console.WriteLine("Job rate estimate: " + bje.EstimateOfJobRateMBMin);
+        //    //Console.WriteLine("Elapsed time estimate (sec): " + bje.EstimateOfElapsedTimeSec);
+        //    //Console.WriteLine("Data Size estimate: " + bje.EstimateDataSizeMB);
+        //    //Console.WriteLine("=============================");
+
+        //    //var forecast = new Forecast(job.Id);
+        //    //Console.WriteLine("Slope: " + forecast.FinalSlope);
+        //    //Console.WriteLine("Intercept: " + forecast.FinalIntercept);
+        //    //Console.ReadLine();
+
+        //    //var frontEnd = new FrontEndUsedCapacity();
+        //    //Console.ReadLine();
+
+        //    //called on application close?
         }
 
     }
 }
+

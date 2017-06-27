@@ -32,7 +32,10 @@ namespace CheckupExec.Utilities
             if (jobHistories != null && jobHistories.Count > 0)
             {
                 runForecast(jobHistories);
-                populatePlot(jobHistories);
+                if (_forecastResults.ForecastSuccessful)
+                {
+                    populatePlot(jobHistories);
+                }
             }
             else
             {
@@ -51,7 +54,10 @@ namespace CheckupExec.Utilities
             if (diskCapacities != null && diskCapacities.Count > 0)
             {
                 runForecast(diskCapacities);
-                populatePlot(diskCapacities);
+                if (_forecastResults.ForecastSuccessful)
+                {
+                    populatePlot(diskCapacities);
+                }
             }
             else
             {
@@ -93,7 +99,7 @@ namespace CheckupExec.Utilities
 
             // || false for testing with our sets
             //if we meet minimum subset rqmnts, run forecast
-            if (jobHistories.Count >= _minSubsetSizeBE || false)
+            if (jobHistories.Count < _minSubsetSizeBE || false)
             {
                 _forecastResults.ForecastSuccessful = false;
             }
@@ -109,7 +115,7 @@ namespace CheckupExec.Utilities
         private void runForecast(List<DiskCapacity> diskCapacities)
         {
             //if we meet minimum subset rqmnts, run forecast
-            if (diskCapacities.Count >= _minSubsetSizeDC)
+            if (diskCapacities.Count < _minSubsetSizeDC)
             {
                 _forecastResults.ForecastSuccessful = false;
             }

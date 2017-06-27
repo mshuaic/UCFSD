@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace CheckupExec.Utilities
 {
-    class BEMCLIHelper
+    public class BEMCLIHelper
     {
         public static WSManConnectionInfo connectionInfo = null;
         public static Runspace runspace     = null;
