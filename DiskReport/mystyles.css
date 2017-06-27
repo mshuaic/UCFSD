@@ -1,0 +1,25 @@
+* {
+	margin:0;
+	padding:0;
+}
+
+.rows {
+    display: grid;
+    grid-template-rows: 50% 50%;
+	width: 100%;
+}
+
+.columns {
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
+.box{
+	border: 3px;
+	border-style: solid;
+	height: auto;
+}
+
+.item {
+
+}

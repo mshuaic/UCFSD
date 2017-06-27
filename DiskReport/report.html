@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--<script src="plotly-latest.min.js"></script>-->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="mystyles.css" media="screen" />
+  <title>Checkup Exec Report</title>
+</head>
+<body>
+<br>
+<h1 style="text-align:center">CheckUp Exec Report</h1>
+
+<!--REPORT-->
+<div style="margin: auto; width: 80%;">
+  <div class="rows">
+    <div class="columns">
+      <div class="item">
+		<br>
+        <p>Disk <strong>C:</strong> <tab>Free Space: <strong>20%</strong> Used Space: <strong>80%</strong></p>
+		<br>
+		<p>Days of disk space remaining until fill level</p>
+		<p>75% <strong>6 Days</strong></p>
+		<p>90% <strong>14 Days</strong></p>
+		<p>100% <strong>29 Days</strong></p>
+		<p><span style="color:red">Warning!</span> Space depletion approaching.</p>
+		<div class="my" id="line"></div> 
+		<script src="line.js"></script>
+		
+		</div>
+		<div class="item">
+		<br>
+        <p>Disk <strong>D:</strong> <tab>Free Space: <strong>45%</strong> Used Space: <strong>55%</strong></p>
+		<br>
+		<p>Days of disk space remaining until fill level</p>
+		<p>75% <strong>187 Days</strong></p>
+		<p>90% <strong>311 Days</strong></p>
+		<p>100% <strong>446 Days</strong></p>
+		<br>
+		<div class="my" id="line2"></div> 
+		<script src="line2.js"></script>
+		</div>
+    </div>
+	
+  </div>
+</div>
+
+  
+	
+  <script> 
+    window.onresize = function(){ location.reload(); }
+  </script>
+</body>
+</html>
