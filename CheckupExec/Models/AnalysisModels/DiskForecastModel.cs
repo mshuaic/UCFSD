@@ -11,6 +11,10 @@ namespace CheckupExec.Models.AnalysisModels
     {
         public string DiskName { get; set; }
 
-        public DiskForecast DiskForecast { get; set; }
+        public double TotalCapacity { get; set; }
+
+        public List<DiskCapacity> DiskInstances { get; set; }
+
+        public ForecastResults ForecastResults { get; set; }
     }
 }

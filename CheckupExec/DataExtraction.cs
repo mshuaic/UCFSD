@@ -284,25 +284,12 @@ namespace CheckupExec
         /// </summary>
         /// <param name="diskNames">List containing the names of the disks to run the report on.</param>
         /// <returns>True if successful, false if not.</returns>
-        public bool DiskAnalysis(List<string> diskNames)
+        public bool DiskAnalysis(List<string> diskNames, string path)
         {
-            var fc = new Forecast<DiskCapacity>();
-
             //if we have disks passed to us, run a DiskAnalysis on each of them and add each to a list for passing to report generator
             if (diskNames != null && diskNames.Count >= 0)
             {
-                var diskAnalyses = new List<DiskForecastModel>();
-
-                foreach (string diskName in diskNames)
-                {
-                    var dc = new DiskForecastModel
-                    {
-                        DiskName     = diskName,
-                        DiskForecast = new DiskForecast(diskName)
-                    };
-
-                    diskAnalyses.Add(dc);
-                }
+                var diskAnalyses = new DiskForecast(diskNames, path).DiskForecastModels;
 
                 //pass to report generator
 

@@ -85,7 +85,7 @@
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\StorageController.cs" />
     <Compile Include="DataExtraction.cs" />
-    <Compile Include="Models\AnalysisModels\DiskForecast.cs" />
+    <Compile Include="Models\AnalysisModels\DiskForecastModel.cs" />
     <Compile Include="Models\AnalysisModels\FE_Forecast.cs" />
     <Compile Include="Models\AnalysisModels\FullBackupJobInstances.cs" />
     <Compile Include="Models\AnalysisModels\PlotPoint.cs" />
