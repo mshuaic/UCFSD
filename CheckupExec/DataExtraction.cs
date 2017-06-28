@@ -43,11 +43,11 @@ namespace CheckupExec
         /// <param name="serverName"></param>
         /// <param name="userName"></param>
         /// <param name="password"></param>
-        public DataExtraction(bool isRemoteUser, string serverName = null, string userName = null, string password = null)
+        public DataExtraction(bool isRemoteUser, string password = null, string serverName = null, string userName = null)
         {
             try
             {
-                new BEMCLIHelper(isRemoteUser, serverName, userName, password);
+                new BEMCLIHelper(isRemoteUser, password, serverName, userName);
             }
             catch
             {
