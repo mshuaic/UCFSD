@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Timers;
+using Microsoft.Win32;
 
 namespace CheckupService
 {
@@ -8,14 +10,20 @@ namespace CheckupService
         int interval;
         Timer timer;
         logger mylogger;
-        public Service(int interval=60000,string path=@"D:\CEInfo.xml")
+        string path;
+        int max;
+
+        public Service(int interval=60,string path=@"C:\CEInfo.xml",int max=50)
         {
-            this.interval = interval;
+            this.interval = interval*1000;
             this.timer = new Timer();
-            this.mylogger = new logger(path);
+            this.path = path;
+            this.max = max;
+            this.mylogger = new logger(this.path, this.max);
             timer.Elapsed += new ElapsedEventHandler(mylogger._logger);
-            timer.Interval = interval;
+            timer.Interval = this.interval;
         }
+
         public void Start()
         {
             timer.Start();
