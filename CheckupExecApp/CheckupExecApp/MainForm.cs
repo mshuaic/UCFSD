@@ -23,10 +23,29 @@ namespace CheckupExecApp
         {
             InitializeComponent();
             GlobalSettingsTextBox_Load();
-            LoadCheckedListBoxes();
+            
+            // Load Disk Analysis checked list boxes
+            Helpers.LoadStorageDevicesCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox5);
+            
+            // Load Backup Jobs Analysis checked list boxes
+            Helpers.LoadStorageDevicesCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox6);
+            Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, dataExtractionInstance.GetStorageDeviceNames(), BackupJobsCheckedListBox6);
+
+            // Load Alerts Analysis checked list boxes
+            Helpers.LoadStorageDevicesCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox);
+            Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, dataExtractionInstance.GetStorageDeviceNames(), BackupJobsCheckedListBox);
+            Helpers.LoadAlertTypesCheckedListBox(AlertTypesCheckedListBox);
+
+            // Load Job Errors Analysis checked list boxes
+            Helpers.LoadStorageDevicesCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox4);
+            Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, dataExtractionInstance.GetStorageDeviceNames(), BackupJobsCheckedListBox4);
+            Helpers.LoadAlertTypesCheckedListBox(AlertTypesCheckedListBox4);
         }
 
-        #region Configuration Analysis
+        // Create new DataExtraction instance to handle creation of reports/forecasts
+        CheckupExec.DataExtraction dataExtractionInstance = new CheckupExec.DataExtraction(false, null, null, null);
+
+        #region Configuration Settings Overview/Front End Analysis
         // Load global Backup Exec Settings
         private void GlobalSettingsTextBox_Load()
         {
@@ -84,9 +103,46 @@ namespace CheckupExecApp
         {
             Helpers.SelectDestinationFolder(FolderPathTextBox);
         }
+
+        // Run Frontend analysis
+        private void GenerateButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Make sure a folder path was specified
+                if (FolderPathTextBox.Text != "")
+                {
+                    // Get storage devices
+                    dataExtractionInstance.GetStorageDeviceNames();
+                    // Run Frontend analysis
+                    if (dataExtractionInstance.FrontEndAnalysis(FolderPathTextBox.Text))
+                    {
+                        log.Info("Success: Front End Analysis");
+
+                    }
+                    else
+                    {
+                        log.Error("Failure: Front End Analysis");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Please select a valid destination folder.", "Invalid destination folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+            }
+        }
         #endregion
 
-        #region Backup Job/Storage Analysis
+        #region Disk Analysis
+        private void SelectAllStorageDevicesCheckBox5_CheckedChanged(object sender, EventArgs e)
+        {
+            Helpers.CheckAllItems(StorageDevicesCheckedListBox5, SelectAllStorageDevicesCheckBox5);
+        }
+
         // Browse for Backup Job file button is clicked
         private void FilePathBrowseButton_Click(object sender, EventArgs e)
         {
@@ -96,7 +152,7 @@ namespace CheckupExecApp
                 OpenFileDialog ofd = new OpenFileDialog();
 
                 // Filter the file extension to only allow user to open .bkf files
-                ofd.Filter = "BKF|*.bkf";
+                ofd.Filter = "XML|*.xml";
 
                 if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
@@ -161,22 +217,93 @@ namespace CheckupExecApp
         {
             Helpers.SelectDestinationFolder(FolderPathTextBox2);
         }
+
+        // Run Disk analysis
+        private void GenerateButton2_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Make sure a file path and report destination folder path was specified
+                if(FolderPathTextBox2.Text != "" && FilePathTextBox.Text != "")
+                {
+                    // Get storage devices
+                    dataExtractionInstance.GetStorageDeviceNames();
+                    // Run Frontend analysis
+                    if (dataExtractionInstance.DiskAnalysis(StorageDevicesCheckedListBox5.CheckedItems.Cast<string>().ToList(), FilePathTextBox.Text, FolderPathTextBox2.Text))
+                    {
+                        log.Info("Success: Disk Analysis");
+
+                    }
+                    else
+                    {
+                        log.Error("Failure: Disk Analysis");
+                    }      
+                }
+                else
+                {
+                    MessageBox.Show("Please select a valid file and destination folder.", "Invalid file/destination folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch(Exception ex)
+            {
+                log.Error(ex);
+            }
+        }
         #endregion
 
-        #region Error Analysis
-        // Loads the Storage Device and Backup Job checked listboxes
-        private void LoadCheckedListBoxes()
+        #region Backup Jobs Analysis
+        private void SelectAllStorageDevicesCheckBox6_CheckedChanged(object sender, EventArgs e)
         {
-            // Load the Storage Device checked listbox
-            Helpers.LoadStorageDevicesCheckedListBox(StorageDevicesCheckedListBox);
-
-            // Load the Backup Job checked listbox
-            Helpers.LoadBackupJobsCheckedListBox();
-
-            // Load the Alert Types checked listbox
-            Helpers.LoadAlertTypesCheckedListBox();
+            Helpers.CheckAllItems(StorageDevicesCheckedListBox6, SelectAllStorageDevicesCheckBox6);
         }
 
+        private void SelectAllBackupJobsCheckBox6_CheckedChanged(object sender, EventArgs e)
+        {
+            Helpers.CheckAllItems(BackupJobsCheckedListBox6, SelectAllBackupJobsCheckBox6);
+        }
+
+        private void FolderPathBrowseButton6_Click(object sender, EventArgs e)
+        {
+            Helpers.SelectDestinationFolder(FolderPathTextBox6);
+        }
+
+        private void GenerateButton6_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Make sure a folder path was specified
+                if (FolderPathTextBox6.Text != "")
+                {
+                    // Get storage devices
+                    dataExtractionInstance.GetStorageDeviceNames();
+                    // Run Frontend analysis
+                    if (dataExtractionInstance.BackupJobsAnalysis(BackupJobsCheckedListBox6.CheckedItems.Cast<string>().ToList(), FolderPathTextBox6.Text))
+                    {
+                        log.Info("Success: Backup Jobs Analysis");
+                    }
+                    else
+                    {
+                        log.Error("Failure: Backup Jobs Analysis");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Please select a valid destination folder.", "Invalid destination folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+            }
+        }
+
+        private void RefreshJobsButton6_Click(object sender, EventArgs e)
+        {
+            Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox6.CheckedItems.Cast<string>().ToList(), BackupJobsCheckedListBox6);
+        }
+        #endregion
+
+        #region Alerts Analysis
         private void SelectAllStorageDevicesCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             Helpers.CheckAllItems(StorageDevicesCheckedListBox, SelectAllStorageDevicesCheckBox);
@@ -197,6 +324,102 @@ namespace CheckupExecApp
         {
             Helpers.SelectDestinationFolder(FolderPathTextBox3);
         }
-        #endregion 
+
+        private void GenerateButton3_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Make sure a folder path was specified
+                if (FolderPathTextBox3.Text != "")
+                {
+                    // Get storage devices
+                    dataExtractionInstance.GetStorageDeviceNames();
+                    // Run Frontend analysis
+                    if(dataExtractionInstance.AlertsAnalysis(FolderPathTextBox3.Text, BackupJobsCheckedListBox.CheckedItems.Cast<string>().ToList(), null, StartDateTimePicker.Value, EndDateTimePicker.Value))
+                    {
+                        log.Info("Success: Alerts Analysis");
+                    }
+                    else
+                    {
+                        log.Error("Failure: Alerts Analysis");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Please select a valid destination folder.", "Invalid destination folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+            }
+        }
+
+        // Reload the BackupJobsCheckedListBox based on selected storage devices
+        private void RefreshJobsButton_Click(object sender, EventArgs e)
+        {
+            Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox.CheckedItems.Cast<string>().ToList(), BackupJobsCheckedListBox);
+        }
+        #endregion
+
+        #region Job Error Analysis
+        private void SelectAllStorageDevicesCheckBox4_CheckedChanged(object sender, EventArgs e)
+        {
+            Helpers.CheckAllItems(StorageDevicesCheckedListBox4, SelectAllStorageDevicesCheckBox4);
+        }
+
+        private void SelectAllBackupJobsCheckBox4_CheckedChanged(object sender, EventArgs e)
+        {
+            Helpers.CheckAllItems(BackupJobsCheckedListBox4, SelectAllBackupJobsCheckBox4);
+        }
+
+        private void SelectAllAlertTypesCheckBox4_CheckedChanged(object sender, EventArgs e)
+        {
+            Helpers.CheckAllItems(AlertTypesCheckedListBox4, SelectAllAlertTypesCheckBox4);
+        }
+
+        // Destination folder Browse button is clicked
+        private void FolderPathBrowseButton4_Click(object sender, EventArgs e)
+        {
+            Helpers.SelectDestinationFolder(FolderPathTextBox4);
+        }
+
+        private void GenerateButton4_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Make sure a folder path was specified
+                if (FolderPathTextBox4.Text != "")
+                {
+                    // Get storage devices
+                    dataExtractionInstance.GetStorageDeviceNames();
+                    // Run Frontend analysis
+                    if (dataExtractionInstance.JobErrorsAnalysis(FolderPathTextBox4.Text, BackupJobsCheckedListBox4.CheckedItems.Cast<string>().ToList(), null, StartDateTimePicker4.Value, EndDateTimePicker4.Value))
+                    {
+                        log.Info("Success: Job Errors Analysis");
+                    }
+                    else
+                    {
+                        log.Error("Failure: Job Errors Analysis");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Please select a valid destination folder.", "Invalid destination folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+            }
+        }
+
+        // Reload the BackupJobsCheckedListBox based on selected storage devices
+        private void RefreshJobsButton4_Click(object sender, EventArgs e)
+        {
+            Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox4.CheckedItems.Cast<string>().ToList(), BackupJobsCheckedListBox4);
+        }
+        #endregion
+
     }   
 }

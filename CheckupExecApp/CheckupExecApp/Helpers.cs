@@ -12,7 +12,6 @@ namespace CheckupExecApp
 {
     class Helpers
     {
-        
         private static Logger log = LogManager.GetCurrentClassLogger();
 
         static readonly string[] SizeSuffixes =
@@ -65,23 +64,35 @@ namespace CheckupExecApp
         }
 
         // Populates the StorageDevicesCheckedListBox with the list of storage devices
-        public static void LoadStorageDevicesCheckedListBox(CheckedListBox StorageDevicesCheckedListBox)
+        public static void LoadStorageDevicesCheckedListBox(DataExtraction dataExtractionInstance, CheckedListBox StorageDevicesCheckedListBox)
         {
-            DriveInfo[] drives = DriveInfo.GetDrives();
-            foreach(DriveInfo drive in drives)
+            // Clear the checked list box
+            StorageDevicesCheckedListBox.Items.Clear();
+
+            // Get list of storage devices
+            List<string> storageDevices = dataExtractionInstance.GetStorageDeviceNames();
+            foreach(string storageDevice in storageDevices)
             {
-                StorageDevicesCheckedListBox.Items.Add(drive.Name);
+                StorageDevicesCheckedListBox.Items.Add(storageDevice);
             }
         }
 
         // Populates the BackupJobsCheckedListBox with the list of Backup Jobs for the selected storage device
-        public static void LoadBackupJobsCheckedListBox()
+        public static void LoadBackupJobsCheckedListBox(DataExtraction dataExtractionInstance, List<string> storageDevices, CheckedListBox BackupJobsCheckedListBox)
         {
+            // Clear the checked list box
+            BackupJobsCheckedListBox.Items.Clear();
 
+            // Get list of backup jobs
+            List<string> backupJobs = dataExtractionInstance.GetJobNames(storageDevices);
+            foreach(string backupJob in backupJobs)
+            {
+                BackupJobsCheckedListBox.Items.Add(backupJob);
+            }
         }
 
         // Populates the AlertTypesCheckedListBox with the list of Backup Jobs for the selected storage device
-        public static void LoadAlertTypesCheckedListBox()
+        public static void LoadAlertTypesCheckedListBox(CheckedListBox AlertTypesCheckedListBox)
         {
 
         }
