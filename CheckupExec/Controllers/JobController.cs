@@ -8,21 +8,21 @@ using System.Threading.Tasks;
 
 namespace CheckupExec.Controllers
 {
-    class JobController
+    public class JobController
     {
-        private const string _getJobsScript = "get-bejob ";
-        private const string _converttoJsonString = "| convertto-json";
+        private const string _getJobsScript       = Constants.GetJobs + " ";
+        private const string _converttoJsonString = "| " + Constants.JsonPipeline;
 
         private List<Job> invokeGetJobs(string scriptToInvoke)
         {
-            List<Job> jobs = null;
+            List<Job> jobs = new List<Job>();
 
             BEMCLIHelper.powershell.AddScript(scriptToInvoke + _converttoJsonString);
 
             try
             {
                 var output = BEMCLIHelper.powershell.Invoke<string>();
-                jobs = (output.Count > 0) ? JsonHelper.ConvertFromJson<Job>(output[0]) : null;
+                jobs       = (output.Count > 0) ? JsonHelper.ConvertFromJson<Job>(output[0]) : jobs;
             }
             catch (Exception e)
             {
@@ -41,11 +41,13 @@ namespace CheckupExec.Controllers
             return invokeGetJobs(_getJobsScript);
         }
 
-        public List<Job> GetJobsBy(Dictionary<string, string> parameters)
+        public List<Job> GetJobs(Dictionary<string, string> parameters)
         {
             string scriptToInvoke = _getJobsScript;
 
-            foreach (var parameter in parameters)
+            parameters = parameters ?? new Dictionary<string, string>();
+
+            foreach (KeyValuePair<string, string> parameter in parameters)
             {
                 scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
             }
@@ -54,44 +56,57 @@ namespace CheckupExec.Controllers
         }
 
         //get-bealert {| get-be<..> {-k j}*}+ | convertto-json
-        public List<Job> GetJobsPipeline(Dictionary<string, Dictionary<string, string>> pipelineCommands)
+        public List<Job> GetJobs(Dictionary<string, Dictionary<string, string>> pipelineCommands)
         {
             string scriptToInvoke = "";
+
             int numCommands = pipelineCommands.Count;
 
-            foreach (var pipeline in pipelineCommands)
+            pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
+
+            foreach (KeyValuePair<string, Dictionary<string, string>> pipeline in pipelineCommands)
             {
                 scriptToInvoke += pipeline.Key + " ";
 
-                foreach (var parameter in pipeline.Value)
+                foreach (KeyValuePair<string, string> parameter in pipeline.Value)
                 {
                     scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
                 }
+
+                scriptToInvoke += "| ";
             }
 
-            scriptToInvoke += "| " + _getJobsScript;
+            scriptToInvoke += _getJobsScript;
 
             return invokeGetJobs(scriptToInvoke);
         }
 
         //get-bealert {-x y}+ {| get-be<> {-k j}*}+ | convertto-json
-        public List<Job> GetJobsByPipeline(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> jobParameters)
+        public List<Job> GetJobs(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> jobParameters)
         {
             string scriptToInvoke = "";
+
             int numCommands = pipelineCommands.Count;
 
-            foreach (var pipeline in pipelineCommands)
+            pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
+
+            foreach (KeyValuePair<string, Dictionary<string, string>> pipeline in pipelineCommands)
             {
                 scriptToInvoke += pipeline.Key + " ";
 
-                foreach (var parameter in pipeline.Value)
+                foreach (KeyValuePair<string, string> parameter in pipeline.Value)
                 {
                     scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
                 }
+
+                scriptToInvoke += "| ";
             }
 
-            scriptToInvoke += "| " + _getJobsScript;
-            foreach (var parameter in jobParameters)
+            scriptToInvoke += _getJobsScript;
+
+            jobParameters = jobParameters ?? new Dictionary<string, string>();
+
+            foreach (KeyValuePair<string, string> parameter in jobParameters)
             {
                 scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
             }

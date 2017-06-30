@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CheckupExec.Models
 {
-    class ServerInformation
+    public class ServerInformation
     {
         public string Name { get; set; }
 

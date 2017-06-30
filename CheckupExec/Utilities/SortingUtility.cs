@@ -10,6 +10,8 @@ namespace CheckupExec.Utilities
     {
         public static bool isSorted(List<T> objects)
         {
+            objects = objects ?? new List<T>();
+
             int count = objects.Count;
             for (int i = 0; i < count - 1; i++)
             {
@@ -18,40 +20,48 @@ namespace CheckupExec.Utilities
                     return false;
                 }
             }
+
             return true;
         }
 
+        //standard quicksort is used
         public static void sort(List<T> objects, int left, int right)
         {
-            int i = left, j = right;
-            T pivot = objects[(left + right) / 2];
+            objects = objects ?? new List<T>();
 
-            while (i <= j)
+            if (!isSorted(objects))
             {
-                while (objects[i].CompareTo(pivot) < 0)
+                qsort(objects, left, right);
+            }
+        }
+
+        private static void qsort(List<T> objects, int left, int right)
+        {
+            int pivot = 0;
+
+            if (left < right)
+            {
+                pivot = partition(objects, left, right);
+                qsort(objects, left, pivot - 1);
+                qsort(objects, pivot + 1, right);
+            }
+        }
+
+        private static int partition(List<T> objects, int left, int right)
+        {
+            var pivot = objects[(left + right) / 2];
+            int i = left - 1;
+
+            for (int j = left; j < right - 1; j++)
+            {
+                if (objects[j].CompareTo(pivot) <= 0)
                 {
                     i++;
-                }
-                while (objects[j].CompareTo(pivot) > 0)
-                {
-                    j--;
-                }
-                if (i <= j)
-                {
                     swap(objects[i], objects[j]);
-                    i++;
-                    j--;
                 }
             }
-
-            if (left < j)
-            {
-                sort(objects, left, j);
-            }
-            if (i < right)
-            {
-                sort(objects, i, right);
-            }
+            swap(objects[i + 1], objects[right]);
+            return i + 1;
         }
 
         private static void swap(T a, T b)

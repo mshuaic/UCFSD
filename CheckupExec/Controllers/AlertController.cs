@@ -1,4 +1,5 @@
-﻿using CheckupExec.Utilities;
+﻿using CheckupExec.Models;
+using CheckupExec.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,21 +8,21 @@ using System.Threading.Tasks;
 
 namespace CheckupExec.Controllers
 {
-    class AlertController
+    public class AlertController
     {
-        private const string _getAlertsScript = "get-bealert ";
-        private const string _converttoJsonString = "| convertto-json";
+        private const string _getAlertsScript     = Constants.GetAlerts + " ";
+        private const string _converttoJsonString = "| " + Constants.JsonPipeline;
 
         private List<Alert> invokeGetAlerts(string scriptToInvoke)
         {
-            List<Alert> alerts = null;
+            List<Alert> alerts = new List<Alert>();
 
             BEMCLIHelper.powershell.AddScript(scriptToInvoke + _converttoJsonString);
 
             try
             {
                 var output = BEMCLIHelper.powershell.Invoke<string>();
-                alerts = (output.Count > 0) ? JsonHelper.ConvertFromJson<Alert>(output[0]) : null;
+                alerts     = (output.Count > 0) ? JsonHelper.ConvertFromJson<Alert>(output[0]) : alerts;
             }
             catch (Exception e)
             {
@@ -40,11 +41,13 @@ namespace CheckupExec.Controllers
             return invokeGetAlerts(_getAlertsScript);
         }
 
-        public List<Alert> GetAlertsBy(Dictionary<string, string> parameters)
+        public List<Alert> GetAlerts(Dictionary<string, string> parameters)
         {
             string scriptToInvoke = _getAlertsScript;
 
-            foreach (var parameter in parameters)
+            parameters = parameters ?? new Dictionary<string, string>();
+            
+            foreach (KeyValuePair<string, string> parameter in parameters)
             {
                 scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
             }
@@ -53,48 +56,61 @@ namespace CheckupExec.Controllers
         }
 
         //get-bealert {| get-be<..> {-k j}*}+ | convertto-json
-        public List<Alert> GetAlertsPipeline(Dictionary<string, Dictionary<string, string>> pipelineCommands)
+        public List<Alert> GetAlerts(Dictionary<string, Dictionary<string, string>> pipelineCommands)
         {
             string scriptToInvoke = "";
+
             int numCommands = pipelineCommands.Count;
 
-            foreach (var pipeline in pipelineCommands)
+            pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
+
+            foreach (KeyValuePair<string, Dictionary<string, string>> pipeline in pipelineCommands)
             {
                 scriptToInvoke += pipeline.Key + " ";
 
-                foreach (var parameter in pipeline.Value)
+                foreach (KeyValuePair<string, string> parameter in pipeline.Value)
                 {
                     scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
                 }
+
+                scriptToInvoke += "| ";
             }
 
-            scriptToInvoke += "| " + _getAlertsScript;
+            scriptToInvoke += _getAlertsScript;
 
             return invokeGetAlerts(scriptToInvoke);
         }
 
         //get-bealert {-x y}+ {| get-be<> {-k j}*}+ | convertto-json
-        public List<Alert> GetAlertsByPipeline(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> alertParameters)
+        public List<Alert> GetAlerts(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> alertParameters)
         {
             string scriptToInvoke = ""; 
+
             int numCommands = pipelineCommands.Count;
 
-            foreach (var pipeline in pipelineCommands)
+            pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
+            
+            foreach (KeyValuePair<string, Dictionary<string, string>> pipeline in pipelineCommands)
             {
                 scriptToInvoke += pipeline.Key + " ";
 
-                foreach (var parameter in pipeline.Value)
+                foreach (KeyValuePair<string, string> parameter in pipeline.Value)
                 {
                     scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
                 }
+
+                scriptToInvoke += "| ";
             }
 
-            scriptToInvoke += "| " + _getAlertsScript;
-            foreach (var parameter in alertParameters)
+            scriptToInvoke += _getAlertsScript;
+
+            alertParameters = alertParameters ?? new Dictionary<string, string>();
+
+            foreach (KeyValuePair<string, string> parameter in alertParameters)
             {
                 scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
             }
-
+            
             return invokeGetAlerts(scriptToInvoke);
         }
     }

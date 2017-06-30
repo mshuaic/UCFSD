@@ -8,19 +8,19 @@ using System.Linq;
 
 namespace CheckupExec.Utilities
 {
-    class BEMCLIHelper
+    public class BEMCLIHelper
     {
-
         public static WSManConnectionInfo connectionInfo = null;
-        public static Runspace runspace = null;
+        public static Runspace runspace     = null;
         public static PowerShell powershell = null;
 
-        private const int port = 5985;
-        private const string appName = "/wsman";
+        private const int port        = 5985;
+        private const string appName  = "/wsman";
         private const string shellUri = "http://schemas.microsoft.com/powershell/Microsoft.PowerShell";
 
         public BEMCLIHelper(Boolean isRemoteUser, string pass, string serverName = null, string serverUsername = null)
         {    
+            //remote user and credential params fit
             if (isRemoteUser && !String.IsNullOrWhiteSpace(pass) && !String.IsNullOrWhiteSpace(serverName) && !String.IsNullOrWhiteSpace(serverUsername))
             {
                 try
@@ -42,7 +42,7 @@ namespace CheckupExec.Utilities
                     powershell = PowerShell.Create();
 
                     powershell.Runspace = runspace;
-                    powershell.AddScript("import-module bemcli");
+                    powershell.AddScript(Constants.ImportBEMCLI);
                     powershell.Invoke();
                     powershell.Commands.Clear();
                 }
@@ -53,6 +53,7 @@ namespace CheckupExec.Utilities
                     Console.WriteLine("Error: {0}, Message: {1}", e.Message, baseException.Message);
                 }
             }
+            //not remote user (params are not needed)
             else if (!isRemoteUser)
             {
                 try
@@ -66,7 +67,7 @@ namespace CheckupExec.Utilities
                     powershell = PowerShell.Create();
 
                     powershell.Runspace = runspace;
-                    powershell.AddScript("import-module bemcli");
+                    powershell.AddScript(Constants.ImportBEMCLI);
                     powershell.Invoke();
                     powershell.Commands.Clear();
                 }
@@ -77,6 +78,7 @@ namespace CheckupExec.Utilities
                     Console.WriteLine("Error: {0}, Message: {1}", e.Message, baseException.Message);
                 }
             }
+            //remote user missing one or more params
             else
             {
                 //LogUtility.LogInfoFunction("A password, server name, and username must be provided if accessing a Backup Exec Server remotely.");
@@ -84,24 +86,22 @@ namespace CheckupExec.Utilities
             }
         }
 
-        public static void cleanUp()
+        //dispose
+        public static bool CleanUp()
         {
-            if (runspace != null && powershell != null)
+            try
             {
-                try
-                {
-                    runspace.Close();
-                    powershell.Dispose();
-                }
-                catch (Exception e)
-                {
-                    Exception baseException = e.GetBaseException();
-                    //LogUtility.LogInfoFunction("Error:" + e.Message + "Message:" + baseException.Message);
-                    Console.WriteLine("Error: {0}, Message: {1}", e.Message, baseException.Message);
-                }
-
+                runspace.Close();
+                powershell.Dispose();
+                return true;
             }
-
+            catch (Exception e)
+            {
+                Exception baseException = e.GetBaseException();
+                //LogUtility.LogInfoFunction("Error:" + e.Message + "Message:" + baseException.Message);
+                Console.WriteLine("Error: {0}, Message: {1}", e.Message, baseException.Message);
+                return false;
+            }
         }
     }
 }

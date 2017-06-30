@@ -8,21 +8,21 @@ using System.Threading.Tasks;
 
 namespace CheckupExec.Controllers
 {
-    public class BEServerController
+    public class LicenseInformationController
     {
-        private const string _getBEServersScript  = Constants.GetBEServers + " ";
-        private const string _converttoJsonString = "| " + Constants.JsonPipeline;
+        private const string _getLicenseInformationScript = Constants.GetLicenses + " ";
+        private const string _converttoJsonString         = "| " + Constants.JsonPipeline;
 
-        private List<BEServer> invokeGetBEServers(string scriptToInvoke)
+        private List<LicenseInformation> invokeGetLicenseInformation(string scriptToInvoke)
         {
-            List<BEServer> beServers = new List<BEServer>();
+            List<LicenseInformation> licenses = new List<LicenseInformation>();
 
             BEMCLIHelper.powershell.AddScript(scriptToInvoke + _converttoJsonString);
 
             try
             {
                 var output = BEMCLIHelper.powershell.Invoke<string>();
-                beServers  = (output.Count > 0) ? JsonHelper.ConvertFromJson<BEServer>(output[0]) : beServers;
+                licenses   = (output.Count > 0) ? JsonHelper.ConvertFromJson<LicenseInformation>(output[0]) : licenses;
             }
             catch (Exception e)
             {
@@ -33,17 +33,17 @@ namespace CheckupExec.Controllers
 
             BEMCLIHelper.powershell.Commands.Clear();
 
-            return beServers;
+            return licenses;
         }
 
-        public List<BEServer> GetBEServers()
+        public List<LicenseInformation> GetLicenses()
         {
-            return invokeGetBEServers(_getBEServersScript);
+            return invokeGetLicenseInformation(_getLicenseInformationScript);
         }
 
-        public List<BEServer> GetBEServers(Dictionary<string, string> parameters)
+        public List<LicenseInformation> GetLicenses(Dictionary<string, string> parameters)
         {
-            string scriptToInvoke = _getBEServersScript;
+            string scriptToInvoke = _getLicenseInformationScript;
 
             parameters = parameters ?? new Dictionary<string, string>();
 
@@ -51,12 +51,12 @@ namespace CheckupExec.Controllers
             {
                 scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
             }
-
-            return invokeGetBEServers(scriptToInvoke);
+            
+            return invokeGetLicenseInformation(scriptToInvoke);
         }
 
         //get-bealert {| get-be<..> {-k j}*}+ | convertto-json
-        public List<BEServer> GetBEServers(Dictionary<string, Dictionary<string, string>> pipelineCommands)
+        public List<LicenseInformation> GetLicenses(Dictionary<string, Dictionary<string, string>> pipelineCommands)
         {
             string scriptToInvoke = "";
 
@@ -76,13 +76,13 @@ namespace CheckupExec.Controllers
                 scriptToInvoke += "| ";
             }
 
-            scriptToInvoke += _getBEServersScript;
+            scriptToInvoke += _getLicenseInformationScript;
 
-            return invokeGetBEServers(scriptToInvoke);
+            return invokeGetLicenseInformation(scriptToInvoke);
         }
 
         //get-bealert {-x y}+ {| get-be<> {-k j}*}+ | convertto-json
-        public List<BEServer> GetBEServers(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> beServerParameters)
+        public List<LicenseInformation> GetLicenses(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> licenseParameters)
         {
             string scriptToInvoke = "";
 
@@ -102,16 +102,16 @@ namespace CheckupExec.Controllers
                 scriptToInvoke += "| ";
             }
 
-            scriptToInvoke += _getBEServersScript;
+            scriptToInvoke += _getLicenseInformationScript;
 
-            beServerParameters = beServerParameters ?? new Dictionary<string, string>();
+            licenseParameters = licenseParameters ?? new Dictionary<string, string>();
 
-            foreach (KeyValuePair<string, string> parameter in beServerParameters)
+            foreach (KeyValuePair<string, string> parameter in licenseParameters)
             {
                 scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
             }
-
-            return invokeGetBEServers(scriptToInvoke);
+            
+            return invokeGetLicenseInformation(scriptToInvoke);
         }
     }
 }

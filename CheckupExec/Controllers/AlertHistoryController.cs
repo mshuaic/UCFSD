@@ -8,21 +8,21 @@ using System.Threading.Tasks;
 
 namespace CheckupExec.Controllers
 {
-    class AlertHistoryController
+    public class AlertHistoryController
     {
-        private const string _getAlertHistoriesScript = "get-beAlertHistory ";
-        private const string _converttoJsonString = "| convertto-json";
+        private const string _getAlertHistoriesScript = Constants.GetAlertHistories + " ";
+        private const string _converttoJsonString     = "| " + Constants.JsonPipeline;
 
         private List<Alert> invokeGetAlertHistories(string scriptToInvoke)
         {
-            List<Alert> alertHistories = null;
+            List<Alert> alertHistories = new List<Alert>();
 
             BEMCLIHelper.powershell.AddScript(scriptToInvoke + _converttoJsonString);
-
+            
             try
             {
-                var output = BEMCLIHelper.powershell.Invoke<string>();
-                alertHistories = (output.Count > 0) ? JsonHelper.ConvertFromJson<Alert>(output[0]) : null;
+                var output     = BEMCLIHelper.powershell.Invoke<string>();
+                alertHistories = (output.Count > 0) ? JsonHelper.ConvertFromJson<Alert>(output[0]) : alertHistories;
             }
             catch (Exception e)
             {
@@ -41,46 +41,56 @@ namespace CheckupExec.Controllers
             return invokeGetAlertHistories(_getAlertHistoriesScript);
         }
 
-        public List<Alert> GetAlertHistoriesBy(Dictionary<string, string> parameters)
+        public List<Alert> GetAlertHistories(Dictionary<string, string> parameters)
         {
             string scriptToInvoke = _getAlertHistoriesScript;
 
-            foreach (var parameter in parameters)
+            parameters = parameters ?? new Dictionary<string, string>();
+
+            foreach (KeyValuePair<string, string> parameter in parameters)
             {
                 scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
             }
-
+            
             return invokeGetAlertHistories(scriptToInvoke);
         }
 
         //get-bealert {| get-be<..> {-k j}*}+ | convertto-json
-        public List<Alert> GetAlertHistoriesPipeline(Dictionary<string, Dictionary<string, string>> pipelineCommands)
+        public List<Alert> GetAlertHistories(Dictionary<string, Dictionary<string, string>> pipelineCommands)
         {
             string scriptToInvoke = "";
+
             int numCommands = pipelineCommands.Count;
 
-            foreach (var pipeline in pipelineCommands)
+            pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
+
+            foreach (KeyValuePair<string, Dictionary<string, string>> pipeline in pipelineCommands)
             {
                 scriptToInvoke += pipeline.Key + " ";
 
-                foreach (var parameter in pipeline.Value)
+                foreach (KeyValuePair<string, string> parameter in pipeline.Value)
                 {
                     scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
                 }
+
+                scriptToInvoke += "| ";
             }
 
-            scriptToInvoke += "| " + _getAlertHistoriesScript;
+            scriptToInvoke += _getAlertHistoriesScript;
 
             return invokeGetAlertHistories(scriptToInvoke);
         }
 
         //get-bealert {-x y}+ {| get-be<> {-k j}*}+ | convertto-json
-        public List<Alert> GetAlertHistoriesByPipeline(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> alertHistoryParameters)
+        public List<Alert> GetAlertHistories(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> alertHistoryParameters)
         {
             string scriptToInvoke = "";
+
             int numCommands = pipelineCommands.Count;
 
-            foreach (var pipeline in pipelineCommands)
+            pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
+
+            foreach (KeyValuePair<string, Dictionary<string, string>> pipeline in pipelineCommands)
             {
                 scriptToInvoke += pipeline.Key + " ";
 
@@ -88,14 +98,19 @@ namespace CheckupExec.Controllers
                 {
                     scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
                 }
+
+                scriptToInvoke += "| ";
             }
 
-            scriptToInvoke += "| " + _getAlertHistoriesScript;
-            foreach (var parameter in alertHistoryParameters)
+            scriptToInvoke += _getAlertHistoriesScript;
+
+            alertHistoryParameters = alertHistoryParameters ?? new Dictionary<string, string>();
+
+            foreach (KeyValuePair<string, string> parameter in alertHistoryParameters)
             {
                 scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
             }
-
+            
             return invokeGetAlertHistories(scriptToInvoke);
         }
     }

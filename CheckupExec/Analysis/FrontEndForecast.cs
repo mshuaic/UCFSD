@@ -1,4 +1,6 @@
 ﻿using CheckupExec.Models;
+using CheckupExec.Models.AnalysisModels;
+using CheckupExec.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,29 +20,37 @@ namespace CheckupExec.Analysis
             }
         }
 
-        public long UsedCapacityBytes { get; }
+        public double MaxCapacity { get; }
 
-        public long MaxCapacityBytes { get; }
+        public List<FE_Forecast> FE_Forecasts { get; set; }
 
-        public string StorageType { get; }
-
-        public Dictionary<Storage, Forecast> forecasts { get; set; }
-
-        public FrontEndForecast(Dictionary<Storage, List<JobHistory>> fullBackupJobInstances)
+        public FrontEndForecast(List<FullBackupJobInstance> fullBackupJobInstances)
         {
             _forecastsSuccessful = true;
 
-            if (fullBackupJobInstances != null)
-            {
-                foreach (var storageDevice in fullBackupJobInstances)
-                {
-                    forecasts[storageDevice.Key] = new Forecast(storageDevice.Key, storageDevice.Value);
+            FE_Forecasts = new List<FE_Forecast>();
+            var fc       = new Forecast<JobHistory>();
 
-                    if (!forecasts[storageDevice.Key].ForecastSuccessful)
+            //for each element, create an element in Forecasts like { storage: ForecastResults } and compute maxcapacity available between all storage devices
+            //being backed up fully
+            if (fullBackupJobInstances != null && fullBackupJobInstances.Count > 0)
+            {
+                foreach (FullBackupJobInstance fullBackupJobInstance in fullBackupJobInstances)
+                {
+                    var fe_forecast = new FE_Forecast
+                    {
+                        Storage         = fullBackupJobInstance.Storage,
+                        ForecastResults = fc.doForecast(fullBackupJobInstance.JobHistories)
+                    };
+                    
+                    if (!fe_forecast.ForecastResults.ForecastSuccessful)
                     {
                         _forecastsSuccessful = false;
                         break;
                     }
+
+                    FE_Forecasts.Add(fe_forecast);
+                    MaxCapacity += (double)(fullBackupJobInstance.Storage.TotalCapacityBytes >> 20) / 1024;
                 }
             }
         }
