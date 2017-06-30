@@ -206,6 +206,7 @@ namespace CheckupExecApp
 
             // Display drive usage pie chart
             DiskInfoLabel.Text = drivePath;
+            DriveUsageChart.Series["DriveUsage"].Points.Clear();
             // Drive space used
             DriveUsageChart.Series["DriveUsage"].Points.AddXY(driveSpaceUsedPercent + "% Used", driveSpaceUsedPercent);
             // Drive space available
