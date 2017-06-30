@@ -386,5 +386,74 @@ namespace CheckupExec
         {
             return BEMCLIHelper.CleanUp();
         }
+
+        public bool DemoTest()
+        {
+            var instances = new List<JobHistory>();
+            Random j = new Random();
+            long bytes = 10000000000;
+
+            for (int i = 0, k = 100; i <= 100; i++, k--)
+            {
+                bytes = bytes + j.Next(-100000, 10000000);
+
+                instances.Add(new JobHistory
+                {
+                    TotalDataSizeBytes = bytes,
+                    StartTime = DateTime.Now.Date.AddDays(-k)
+                });
+            }
+
+            double maxCapacity = 20;
+
+            var fc = new Forecast<JobHistory>();
+
+            var fr = fc.doForecast(instances);
+
+            var report = new BackupJobReport();
+
+            report.HistoricalPoints = fr.plot;
+
+            report.ForecastPoints = new List<PlotPoint>();
+
+            report.DaysTo50 = ((maxCapacity * .5) - fr.FinalIntercept) / fr.FinalSlope;
+            report.ForecastPoints.Add(new PlotPoint
+            {
+                Days = report.DaysTo50,
+                GB = (maxCapacity * .5)
+            });
+
+            report.DaysTo75 = ((maxCapacity * .75) - fr.FinalIntercept) / fr.FinalSlope;
+            report.ForecastPoints.Add(new PlotPoint
+            {
+                Days = report.DaysTo75,
+                GB = (maxCapacity * .75)
+            });
+
+            report.DaysTo90 = ((maxCapacity * .9) - fr.FinalIntercept) / fr.FinalSlope;
+            report.ForecastPoints.Add(new PlotPoint
+            {
+                Days = report.DaysTo90,
+                GB = (maxCapacity * .9)
+            });
+
+            report.DaysToFull = (maxCapacity - fr.FinalIntercept) / fr.FinalSlope;
+            report.ForecastPoints.Add(new PlotPoint
+            {
+                Days = report.DaysToFull,
+                GB = (maxCapacity)
+            });
+
+            //foreach (FE_Forecast fe_forecast in feuc.FrontEndForecast.FE_Forecasts)
+            //{
+            //    report.StorageDevices.Add(fe_forecast.Storage);
+            //}
+
+            report.MaxCapacity = maxCapacity;
+            report.UsedCapacity = bytes;
+            report.JobName = "Demo Test Job";
+
+            return true;
+        }
     }
 }
