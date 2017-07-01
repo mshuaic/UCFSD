@@ -14,13 +14,13 @@ namespace CheckupExec.Models
 
         public int CompareTo(DiskCapacity dc)
         {
-            if (dc.Date > this.Date)
-            {
-                return 1;
-            }
-            else if (dc.Date < this.Date)
+            if (dc.Date > Date)
             {
                 return -1;
+            }
+            else if (dc.Date < Date)
+            {
+                return 1;
             }
             return 0;
         }

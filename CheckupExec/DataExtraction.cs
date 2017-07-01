@@ -444,13 +444,8 @@ namespace CheckupExec
                 GB = (maxCapacity)
             });
 
-            //foreach (FE_Forecast fe_forecast in feuc.FrontEndForecast.FE_Forecasts)
-            //{
-            //    report.StorageDevices.Add(fe_forecast.Storage);
-            //}
-
             report.MaxCapacity = maxCapacity;
-            report.UsedCapacity = bytes;
+            report.UsedCapacity = (double) (bytes >> 20) / 1024;
             report.JobName = "Demo Test Job";
 
             return true;

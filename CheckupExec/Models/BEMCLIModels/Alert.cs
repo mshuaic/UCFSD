@@ -164,13 +164,13 @@ namespace CheckupExec.Models
 
         public int CompareTo(Alert alert)
         {
-            if (alert.Date > this.Date)
-            {
-                return 1;
-            }
-            else if (alert.Date < this.Date)
+            if (alert.Date > Date)
             {
                 return -1;
+            }
+            else if (alert.Date < Date)
+            {
+                return 1;
             }
             return 0;
         }

@@ -39,7 +39,7 @@ namespace CheckupExec.Analysis
 
             //if we have storages, and they are not a pool of devices, set up the list _fullBackupJobInstances with { storage: List<JobHistory> }'s
             //then pass this list to FrontendForecast
-            if (storageDevices.Count > 0)
+            if (storageDevices != null && storageDevices.Count > 0)
             {
                 foreach (Storage storageDevice in storageDevices)
                 {
@@ -64,6 +64,8 @@ namespace CheckupExec.Analysis
                                     lastFullBackupJobInstance = jobHistory;
                                 }
                             }
+
+                            SortingUtility<JobHistory>.sort(fullBackupJobInstance.JobHistories, 0, fullBackupJobInstance.JobHistories.Count - 1);
 
                             _fullBackupJobInstances.Add(fullBackupJobInstance);
 

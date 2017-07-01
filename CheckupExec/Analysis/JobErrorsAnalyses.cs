@@ -18,6 +18,8 @@ namespace CheckupExec.Analysis
         //All this is doing right now is getting job histories depending on the params passed
         public JobErrorsAnalyses(DateTime? start = null, DateTime? end = null, List<string> jobErrorStatuses = null, List<string> jobNames = null)
         {
+            Successful = true;
+
             _jobHistories = new List<JobHistory>();
 
             var jobHistoryPipeline = new Dictionary<string, string>
@@ -124,13 +126,19 @@ namespace CheckupExec.Analysis
                 foreach (JobHistory jobHistory in _jobHistories)
                 {
                     if (Convert.ToInt32(jobHistory.JobStatus) == JobHistory.SuccessfulFinalStatus)
+                    {
                         filteredJobHistories.Add(jobHistory);
+                    }
                 }
 
                 foreach (JobHistory jobHistory in filteredJobHistories)
                 {
                     _jobHistories.Remove(jobHistory);
                 }
+            }
+            else
+            {
+                Successful = false;
             }
         }
     }

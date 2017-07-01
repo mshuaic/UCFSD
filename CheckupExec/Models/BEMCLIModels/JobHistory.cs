@@ -84,13 +84,13 @@ namespace CheckupExec.Models
 
         public int CompareTo(JobHistory jobHistory)
         {
-            if (jobHistory.StartTime > this.StartTime)
-            {
-                return 1;
-            }
-            else if (jobHistory.StartTime < this.StartTime)
+            if (jobHistory.StartTime > StartTime)
             {
                 return -1;
+            }
+            else if (jobHistory.StartTime < StartTime)
+            {
+                return 1;
             }
             return 0;
         }

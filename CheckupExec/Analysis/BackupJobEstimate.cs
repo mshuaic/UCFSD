@@ -143,7 +143,14 @@ namespace CheckupExec.Analysis
                         }
                     }
 
-                    EstimateDataSizeMB = ((jobHistories[count - 1].TotalDataSizeBytes >> 20) + sum / count) / 1024;
+                    try
+                    {
+                        EstimateDataSizeMB = ((jobHistories[count - 1].TotalDataSizeBytes >> 20) + sum / count) / 1024;
+                    }
+                    catch (IndexOutOfRangeException e)
+                    {
+                        //index out of range
+                    }
                 }
 
                 try

@@ -18,6 +18,8 @@ namespace CheckupExec.Analysis
         //All this is doing right now is getting alerts depending on the params passed
         public AlertsAnalyses(DateTime? start = null, DateTime? end = null, List<string> jobNames = null, List<string> alertTypes = null)
         {
+            Successful = true;
+
             start      = start ?? DateTime.MinValue;
             end        = end ?? DateTime.Now;
             jobNames   = jobNames ?? new List<string>();
@@ -131,16 +133,28 @@ namespace CheckupExec.Analysis
             }
 
             if (_allAlerts.Count > 0)
-            {                
+            {
                 SortingUtility<Alert>.sort(_allAlerts, 0, _allAlerts.Count - 1);   
+
+                var filteredAlerts = new List<Alert>();
 
                 foreach (Alert alert in _allAlerts)
                 {
                     if (alert.Date < start || alert.Date > end)
                     {
-                        _allAlerts.Remove(alert);
+                        filteredAlerts.Remove(alert);
                     }
                 }
+
+                foreach (Alert alert in filteredAlerts)
+                {
+                    _allAlerts.Remove(alert);
+                }
+
+            }
+            else
+            {
+                Successful = false;
             }
         }
     }
