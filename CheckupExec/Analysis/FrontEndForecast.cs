@@ -20,37 +20,28 @@ namespace CheckupExec.Analysis
             }
         }
 
-        public double MaxCapacity { get; }
-
-        public List<FE_Forecast> FE_Forecasts { get; set; }
-
-        public FrontEndForecast(List<FullBackupJobInstance> fullBackupJobInstances)
+        public FrontEndForecast(List<FE_Forecast> fe_forecasts)
         {
             _forecastsSuccessful = true;
 
-            FE_Forecasts = new List<FE_Forecast>();
             var fc       = new Forecast<JobHistory>();
 
             //for each element, create an element in Forecasts like { storage: ForecastResults } and compute maxcapacity available between all storage devices
             //being backed up fully
-            if (fullBackupJobInstances != null && fullBackupJobInstances.Count > 0)
+            if (fe_forecasts != null && fe_forecasts.Count > 0)
             {
-                foreach (FullBackupJobInstance fullBackupJobInstance in fullBackupJobInstances)
+                foreach (FE_Forecast fe_forecast in fe_forecasts)
                 {
-                    var fe_forecast = new FE_Forecast
-                    {
-                        Storage         = fullBackupJobInstance.Storage,
-                        ForecastResults = fc.doForecast(fullBackupJobInstance.JobHistories)
-                    };
-                    
+                    fe_forecast.ForecastResults = fc.doForecast(fe_forecast.JobHistories);
+
                     if (!fe_forecast.ForecastResults.ForecastSuccessful)
                     {
                         _forecastsSuccessful = false;
                         break;
                     }
 
-                    FE_Forecasts.Add(fe_forecast);
-                    MaxCapacity += (double)(fullBackupJobInstance.Storage.TotalCapacityBytes >> 20) / 1024;
+                    //max capacity that can be stored on device
+                    fe_forecast.MaxCapacity += (double)(fe_forecast.Storage.TotalCapacityBytes >> 20) / 1024;
                 }
             }
         }

@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace CheckupExec.Models
 {   
+    //we are not storing member devices [for device pools] because we are not looing directly at any device pools
+
     public class Storage
     {
         public string Name { get; set; }

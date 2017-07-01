@@ -7,39 +7,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CheckupExec.Utilities;
+using CheckupExec.Models.AnalysisModels;
 
 namespace CheckupExec.Analysis
 {
     public class BackupJobEstimate
     {
-        public string JobName { get; }
-
-        public DateTime NextStartDate { get; }
-
-        public double EstimateOfJobRateMBMin { get; }
-
-        public double EstimateOfElapsedTimeSec { get; }
-
-        public double EstimateDataSizeMB { get; set; }
-
-        public ForecastResults ForecastResults { get; set; }
-
-        public bool isPoolDevice { get; set; }
-
-        public string StorageName { get; }
-
-        public long UsedCapacityBytes { get; }
-
-        public long MaxCapacityBytes { get; }
-
-        public string StorageType { get; }
-
-        private string _jobId;
+        public BackupJobEstimateModel BackupJobEstimateModel { get; set; }
 
         //get all job instances and filter by 1) successful and 2) fully completed, then run analysis on those job instances 
         public BackupJobEstimate(string jobId)
         {
-            _jobId = jobId;
+            BackupJobEstimateModel = new BackupJobEstimateModel
+            {
+                JobId = jobId
+            };
 
             var jobPipeline = new Dictionary<string, string>
             {
@@ -69,13 +51,13 @@ namespace CheckupExec.Analysis
                     }
                 }
             }
-
+            
             if (filteredJobHistories.Count > 0)
             {
-                JobName                  = job.Name;
-                NextStartDate            = job.NextStartDate;
-                EstimateOfJobRateMBMin   = estimateJobRate(filteredJobHistories);
-                EstimateOfElapsedTimeSec = estimateElapsedTime(filteredJobHistories);
+                BackupJobEstimateModel.JobName                  = job.Name;
+                BackupJobEstimateModel.NextStartDate            = job.NextStartDate;
+                BackupJobEstimateModel.EstimateOfJobRateMBMin   = estimateJobRate(filteredJobHistories);
+                BackupJobEstimateModel.EstimateOfElapsedTimeSec = estimateElapsedTime(filteredJobHistories);
             }
         }
 
@@ -117,13 +99,15 @@ namespace CheckupExec.Analysis
     
                 SortingUtility<JobHistory>.sort(jobHistories, 0, jobHistories.Count - 1);
 
-                ForecastResults = _fc.doForecast(jobHistories);
+                BackupJobEstimateModel.ForecastResults = _fc.doForecast(jobHistories);
 
-                if (ForecastResults.ForecastSuccessful)
+                if (BackupJobEstimateModel.ForecastResults.ForecastSuccessful)
                 {
                     //Console.WriteLine("Slope: " + ForecastResults.FinalSlope);
                     //Console.WriteLine("Intercept: " + ForecastResults.FinalIntercept);
-                    EstimateDataSizeMB = ForecastResults.FinalIntercept + ForecastResults.FinalSlope * NextStartDate.Subtract(DateTime.Now).TotalDays;
+                    BackupJobEstimateModel.EstimateDataSizeMB =
+                        BackupJobEstimateModel.ForecastResults.FinalIntercept +
+                        BackupJobEstimateModel.ForecastResults.FinalSlope * BackupJobEstimateModel.NextStartDate.Subtract(DateTime.Now).TotalDays;
                 }
                 else
                 {
@@ -145,7 +129,7 @@ namespace CheckupExec.Analysis
 
                     try
                     {
-                        EstimateDataSizeMB = ((jobHistories[count - 1].TotalDataSizeBytes >> 20) + sum / count) / 1024;
+                        BackupJobEstimateModel.EstimateDataSizeMB = ((jobHistories[count - 1].TotalDataSizeBytes >> 20) + sum / count) / 1024;
                     }
                     catch (IndexOutOfRangeException e)
                     {
@@ -155,7 +139,8 @@ namespace CheckupExec.Analysis
 
                 try
                 {
-                    return 60 * (EstimateDataSizeMB * 1024) / EstimateOfJobRateMBMin;
+                    return 60 * (BackupJobEstimateModel.EstimateDataSizeMB * 1024) 
+                        / BackupJobEstimateModel.EstimateOfJobRateMBMin;
                 }
                 catch (DivideByZeroException e)
                 {

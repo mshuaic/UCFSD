@@ -31,6 +31,10 @@ namespace CheckupExec
 
         public static StorageController StorageController { get; set; }
 
+        public static StorageDevicePoolController StorageDevicePoolController { get; set; }
+
+        public static EditionInformationController EditionInformationController { get; set; }
+
         private List<Storage> _storageDevices { get; set; }
 
         private List<Job> _jobs { get; set; }
@@ -69,6 +73,10 @@ namespace CheckupExec
                 LicenseInformationController = new LicenseInformationController();
 
                 StorageController            = new StorageController();
+
+                StorageDevicePoolController  = new StorageDevicePoolController();
+
+                EditionInformationController = new EditionInformationController();
             }
             else
             {
@@ -86,6 +94,21 @@ namespace CheckupExec
 
             //retrieve storage devices and return their names
             _storageDevices = StorageController.GetStorages();
+            var poolDevices = StorageDevicePoolController.GetStoragePools();
+
+            if (_storageDevices != null && _storageDevices.Count > 0
+                && poolDevices != null && poolDevices.Count > 0)
+            {
+                Storage temp = null;
+                foreach (var device in poolDevices)
+                {
+                    if ((temp = _storageDevices.Find(x => x.Name.Equals(device.Name))) != null)
+                    {
+                        _storageDevices.Remove(temp);
+                        temp = null;
+                    }
+                }
+            }
 
             if (_storageDevices != null && _storageDevices.Count > 0)
             {
@@ -159,8 +182,17 @@ namespace CheckupExec
             //run frontendanalysis
             var feuc = new FrontEndUsedCapacity(_storageDevices);
 
-            var maxCapacity = feuc.FrontEndForecast.MaxCapacity;
-            var usedCapacity = feuc.TotalUsedCapacity;
+            //used is total data being processed by be. max is total max storage on all resources that be currently backs up.
+            double maxCapacity = 0;
+            double usedCapacity = 0;
+
+            //get editioninformation here, then licenseinformation (count of used licenses that correspond to each tier * TB and compare with usedcap.)
+
+            foreach (var FE_Forecast in feuc.Fe_Forecasts)
+            {
+                maxCapacity += FE_Forecast.MaxCapacity;
+                usedCapacity += FE_Forecast.UsedCapacity;
+            };
 
             // || true to test with our sets
             //front end analysis has already been run, so here we check if it was successful
@@ -171,8 +203,7 @@ namespace CheckupExec
                 double fullSlope     = 0;
                 double fullIntercept = 0;
 
-                //
-                foreach (FE_Forecast forecast in feuc.FrontEndForecast.FE_Forecasts)
+                foreach (FE_Forecast forecast in feuc.Fe_Forecasts)
                 {
                     foreach (PlotPoint point in forecast.ForecastResults.plot)
                     {
@@ -187,18 +218,9 @@ namespace CheckupExec
                     fullIntercept += forecast.ForecastResults.FinalIntercept;
                 }
 
-                //call report generator method for frontend and pass in ^
+                //call license analysis and pass used cap.
+                //brings back analysis and max cap. support by current licensing
 
-                //foreach (var pointList in fullPlot)
-                //{
-                //    foreach (var point in pointList.Value)
-                //    {
-                //        Console.WriteLine("(" + pointList.Key + ", " + point + ")");
-                //    }
-                //}
-
-                //Console.WriteLine("Slope: " + fullSlope);
-                //Console.WriteLine("Intercept: " + fullIntercept);
                 var report = new FrontEndCapacityReport();
 
                 report.HistoricalPoints = fullPlot;
@@ -233,7 +255,7 @@ namespace CheckupExec
                     GB = (maxCapacity)
                 });
 
-                foreach (FE_Forecast fe_forecast in feuc.FrontEndForecast.FE_Forecasts)
+                foreach (FE_Forecast fe_forecast in feuc.Fe_Forecasts)
                 {
                     report.StorageDevices.Add(fe_forecast.Storage);
                 }
@@ -259,7 +281,7 @@ namespace CheckupExec
         /// <returns>True if successful, false if not.</returns>
         public bool BackupJobsAnalysis(List<string> jobNames, string reportPath)
         {
-            var buJobEstimates = new List<BackupJobEstimate>();
+            var buJobEstimates = new List<BackupJobEstimateModel>();
 
             //if we have a subset of total jobs passed to us, for each of these run backupjobestimate on it and add to a list for report generator
             if (jobNames!= null && jobNames.Count > 0)
@@ -275,7 +297,7 @@ namespace CheckupExec
                 {
                     foreach (string jobId in jobIds)
                     {
-                        var buje = new BackupJobEstimate(jobId);
+                        var buje = new BackupJobEstimate(jobId).BackupJobEstimateModel;
 
                         buJobEstimates.Add(buje);
                     }
@@ -308,7 +330,7 @@ namespace CheckupExec
                 {
                     foreach (Job job in _jobs)
                     {
-                        var buje = new BackupJobEstimate(job.Id);
+                        var buje = new BackupJobEstimate(job.Id).BackupJobEstimateModel;
 
                         buJobEstimates.Add(buje);
                     }

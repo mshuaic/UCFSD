@@ -97,9 +97,9 @@ namespace CheckupExec.Utilities
             //        return;
             //}
 
-            // || false for testing with our sets
+            // && false for testing with our sets
             //if we meet minimum subset rqmnts, run forecast
-            if (jobHistories.Count < _minSubsetSizeBE || false)
+            if (jobHistories.Count < _minSubsetSizeBE && false)
             {
                 _forecastResults.ForecastSuccessful = false;
             }
