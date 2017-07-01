@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace CheckupExec.Models.ReportModels
 {
+    //todo: add license analysis props (w/e those are going to be)
     public class FrontEndCapacityReport
     {
         public List<PlotPoint> HistoricalPoints { get; set; }

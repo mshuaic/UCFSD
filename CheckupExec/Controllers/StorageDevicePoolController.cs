@@ -41,77 +41,77 @@ namespace CheckupExec.Controllers
             return invokeGetStorages(_getStoragePoolsScript);
         }
 
-        public List<Storage> GetStoragePools(Dictionary<string, string> parameters)
-        {
-            string scriptToInvoke = _getStoragePoolsScript;
+        //public List<Storage> GetStoragePools(Dictionary<string, string> parameters)
+        //{
+        //    string scriptToInvoke = _getStoragePoolsScript;
 
-            parameters = parameters ?? new Dictionary<string, string>();
+        //    parameters = parameters ?? new Dictionary<string, string>();
 
-            foreach (KeyValuePair<string, string> parameter in parameters)
-            {
-                scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
-            }
+        //    foreach (KeyValuePair<string, string> parameter in parameters)
+        //    {
+        //        scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
+        //    }
 
-            return invokeGetStorages(scriptToInvoke);
-        }
+        //    return invokeGetStorages(scriptToInvoke);
+        //}
 
-        //get-bealert {| get-be<..> {-k j}*}+ | convertto-json
-        public List<Storage> GetStoragePools(Dictionary<string, Dictionary<string, string>> pipelineCommands)
-        {
-            string scriptToInvoke = "";
+        ////get-bealert {| get-be<..> {-k j}*}+ | convertto-json
+        //public List<Storage> GetStoragePools(Dictionary<string, Dictionary<string, string>> pipelineCommands)
+        //{
+        //    string scriptToInvoke = "";
 
-            int numCommands = pipelineCommands.Count;
+        //    int numCommands = pipelineCommands.Count;
 
-            pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
+        //    pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
 
-            foreach (KeyValuePair<string, Dictionary<string, string>> pipeline in pipelineCommands)
-            {
-                scriptToInvoke += pipeline.Key + " ";
+        //    foreach (KeyValuePair<string, Dictionary<string, string>> pipeline in pipelineCommands)
+        //    {
+        //        scriptToInvoke += pipeline.Key + " ";
 
-                foreach (KeyValuePair<string, string> parameter in pipeline.Value)
-                {
-                    scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
-                }
+        //        foreach (KeyValuePair<string, string> parameter in pipeline.Value)
+        //        {
+        //            scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+        //        }
 
-                scriptToInvoke += "| ";
-            }
+        //        scriptToInvoke += "| ";
+        //    }
 
-            scriptToInvoke += _getStoragePoolsScript;
+        //    scriptToInvoke += _getStoragePoolsScript;
 
-            return invokeGetStorages(scriptToInvoke);
-        }
+        //    return invokeGetStorages(scriptToInvoke);
+        //}
 
-        //get-bealert {-x y}+ {| get-be<> {-k j}*}+ | convertto-json
-        public List<Storage> GetStoragePools(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> storagePoolParameters)
-        {
-            string scriptToInvoke = "";
+        ////get-bealert {-x y}+ {| get-be<> {-k j}*}+ | convertto-json
+        //public List<Storage> GetStoragePools(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> storagePoolParameters)
+        //{
+        //    string scriptToInvoke = "";
 
-            int numCommands = pipelineCommands.Count;
+        //    int numCommands = pipelineCommands.Count;
 
-            pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
+        //    pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
 
-            foreach (KeyValuePair<string, Dictionary<string, string>> pipeline in pipelineCommands)
-            {
-                scriptToInvoke += pipeline.Key + " ";
+        //    foreach (KeyValuePair<string, Dictionary<string, string>> pipeline in pipelineCommands)
+        //    {
+        //        scriptToInvoke += pipeline.Key + " ";
 
-                foreach (KeyValuePair<string, string> parameter in pipeline.Value)
-                {
-                    scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
-                }
+        //        foreach (KeyValuePair<string, string> parameter in pipeline.Value)
+        //        {
+        //            scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+        //        }
 
-                scriptToInvoke += "| ";
-            }
+        //        scriptToInvoke += "| ";
+        //    }
 
-            scriptToInvoke += _getStoragePoolsScript;
+        //    scriptToInvoke += _getStoragePoolsScript;
 
-            storagePoolParameters = storagePoolParameters ?? new Dictionary<string, string>();
+        //    storagePoolParameters = storagePoolParameters ?? new Dictionary<string, string>();
 
-            foreach (KeyValuePair<string, string> parameter in storagePoolParameters)
-            {
-                scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
-            }
+        //    foreach (KeyValuePair<string, string> parameter in storagePoolParameters)
+        //    {
+        //        scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+        //    }
 
-            return invokeGetStorages(scriptToInvoke);
-        }
+        //    return invokeGetStorages(scriptToInvoke);
+        //}
     }
 }

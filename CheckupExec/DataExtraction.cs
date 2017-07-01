@@ -2,13 +2,12 @@
 using CheckupExec.Controllers;
 using CheckupExec.Models;
 using CheckupExec.Models.AnalysisModels;
+using CheckupExec.Models.BEMCLIModels;
 using CheckupExec.Models.ReportModels;
 using CheckupExec.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CheckupExec
 {
@@ -22,6 +21,8 @@ namespace CheckupExec
         public static AlertController AlertController { get; set; }
 
         public static AlertHistoryController AlertHistoryController { get; set; }
+
+        public static AlertCategoryController AlertCategoryController { get; set; }
 
         public static JobController JobController { get; set; }
 
@@ -66,6 +67,8 @@ namespace CheckupExec
 
                 AlertHistoryController       = new AlertHistoryController();
 
+                AlertCategoryController      = new AlertCategoryController();
+
                 JobController                = new JobController();
 
                 JobHistoryController         = new JobHistoryController();
@@ -105,7 +108,6 @@ namespace CheckupExec
                     if ((temp = _storageDevices.Find(x => x.Name.Equals(device.Name))) != null)
                     {
                         _storageDevices.Remove(temp);
-                        temp = null;
                     }
                 }
             }
@@ -173,6 +175,34 @@ namespace CheckupExec
             return names;
         }
 
+        public List<string> GetAlertCategoryNames()
+        {
+            var alertCategories = AlertCategoryController.GetAlertCategories();
+            var alertCategoryNames = new List<string>();
+
+            if (alertCategories != null && alertCategories.Count > 0)
+            {
+                foreach (AlertCategory category in alertCategories)
+                {
+                    alertCategoryNames.Add(category.Name);
+                }
+            }
+
+            return alertCategoryNames;
+        }
+
+        public List<string> GetJobErrorStatuses()
+        {
+            var errorStatuses = new List<string>();
+
+            foreach (KeyValuePair<string, string> errorStatus in Constants.JobErrorStatuses)
+            {
+                errorStatuses.Add(errorStatus.Key);
+            }
+
+            return errorStatuses;
+        }
+
         /// <summary>
         /// Runs FrontendUsedCapacity and FrontendForecast. No parameters are needed since this is a full analysis of the server.
         /// </summary>
@@ -188,7 +218,7 @@ namespace CheckupExec
 
             //get editioninformation here, then licenseinformation (count of used licenses that correspond to each tier * TB and compare with usedcap.)
 
-            foreach (var FE_Forecast in feuc.Fe_Forecasts)
+            foreach (FE_Forecast FE_Forecast in feuc.Fe_Forecasts)
             {
                 maxCapacity += FE_Forecast.MaxCapacity;
                 usedCapacity += FE_Forecast.UsedCapacity;
@@ -254,6 +284,8 @@ namespace CheckupExec
                     Days = report.DaysToFull,
                     GB = (maxCapacity)
                 });
+
+                report.StorageDevices = new List<Storage>();
 
                 foreach (FE_Forecast fe_forecast in feuc.Fe_Forecasts)
                 {
@@ -394,8 +426,17 @@ namespace CheckupExec
         /// <returns>True if successful, false if not.</returns>
         public bool JobErrorsAnalysis(string reportPath, List<string> jobNames, List<string> errorStatuses, DateTime? start = null, DateTime? end = null)
         {
+            var jobErrorStatuses = new List<string>();
+            if (errorStatuses != null && errorStatuses.Count > 0)
+            {
+                foreach (string errorStatus in errorStatuses)
+                {
+                    jobErrorStatuses.Add(Constants.JobErrorStatuses[errorStatus]);
+                }
+            }
+
             //run JobErrorsAnalysis with given params
-            var jobErrorsAnalysis = new JobErrorsAnalyses(start, end, errorStatuses, jobNames);
+            var jobErrorsAnalysis = new JobErrorsAnalyses(start, end, jobErrorStatuses, jobNames);
 
             //pass to report generator
 

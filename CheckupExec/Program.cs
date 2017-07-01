@@ -1,19 +1,4 @@
-﻿using CheckupExec.Analysis;
-using CheckupExec.Controllers;
-using CheckupExec.Models;
-using CheckupExec.Models.AnalysisModels;
-using CheckupExec.Models.ReportModels;
-using CheckupExec.Utilities;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Management.Automation;
-using System.Management.Automation.Runspaces;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace CheckupExec
 {
@@ -32,6 +17,19 @@ namespace CheckupExec
 
             if (de.PowershellInstanceCreated)
             {
+                var cats = de.GetAlertCategoryNames();
+                var jess = de.GetJobErrorStatuses();
+
+                foreach (var cat in cats)
+                {
+                    Console.WriteLine(cat);
+                }
+
+                foreach (var jes in jess)
+                {
+                    Console.WriteLine(jes);
+                }
+
                 //get storage device names
                 var storageNames = de.GetStorageDeviceNames();
 

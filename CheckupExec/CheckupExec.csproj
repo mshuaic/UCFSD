@@ -76,6 +76,7 @@
     <Compile Include="Analysis\FrontEndUsedCapacity.cs" />
     <Compile Include="Analysis\JobErrorsAnalyses.cs" />
     <Compile Include="Analysis\LicenseAnalysis.cs" />
+    <Compile Include="Controllers\AlertCategoryController.cs" />
     <Compile Include="Controllers\AlertController.cs" />
     <Compile Include="Controllers\AlertHistoryController.cs" />
     <Compile Include="Controllers\BEServerController.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="Models\AnalysisModels\FE_Forecast.cs" />
     <Compile Include="Models\AnalysisModels\PlotPoint.cs" />
     <Compile Include="Models\BEMCLIModels\Alert.cs" />
+    <Compile Include="Models\BEMCLIModels\AlertCategory.cs" />
     <Compile Include="Models\BEMCLIModels\BackupDefinition.cs" />
     <Compile Include="Models\BEMCLIModels\BEServer.cs" />
     <Compile Include="Models\AnalysisModels\UsedCapacity.cs" />

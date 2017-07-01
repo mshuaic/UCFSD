@@ -11,27 +11,26 @@ namespace CheckupExec.Analysis
 
     public class LicenseAnalysis
     {
-        //likely will be called straight from frontend forecast [if condition is met] to tie the forecast with the user's licensing setup
+        //likely will be called straight from frontend forecast to tie the forecast with the user's licensing setup
         public LicenseAnalysis()
         {
-            var serverEdition = "";
             var editionInformationAsList = DataExtraction.EditionInformationController.GetEditionInformation();
-            if (editionInformationAsList != null && editionInformationAsList.Count > 0)
+
+            var editionInformation = editionInformationAsList.First();
+
+            var serverEdition = (editionInformation == null) ? "" : editionInformation.Edition;
+
+            if (serverEdition.Equals("Capacity Edition"))
             {
-                var editionInformation = editionInformationAsList.First();
-                serverEdition = editionInformation.Edition;
-
-                if (serverEdition.Equals("Capacity Edition"))
-                {
-                    //todo
-                }
-                else if (serverEdition.Equals("Capacity Edition Lite"))
-                {
-                    //todo
-                }
-
-                //add to license model
+                //todo
             }
+            else if (serverEdition.Equals("Capacity Edition Lite"))
+            {
+                //todo
+            }
+
+            //add to license model
+            
         }
     }
 }

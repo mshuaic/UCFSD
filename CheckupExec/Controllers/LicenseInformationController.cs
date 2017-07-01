@@ -41,77 +41,77 @@ namespace CheckupExec.Controllers
             return invokeGetLicenseInformation(_getLicenseInformationScript);
         }
 
-        public List<LicenseInformation> GetLicenses(Dictionary<string, string> parameters)
-        {
-            string scriptToInvoke = _getLicenseInformationScript;
+        //public List<LicenseInformation> GetLicenses(Dictionary<string, string> parameters)
+        //{
+        //    string scriptToInvoke = _getLicenseInformationScript;
 
-            parameters = parameters ?? new Dictionary<string, string>();
+        //    parameters = parameters ?? new Dictionary<string, string>();
 
-            foreach (KeyValuePair<string, string> parameter in parameters)
-            {
-                scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
-            }
+        //    foreach (KeyValuePair<string, string> parameter in parameters)
+        //    {
+        //        scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
+        //    }
             
-            return invokeGetLicenseInformation(scriptToInvoke);
-        }
+        //    return invokeGetLicenseInformation(scriptToInvoke);
+        //}
 
-        //get-bealert {| get-be<..> {-k j}*}+ | convertto-json
-        public List<LicenseInformation> GetLicenses(Dictionary<string, Dictionary<string, string>> pipelineCommands)
-        {
-            string scriptToInvoke = "";
+        ////get-bealert {| get-be<..> {-k j}*}+ | convertto-json
+        //public List<LicenseInformation> GetLicenses(Dictionary<string, Dictionary<string, string>> pipelineCommands)
+        //{
+        //    string scriptToInvoke = "";
 
-            int numCommands = pipelineCommands.Count;
+        //    int numCommands = pipelineCommands.Count;
 
-            pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
+        //    pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
 
-            foreach (KeyValuePair<string, Dictionary<string, string>> pipeline in pipelineCommands)
-            {
-                scriptToInvoke += pipeline.Key + " ";
+        //    foreach (KeyValuePair<string, Dictionary<string, string>> pipeline in pipelineCommands)
+        //    {
+        //        scriptToInvoke += pipeline.Key + " ";
 
-                foreach (KeyValuePair<string, string> parameter in pipeline.Value)
-                {
-                    scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
-                }
+        //        foreach (KeyValuePair<string, string> parameter in pipeline.Value)
+        //        {
+        //            scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+        //        }
 
-                scriptToInvoke += "| ";
-            }
+        //        scriptToInvoke += "| ";
+        //    }
 
-            scriptToInvoke += _getLicenseInformationScript;
+        //    scriptToInvoke += _getLicenseInformationScript;
 
-            return invokeGetLicenseInformation(scriptToInvoke);
-        }
+        //    return invokeGetLicenseInformation(scriptToInvoke);
+        //}
 
-        //get-bealert {-x y}+ {| get-be<> {-k j}*}+ | convertto-json
-        public List<LicenseInformation> GetLicenses(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> licenseParameters)
-        {
-            string scriptToInvoke = "";
+        ////get-bealert {-x y}+ {| get-be<> {-k j}*}+ | convertto-json
+        //public List<LicenseInformation> GetLicenses(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> licenseParameters)
+        //{
+        //    string scriptToInvoke = "";
 
-            int numCommands = pipelineCommands.Count;
+        //    int numCommands = pipelineCommands.Count;
 
-            pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
+        //    pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
 
-            foreach (KeyValuePair<string, Dictionary<string, string>> pipeline in pipelineCommands)
-            {
-                scriptToInvoke += pipeline.Key + " ";
+        //    foreach (KeyValuePair<string, Dictionary<string, string>> pipeline in pipelineCommands)
+        //    {
+        //        scriptToInvoke += pipeline.Key + " ";
 
-                foreach (KeyValuePair<string, string> parameter in pipeline.Value)
-                {
-                    scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
-                }
+        //        foreach (KeyValuePair<string, string> parameter in pipeline.Value)
+        //        {
+        //            scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+        //        }
 
-                scriptToInvoke += "| ";
-            }
+        //        scriptToInvoke += "| ";
+        //    }
 
-            scriptToInvoke += _getLicenseInformationScript;
+        //    scriptToInvoke += _getLicenseInformationScript;
 
-            licenseParameters = licenseParameters ?? new Dictionary<string, string>();
+        //    licenseParameters = licenseParameters ?? new Dictionary<string, string>();
 
-            foreach (KeyValuePair<string, string> parameter in licenseParameters)
-            {
-                scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
-            }
+        //    foreach (KeyValuePair<string, string> parameter in licenseParameters)
+        //    {
+        //        scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
+        //    }
             
-            return invokeGetLicenseInformation(scriptToInvoke);
-        }
+        //    return invokeGetLicenseInformation(scriptToInvoke);
+        //}
     }
 }
