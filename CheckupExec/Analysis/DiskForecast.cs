@@ -11,8 +11,6 @@ using System.Xml.Linq;
 
 namespace CheckupExec.Analysis
 {
-    //to-do......
-    //same as forecast except the source of data will be the service's file and max=30, min=10
     public class DiskForecast
     {
         public List<UsedCapacityForecastModel> UsedCapacityForecastModels { get; set; }
@@ -105,7 +103,10 @@ namespace CheckupExec.Analysis
 
                 foreach (UsedCapacityForecastModel model in UsedCapacityForecastModels)
                 {
-                    model.ForecastResults = fc.doForecast(model.UsedCapacityInstances);
+                    if (diskNames.Contains(model.StorageName))
+                    {
+                        model.ForecastResults = fc.doForecast(model.UsedCapacityInstances);
+                    }
                 }
             }
         }

@@ -22,7 +22,7 @@ namespace CheckupExec.Analysis
         {
             _fullBackupJobInstances = new List<FullBackupJobInstance>();
 
-            var jobHistoryPipeline = new Dictionary<string, Dictionary<string, string>>
+            var jobHistoryPipelineLast30Days = new Dictionary<string, Dictionary<string, string>>
             {
                 [Constants.GetStorages] = new Dictionary<string, string>
                 {
@@ -30,7 +30,20 @@ namespace CheckupExec.Analysis
                 },
                 [Constants.GetJobs] = new Dictionary<string, string>
                 {
-                    ["TaskType"] = "Full"
+                    ["TaskType"] = "'Full'"
+                }
+            };
+
+            var jobHistoryParamsLast30Days = new Dictionary<string, string>
+            {
+                ["FromStartTime"] = "'" + DateTime.Now.AddDays(-60).ToString() + "'"
+            };
+
+            var jobHistoryPipeline = new Dictionary<string, Dictionary<string, string>>
+            {
+                [Constants.GetJobs] = new Dictionary<string, string>
+                {
+                    ["Id"] = ""
                 }
             };
 
@@ -44,17 +57,38 @@ namespace CheckupExec.Analysis
                 foreach (Storage storageDevice in storageDevices)
                 {
                     // || true for testing with our sets
+                    //if storage device is not a pool of devices (we want to look at jobs of individual resources)
                     if (!storageDevice.StorageType.Equals("0") || true)
                     {
-                        jobHistoryPipeline[Constants.GetStorages]["Id"] = "'" + storageDevice.Id + "'";
+                        jobHistoryPipelineLast30Days[Constants.GetStorages]["Id"] = "'" + storageDevice.Id + "'";
 
-                        var temp = DataExtraction.JobHistoryController.GetJobHistories(jobHistoryPipeline);
+                        //get instances of full backup jobs that ran in the last 30 days of current device
+                        var temp = DataExtraction.JobHistoryController.GetJobHistories(jobHistoryPipelineLast30Days, jobHistoryParamsLast30Days);
+
+                        JobHistory largestFullBackupLast30Days = new JobHistory();
+
+                        foreach (JobHistory jobHistory in temp)
+                        {
+                            if (Convert.ToInt32(jobHistory.JobStatus) == JobHistory.SuccessfulFinalStatus
+                                && jobHistory.PercentComplete == 100
+                                && jobHistory.TotalDataSizeBytes > largestFullBackupLast30Days.TotalDataSizeBytes)
+                            {
+                                largestFullBackupLast30Days = jobHistory;
+                            }
+                        }
+
+                        jobHistoryPipeline[Constants.GetJobs]["Id"] = "'" + largestFullBackupLast30Days.JobId + "'";
+
+                        //get all instances of the largest full backup job found in the last 30 days
+                        temp = DataExtraction.JobHistoryController.GetJobHistories(jobHistoryPipeline);
 
                         if (temp.Count > 0)
                         {
                             var fullBackupJobInstance = new FullBackupJobInstance { Storage = storageDevice };
 
                             fullBackupJobInstance.JobHistories = new List<JobHistory>();
+
+                            SortingUtility<JobHistory>.sort(temp, 0, temp.Count - 1);
 
                             foreach (JobHistory jobHistory in temp)
                             {
@@ -65,10 +99,11 @@ namespace CheckupExec.Analysis
                                 }
                             }
 
-                            SortingUtility<JobHistory>.sort(fullBackupJobInstance.JobHistories, 0, fullBackupJobInstance.JobHistories.Count - 1);
-
                             _fullBackupJobInstances.Add(fullBackupJobInstance);
 
+                            //presumably each storage device will have 1 largest job instance found. This was used before when we were looking at all jobs
+                            //indiscriminately, however, to ensure that we were not exaggerating the current capacity usage. Current capacity usage is being
+                            //calculated with the last full, successfully completed backup jobs of each storage device
                             if (!storagesAccountedFor.Contains(storageDevice.Name))
                             {
                                 TotalUsedCapacity += (double)((lastFullBackupJobInstance?.TotalDataSizeBytes) >> 20) / 1024;
