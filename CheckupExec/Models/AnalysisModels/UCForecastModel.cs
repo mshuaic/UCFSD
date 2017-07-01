@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace CheckupExec.Models.AnalysisModels
 {
-    public class DiskForecastModel
+    public class UsedCapacityForecastModel
     {
-        public string DiskName { get; set; }
+        public string StorageName { get; set; }
 
         public double TotalCapacity { get; set; }
 
-        public List<DiskCapacity> DiskInstances { get; set; }
+        public List<UsedCapacity> UsedCapacityInstances { get; set; }
 
         public ForecastResults ForecastResults { get; set; }
     }

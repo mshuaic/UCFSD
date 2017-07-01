@@ -85,14 +85,14 @@
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\StorageController.cs" />
     <Compile Include="DataExtraction.cs" />
-    <Compile Include="Models\AnalysisModels\DiskForecastModel.cs" />
+    <Compile Include="Models\AnalysisModels\UCForecastModel.cs" />
     <Compile Include="Models\AnalysisModels\FE_Forecast.cs" />
     <Compile Include="Models\AnalysisModels\FullBackupJobInstances.cs" />
     <Compile Include="Models\AnalysisModels\PlotPoint.cs" />
     <Compile Include="Models\BEMCLIModels\Alert.cs" />
     <Compile Include="Models\BEMCLIModels\BackupDefinition.cs" />
     <Compile Include="Models\BEMCLIModels\BEServer.cs" />
-    <Compile Include="Models\AnalysisModels\DiskCapacity.cs" />
+    <Compile Include="Models\AnalysisModels\UsedCapacity.cs" />
     <Compile Include="Models\BEMCLIModels\ElapsedTime.cs" />
     <Compile Include="Models\AnalysisModels\ForecastResults.cs" />
     <Compile Include="Models\BEMCLIModels\Job.cs" />

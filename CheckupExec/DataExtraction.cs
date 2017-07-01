@@ -332,7 +332,7 @@ namespace CheckupExec
             //if we have disks passed to us, run a DiskAnalysis on each of them and add each to a list for passing to report generator
             if (diskNames != null && diskNames.Count >= 0)
             {
-                var diskAnalyses = new DiskForecast(diskNames, diskPath).DiskForecastModels;
+                var diskAnalyses = new DiskForecast(diskNames, diskPath).UsedCapacityForecastModels;
 
                 //pass to report generator
 

@@ -45,18 +45,18 @@ namespace CheckupExec.Utilities
             return _forecastResults;
         }
 
-        public ForecastResults doForecast(List<DiskCapacity> diskCapacities)
+        public ForecastResults doForecast(List<UsedCapacity> usedCapacities)
         {
             _forecastResults.ForecastSuccessful = true;
             _forecastResults.isDiskForecast     = true;
             _forecastResults.plot = new List<PlotPoint>();
 
-            if (diskCapacities != null && diskCapacities.Count > 0)
+            if (usedCapacities != null && usedCapacities.Count > 0)
             {
-                runForecast(diskCapacities);
+                runForecast(usedCapacities);
                 if (_forecastResults.ForecastSuccessful)
                 {
-                    populatePlot(diskCapacities);
+                    populatePlot(usedCapacities);
                 }
             }
             else
@@ -112,16 +112,16 @@ namespace CheckupExec.Utilities
             }
         }
 
-        private void runForecast(List<DiskCapacity> diskCapacities)
+        private void runForecast(List<UsedCapacity> usedCapacities)
         {
             //if we meet minimum subset rqmnts, run forecast
-            if (diskCapacities.Count < _minSubsetSizeDC)
+            if (usedCapacities.Count < _minSubsetSizeDC)
             {
                 _forecastResults.ForecastSuccessful = false;
             }
             else
             {
-                pWLinearRegression(diskCapacities, _maxSubsetSizeDC, _minSubsetSizeDC);
+                pWLinearRegression(usedCapacities, _maxSubsetSizeDC, _minSubsetSizeDC);
 
                 //This implies that the user will never reach their capacity, which is out of place given what we're doing
                 _forecastResults.ForecastSuccessful = (_forecastResults.FinalSlope < 0) ? false : true;
@@ -243,9 +243,9 @@ namespace CheckupExec.Utilities
         //piecewise simple linear regression (method of ord least squares) is run on each subset starting at minimum and incrementing by 
         //one instance of DiskCapacity until we 1) run out of instances or 2) reach maximum subset size. 
         //Ultimately, the subset that had the highest pearson correlation is chosen (slope and intercept).
-        private void pWLinearRegression(List<DiskCapacity> diskCapacities, int maxSubsetSize, int minSubsetSize)
+        private void pWLinearRegression(List<UsedCapacity> usedCapacities, int maxSubsetSize, int minSubsetSize)
         {
-            int recentIndex       = diskCapacities.Count - 1;
+            int recentIndex       = usedCapacities.Count - 1;
             int finalSubsetSize   = minSubsetSize;
             int currentSubsetSize = minSubsetSize;
             int boundaryIndex     = recentIndex - currentSubsetSize + 1;
@@ -257,16 +257,16 @@ namespace CheckupExec.Utilities
             for (int i = boundaryIndex + 1, j = 1; i <= recentIndex && i >= 0; i++, j++)
             {
 
-                sumy += (double)(diskCapacities[i].Bytes >> 20) / 1024;
+                sumy += (double)(usedCapacities[i].Bytes >> 20) / 1024;
 
-                sumx += diskCapacities[i].Date.Date.Subtract(_currentTime).TotalDays;
+                sumx += usedCapacities[i].Date.Date.Subtract(_currentTime).TotalDays;
             }
 
             while (currentSubsetSize <= maxSubsetSize && boundaryIndex >= 0)
             {
-                sumy += (double)(diskCapacities[boundaryIndex].Bytes >> 20) / 1024;
+                sumy += (double)(usedCapacities[boundaryIndex].Bytes >> 20) / 1024;
 
-                sumx += diskCapacities[boundaryIndex].Date.Date.Subtract(_currentTime).TotalDays;
+                sumx += usedCapacities[boundaryIndex].Date.Date.Subtract(_currentTime).TotalDays;
 
                 double meany = 0;
                 double meanx = 0;
@@ -287,8 +287,8 @@ namespace CheckupExec.Utilities
 
                 for (int i = recentIndex; i >= boundaryIndex && i >= 0; i--)
                 {
-                    double devY = (double)(diskCapacities[i].Bytes >> 20) / 1024 - meany;
-                    double devX = diskCapacities[i].Date.Date.Subtract(_currentTime).TotalDays - meanx;
+                    double devY = (double)(usedCapacities[i].Bytes >> 20) / 1024 - meany;
+                    double devX = usedCapacities[i].Date.Date.Subtract(_currentTime).TotalDays - meanx;
 
                     sumdevy += devY;
                     sumdevx += devX;
@@ -367,14 +367,14 @@ namespace CheckupExec.Utilities
         }
 
         //generate our plot with ALL instances (this is for visualization)
-        private void populatePlot(List<DiskCapacity> diskCapacities)
+        private void populatePlot(List<UsedCapacity> usedCapacities)
         {
-            foreach (var diskCapacity in diskCapacities)
+            foreach (var usedCapacity in usedCapacities)
             {
                 _forecastResults.plot.Add(new PlotPoint
                 {
-                    Days = diskCapacity.Date.Date.Subtract(_currentTime.Date).TotalDays,
-                    GB   = (double)(diskCapacity.Bytes >> 20) / 1024
+                    Days = usedCapacity.Date.Date.Subtract(_currentTime.Date).TotalDays,
+                    GB   = (double)(usedCapacity.Bytes >> 20) / 1024
                 });
             }
         }

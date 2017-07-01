@@ -8,31 +8,12 @@ namespace CheckupExec.Utilities
 {
     public static class SortingUtility<T> where T : IComparable<T>
     {
-        public static bool isSorted(List<T> objects)
-        {
-            objects = objects ?? new List<T>();
-
-            int count = objects.Count;
-            for (int i = 0; i < count - 1; i++)
-            {
-                if (objects[i].CompareTo(objects[i + 1]) == 1)
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
         //standard quicksort is used
         public static void sort(List<T> objects, int left, int right)
         {
             objects = objects ?? new List<T>();
 
-            if (!isSorted(objects))
-            {
-                qsort(objects, left, right);
-            }
+            qsort(objects, left, right);
         }
 
         public static void qsort(List<T> objects, int left, int right)

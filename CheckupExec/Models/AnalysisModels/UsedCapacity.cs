@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace CheckupExec.Models
 {
-    public class DiskCapacity : IComparable<DiskCapacity>
+    public class UsedCapacity : IComparable<UsedCapacity>
     {
         public DateTime Date { get; set; }
 
         public long Bytes { get; set; }
 
-        public int CompareTo(DiskCapacity dc)
+        public int CompareTo(UsedCapacity dc)
         {
             if (dc.Date > Date)
             {
