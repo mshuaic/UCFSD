@@ -130,49 +130,72 @@ namespace CheckupExec
         /// <returns>List of strings representing job names.</returns>
         public List<string> GetJobNames(List<string> storageDeviceNames)
         {
-            var names = new List<string>();
+            var jobNames = new List<string>();
 
-            //if we have storagedevices, retrieve the full backup jobs of those devices and return the names of those retrieved
+            var jobHistoryPipeline = new Dictionary<string, Dictionary<string, string>>
+            {
+                [Constants.GetStorages] = new Dictionary<string, string>
+                {
+                    ["Name"] = ""
+                }
+            };
+
+            var jobParams = new Dictionary<string, string>
+            {
+                ["tasktype"] = "'full'"
+            };
+
+            var fullNamesString = "";
+
             if (storageDeviceNames != null && storageDeviceNames.Count > 0)
             {
-                var jobParams = new Dictionary<string, string>
-                {
-                    ["tasktype"] = "full"
-                };
-
-                var fullNamesString = "";
-
                 foreach (string name in storageDeviceNames)
                 {
                     fullNamesString += "'" + name + "'" + ((storageDeviceNames.ElementAt(storageDeviceNames.Count - 1).Equals(name)) ? "" : ", ");
                 }
-
-                jobParams["storage"] = fullNamesString;
-
-                _jobs = JobController.GetJobs(jobParams);
-
-                if (_jobs != null && _jobs.Count > 0)
-                {
-                    foreach (Job job in _jobs)
-                    {
-                        names.Add(job.Name);
-                    }
-                }
             }
             else
             {
-                _jobs = JobController.GetJobs();
-
-                if (_jobs != null && _jobs.Count > 0)
+                foreach (Storage storage in _storageDevices)
                 {
-                    foreach (Job job in _jobs)
-                    {
-                        names.Add(job.Name);
-                    }
+                    fullNamesString += "'" + storage.Name + "'" + ((_storageDevices.ElementAt(_storageDevices.Count - 1).Equals(storage)) ? "" : ", ");
                 }
             }
 
-            return names;
+            jobHistoryPipeline[Constants.GetStorages]["Name"] = fullNamesString;
+
+            var temp = JobHistoryController.GetJobHistories(jobHistoryPipeline) ?? new List<JobHistory>();
+            var names = new List<string>();
+
+            foreach (JobHistory jobHistory in temp)
+            {
+                if (Convert.ToInt32(jobHistory.JobStatus) == JobHistory.SuccessfulFinalStatus 
+                    && jobHistory.PercentComplete == 100
+                    && jobHistory.JobType == Constants.BACKUP_JOB_TYPE
+                    && !names.Exists(x => x.Equals(jobHistory.JobName)))
+                {
+                    names.Add(jobHistory.JobName);
+                }
+            }
+
+            List<Job> jobTemp = null;
+            _jobs = new List<Job>();
+            foreach (string name in names)
+            {
+                jobParams["Name"] = "'" + name + "'";
+
+                if ((jobTemp = JobController.GetJobs(jobParams) ?? new List<Job>()).Count > 0)
+                {
+                    _jobs.AddRange(jobTemp);
+                }
+            }
+            
+            foreach (var job in _jobs)
+            {
+                jobNames.Add(job.Name);
+            }
+            
+            return jobNames;
         }
 
         public List<string> GetAlertCategoryNames()
@@ -197,7 +220,7 @@ namespace CheckupExec
 
             foreach (KeyValuePair<string, string> errorStatus in Constants.JobErrorStatuses)
             {
-                errorStatuses.Add(errorStatus.Key);
+                errorStatuses.Add(errorStatus.Value);
             }
 
             return errorStatuses;
@@ -426,17 +449,8 @@ namespace CheckupExec
         /// <returns>True if successful, false if not.</returns>
         public bool JobErrorsAnalysis(string reportPath, List<string> jobNames, List<string> errorStatuses, DateTime? start = null, DateTime? end = null)
         {
-            var jobErrorStatuses = new List<string>();
-            if (errorStatuses != null && errorStatuses.Count > 0)
-            {
-                foreach (string errorStatus in errorStatuses)
-                {
-                    jobErrorStatuses.Add(Constants.JobErrorStatuses[errorStatus]);
-                }
-            }
-
             //run JobErrorsAnalysis with given params
-            var jobErrorsAnalysis = new JobErrorsAnalyses(start, end, jobErrorStatuses, jobNames);
+            var jobErrorsAnalysis = new JobErrorsAnalyses(start, end, errorStatuses, jobNames);
 
             //pass to report generator
 

@@ -125,6 +125,9 @@ namespace CheckupExec.Analysis
             {
                 foreach (JobHistory jobHistory in _jobHistories)
                 {
+                    //bemcli returns an int -> get the corresponding string
+                    jobHistory.JobStatus = Constants.JobErrorStatuses[jobHistory.JobStatus];
+
                     if (Convert.ToInt32(jobHistory.JobStatus) == JobHistory.SuccessfulFinalStatus)
                     {
                         filteredJobHistories.Add(jobHistory);
