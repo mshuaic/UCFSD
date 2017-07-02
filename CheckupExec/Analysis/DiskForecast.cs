@@ -19,6 +19,8 @@ namespace CheckupExec.Analysis
         {
             UsedCapacityForecastModels = new List<UsedCapacityForecastModel>();
 
+            diskNames = diskNames ?? new List<string>();
+
             IEnumerable<XElement> diskCapacities = from root in XDocument.Load(path).Elements()
                                                    select root;
 
@@ -103,7 +105,7 @@ namespace CheckupExec.Analysis
 
                 foreach (UsedCapacityForecastModel model in UsedCapacityForecastModels)
                 {
-                    if (diskNames.Contains(model.StorageName))
+                    if (diskNames.Count == 0 || diskNames.Contains(model.StorageName))
                     {
                         model.ForecastResults = fc.doForecast(model.UsedCapacityInstances);
                     }
