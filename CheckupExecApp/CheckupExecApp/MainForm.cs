@@ -34,12 +34,12 @@ namespace CheckupExecApp
             // Load Alerts Analysis checked list boxes
             Helpers.LoadStorageDevicesCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox);
             Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, dataExtractionInstance.GetStorageDeviceNames(), BackupJobsCheckedListBox);
-            Helpers.LoadAlertTypesCheckedListBox(AlertTypesCheckedListBox);
+            Helpers.LoadAlertTypesCheckedListBox(dataExtractionInstance, AlertTypesCheckedListBox);
 
             // Load Job Errors Analysis checked list boxes
             Helpers.LoadStorageDevicesCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox4);
             Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, dataExtractionInstance.GetStorageDeviceNames(), BackupJobsCheckedListBox4);
-            Helpers.LoadAlertTypesCheckedListBox(AlertTypesCheckedListBox4);
+            Helpers.LoadJobErrorTypesCheckedListBox(dataExtractionInstance, AlertTypesCheckedListBox4);
         }
 
         // Create new DataExtraction instance to handle creation of reports/forecasts
@@ -277,7 +277,7 @@ namespace CheckupExecApp
                 {
                     // Get storage devices
                     dataExtractionInstance.GetStorageDeviceNames();
-                    // Run Frontend analysis
+                    // Run Backup Jobs analysis
                     if (dataExtractionInstance.BackupJobsAnalysis(BackupJobsCheckedListBox6.CheckedItems.Cast<string>().ToList(), FolderPathTextBox6.Text))
                     {
                         log.Info("Success: Backup Jobs Analysis");
@@ -335,8 +335,8 @@ namespace CheckupExecApp
                 {
                     // Get storage devices
                     dataExtractionInstance.GetStorageDeviceNames();
-                    // Run Frontend analysis
-                    if(dataExtractionInstance.AlertsAnalysis(FolderPathTextBox3.Text, BackupJobsCheckedListBox.CheckedItems.Cast<string>().ToList(), null, StartDateTimePicker.Value, EndDateTimePicker.Value))
+                    // Run Alerts analysis
+                    if(dataExtractionInstance.AlertsAnalysis(FolderPathTextBox3.Text, BackupJobsCheckedListBox.CheckedItems.Cast<string>().ToList(), AlertTypesCheckedListBox.CheckedItems.Cast<string>().ToList(), StartDateTimePicker.Value, EndDateTimePicker.Value))
                     {
                         log.Info("Success: Alerts Analysis");
                     }
@@ -395,7 +395,7 @@ namespace CheckupExecApp
                     // Get storage devices
                     dataExtractionInstance.GetStorageDeviceNames();
                     // Run Frontend analysis
-                    if (dataExtractionInstance.JobErrorsAnalysis(FolderPathTextBox4.Text, BackupJobsCheckedListBox4.CheckedItems.Cast<string>().ToList(), null, StartDateTimePicker4.Value, EndDateTimePicker4.Value))
+                    if (dataExtractionInstance.JobErrorsAnalysis(FolderPathTextBox4.Text, BackupJobsCheckedListBox4.CheckedItems.Cast<string>().ToList(), AlertTypesCheckedListBox4.CheckedItems.Cast<string>().ToList(), StartDateTimePicker4.Value, EndDateTimePicker4.Value))
                     {
                         log.Info("Success: Job Errors Analysis");
                     }

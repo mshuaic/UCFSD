@@ -91,10 +91,32 @@ namespace CheckupExecApp
             }
         }
 
-        // Populates the AlertTypesCheckedListBox with the list of Backup Jobs for the selected storage device
-        public static void LoadAlertTypesCheckedListBox(CheckedListBox AlertTypesCheckedListBox)
+        // Populates the AlertTypesCheckedListBox with the list of Alert types
+        public static void LoadAlertTypesCheckedListBox(DataExtraction dataExtractionInstance, CheckedListBox AlertTypesCheckedListBox)
         {
+            // Clear the checked list box
+            AlertTypesCheckedListBox.Items.Clear();
 
+            // Get list of alert types
+            List<string> alertTypes = dataExtractionInstance.GetAlertCategoryNames();
+            foreach(string alertType in alertTypes)
+            {
+                AlertTypesCheckedListBox.Items.Add(alertType);
+            }
+        }
+
+        // Populates the AlertTypesCheckedListBox with the list of Job Error statuses
+        public static void LoadJobErrorTypesCheckedListBox(DataExtraction dataExtractionInstane, CheckedListBox AlertTypesCheckedListBox)
+        {
+            // Clear the checked list box
+            AlertTypesCheckedListBox.Items.Clear();
+
+            // Get list of job error statuses
+            List<string> jobErrorStatuses = dataExtractionInstane.GetJobErrorStatuses();
+            foreach(string jobErrorStatus in jobErrorStatuses)
+            {
+                AlertTypesCheckedListBox.Items.Add(jobErrorStatus);
+            }
         }
 
         // Checks all the available items in the given checkedListBox
