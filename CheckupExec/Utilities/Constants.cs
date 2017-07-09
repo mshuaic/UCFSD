@@ -9,34 +9,34 @@ namespace CheckupExec.Utilities
     //constant bemcli commands held in one place
     public static class Constants
     {
-        public const int BACKUP_JOB_TYPE = 1;
+        public const int BACKUP_JOB_TYPE         = 1;
 
-        public const int SUCCESSFUL_JOB_STATUS = 9;
+        public const int SUCCESSFUL_JOB_STATUS   = 9;
 
         //data to backup + 20% to account for growth (used in the case that a forecast cannot be made)
         public const double RECC_COVERAGE_FACTOR = 1.2;
 
-        public const string ImportBEMCLI = "import-module bemcli";
+        public const string ImportBEMCLI          = "import-module bemcli";
 
-        public const string JsonPipeline = "convertto-json";
+        public const string JsonPipeline          = "convertto-json";
 
-        public const string GetAlerts = "get-bealert ";
+        public const string GetAlerts             = "get-bealert ";
 
-        public const string GetAlertHistories = "get-bealerthistory";
+        public const string GetAlertHistories     = "get-bealerthistory";
 
-        public const string GetAlertCategories = "get-bealertcategory";
+        public const string GetAlertCategories    = "get-bealertcategory";
 
-        public const string GetBEServers = "get-bebackupexecserver";
+        public const string GetBEServers          = "get-bebackupexecserver";
 
         public const string GetEditionInformation = "get-beeditioninformation";
 
-        public const string GetJobs = "get-bejob";
+        public const string GetJobs               = "get-bejob";
 
-        public const string GetJobHistories = "get-bejobhistory";
+        public const string GetJobHistories       = "get-bejobhistory";
 
-        public const string GetLicenses = "get-belicenseinformation";
+        public const string GetLicenses           = "get-belicenseinformation";
 
-        public const string GetStorages = "get-bestorage";
+        public const string GetStorages           = "get-bestorage";
 
         public const string GetStorageDevicePools = "get-bestoragedevicepool";
 
