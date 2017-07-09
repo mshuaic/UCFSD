@@ -49,7 +49,7 @@ namespace CheckupExec.Utilities
             ["4"]  = "OnHold",
             ["5"]  = "Error",
             ["6"]  = "Missed",
-            ["7"]  = "Recovered",
+            ["7"]  = "Recovered", 
             ["8"]  = "Resumed",
             ["9"]  = "Succeeded",
             ["10"] = "ThresholdAbort",
