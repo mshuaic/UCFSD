@@ -59,7 +59,7 @@ namespace CheckupExec.Analysis
 
                     foreach (JobHistory jobHistory in temp)
                     {
-                        if (Convert.ToInt32(jobHistory.JobStatus) == JobHistory.SuccessfulFinalStatus
+                        if (Convert.ToInt32(jobHistory.JobStatus) == Constants.SUCCESSFUL_JOB_STATUS
                             && jobHistory.PercentComplete == 100
                             && jobHistory.TotalDataSizeBytes > largestFullBackupLast30Days.TotalDataSizeBytes)
                         {
@@ -82,7 +82,7 @@ namespace CheckupExec.Analysis
 
                         foreach (JobHistory jobHistory in temp)
                         {
-                            if (Convert.ToInt32(jobHistory.JobStatus) == JobHistory.SuccessfulFinalStatus 
+                            if (Convert.ToInt32(jobHistory.JobStatus) == Constants.SUCCESSFUL_JOB_STATUS
                                 && jobHistory.PercentComplete == 100
                                 && jobHistory.StorageName.Equals(storageDevice.Name))
                             {

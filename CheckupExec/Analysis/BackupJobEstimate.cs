@@ -45,7 +45,7 @@ namespace CheckupExec.Analysis
             {
                 foreach (JobHistory jobHistory in jobHistories)
                 {
-                    if (Convert.ToInt32(jobHistory.JobStatus) == JobHistory.SuccessfulFinalStatus && jobHistory.PercentComplete == 100)
+                    if (Convert.ToInt32(jobHistory.JobStatus) == Constants.SUCCESSFUL_JOB_STATUS && jobHistory.PercentComplete == 100)
                     {
                         filteredJobHistories.Add(jobHistory);
                     }
@@ -54,6 +54,7 @@ namespace CheckupExec.Analysis
             
             if (filteredJobHistories.Count > 0)
             {
+                BackupJobEstimateModel.StorageName              = filteredJobHistories.First().StorageName;
                 BackupJobEstimateModel.JobName                  = job.Name;
                 BackupJobEstimateModel.NextStartDate            = job.NextStartDate;
                 BackupJobEstimateModel.EstimateOfJobRateMBMin   = estimateJobRate(filteredJobHistories);
@@ -79,7 +80,7 @@ namespace CheckupExec.Analysis
                 {
                     return sum / count;
                 }
-                catch (DivideByZeroException e)
+                catch
                 {
                     //log utility divide by zero encountered because the job has no successful job histories
                     return -1;
@@ -131,7 +132,7 @@ namespace CheckupExec.Analysis
                     {
                         BackupJobEstimateModel.EstimateDataSizeMB = ((jobHistories[count - 1].TotalDataSizeBytes >> 20) + sum / count) / 1024;
                     }
-                    catch (IndexOutOfRangeException e)
+                    catch
                     {
                         //index out of range
                     }
@@ -142,7 +143,7 @@ namespace CheckupExec.Analysis
                     return 60 * (BackupJobEstimateModel.EstimateDataSizeMB * 1024) 
                         / BackupJobEstimateModel.EstimateOfJobRateMBMin;
                 }
-                catch (DivideByZeroException e)
+                catch
                 {
                     //log utility divide by zero encountered because the job has no successful job histories
                     return -1;

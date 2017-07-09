@@ -19,9 +19,14 @@ namespace CheckupExec.Utilities
         private const int _maxSubsetSizeDC = 30;
         private const int _minSubsetSizeDC = 10;
 
-        private static DateTime _currentTime = DateTime.Now;
+        private DateTime _currentTime;
 
         private ForecastResults _forecastResults = new ForecastResults();
+
+        public Forecast()
+        {
+            _currentTime = DateTime.Now;
+        }
 
         public ForecastResults doForecast(List<JobHistory> jobHistories)
         {
@@ -49,7 +54,7 @@ namespace CheckupExec.Utilities
         {
             _forecastResults.ForecastSuccessful = true;
             _forecastResults.isDiskForecast     = true;
-            _forecastResults.plot = new List<PlotPoint>();
+            _forecastResults.plot               = new List<PlotPoint>();
 
             if (usedCapacities != null && usedCapacities.Count > 0)
             {
@@ -164,7 +169,7 @@ namespace CheckupExec.Utilities
                     meany = sumy / currentSubsetSize;
                     meanx = sumx / currentSubsetSize;
                 }
-                catch (DivideByZeroException e)
+                catch
                 {
                     //log
                 }
@@ -196,7 +201,7 @@ namespace CheckupExec.Utilities
                     stdevy = Math.Sqrt(sumdevy2 / (currentSubsetSize - 1));
                     stdevx = Math.Sqrt(sumdevx2 / (currentSubsetSize - 1));
                 }
-                catch (DivideByZeroException e)
+                catch
                 {
                     //log
                 }
@@ -207,7 +212,7 @@ namespace CheckupExec.Utilities
                 {
                     corr = (sumdevyx) / Math.Sqrt(sumdevy2 * sumdevx2);
                 }
-                catch (DivideByZeroException e)
+                catch
                 {
                     //log, although i don't think it can get to this point (corr = NaN if denominator == 0)
                 }
@@ -220,7 +225,7 @@ namespace CheckupExec.Utilities
                     slope     = corr * (stdevy / stdevx);
                     intercept = meany - slope * meanx;
                 }
-                catch (DivideByZeroException e)
+                catch
                 {
                     //log
                 }
@@ -276,7 +281,7 @@ namespace CheckupExec.Utilities
                     meany = sumy / currentSubsetSize;
                     meanx = sumx / currentSubsetSize;
                 }
-                catch (DivideByZeroException e)
+                catch
                 {
                     //log
                 }
@@ -308,7 +313,7 @@ namespace CheckupExec.Utilities
                     stdevy = Math.Sqrt(sumdevy2 / (currentSubsetSize - 1));
                     stdevx = Math.Sqrt(sumdevx2 / (currentSubsetSize - 1));
                 }
-                catch (DivideByZeroException e)
+                catch
                 {
                     //log
                 }
@@ -319,7 +324,7 @@ namespace CheckupExec.Utilities
                 {
                     corr = (sumdevyx) / Math.Sqrt(sumdevy2 * sumdevx2);
                 }
-                catch (DivideByZeroException e)
+                catch
                 {
                     //log, although i don't think it can get to this point (corr = NaN if denominator == 0)
                 }
@@ -332,7 +337,7 @@ namespace CheckupExec.Utilities
                     slope     = corr * (stdevy / stdevx);
                     intercept = meany - slope * meanx;
                 }
-                catch (DivideByZeroException e)
+                catch
                 {
                     //log
                 }

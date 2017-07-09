@@ -169,7 +169,7 @@ namespace CheckupExec
 
             foreach (JobHistory jobHistory in temp)
             {
-                if (Convert.ToInt32(jobHistory.JobStatus) == JobHistory.SuccessfulFinalStatus 
+                if (Convert.ToInt32(jobHistory.JobStatus) == Constants.SUCCESSFUL_JOB_STATUS
                     && jobHistory.PercentComplete == 100
                     && jobHistory.JobType == Constants.BACKUP_JOB_TYPE
                     && !names.Exists(x => x.Equals(jobHistory.JobName)))
@@ -280,6 +280,9 @@ namespace CheckupExec
 
                 report.ForecastPoints = new List<PlotPoint>();
 
+                report.Slope = fullSlope;
+                report.Intercept = fullIntercept;
+
                 report.DaysTo50 = ((maxCapacity * .5) - fullIntercept) / fullSlope;
                 report.ForecastPoints.Add(new PlotPoint
                 {
@@ -317,6 +320,8 @@ namespace CheckupExec
 
                 report.MaxCapacity = maxCapacity;
                 report.UsedCapacity = usedCapacity;
+
+                var licenseAnalysis = new LicenseAnalysis(report);
 
                 //pass to report
 
@@ -382,7 +387,12 @@ namespace CheckupExec
 
                 report.ForecastPoints = new List<PlotPoint>();
 
-                double maxCapacity = (double)(buje.MaxCapacityBytes >> 20) / 1024;
+                var storage = _storageDevices.Find(x => x.Name.Equals(buje.StorageName));
+
+                report.StorageType = storage.StorageType;
+                report.StorageName = storage.Name;
+
+                double maxCapacity = (double)(storage.TotalCapacityBytes >> 20) / 1024;
 
                 report.DaysTo50 = (maxCapacity * .5 - buje.ForecastResults.FinalIntercept) 
                     / buje.ForecastResults.FinalSlope;
@@ -420,13 +430,13 @@ namespace CheckupExec
                     GB = (maxCapacity)
                 });
 
-                report.MaxCapacity = maxCapacity;
-                report.UsedCapacity = (double)(buje.UsedCapacityBytes >> 20) / 1024;
-                report.JobName = buje.JobName;
-                report.NextDataSize = buje.EstimateDataSizeMB;
+                report.MaxCapacity            = maxCapacity;
+                report.UsedCapacity           = (double)(storage.UsedCapacityBytes >> 20) / 1024;
+                report.JobName                = buje.JobName;
+                report.NextDataSize           = buje.EstimateDataSizeMB;
                 report.NextElapsedTimeSeconds = buje.EstimateOfElapsedTimeSec;
-                report.NextJobDate = buje.NextStartDate;
-                report.NextJobRate = buje.EstimateOfJobRateMBMin;
+                report.NextJobDate            = buje.NextStartDate;
+                report.NextJobRate            = buje.EstimateOfJobRateMBMin;
 
                 reports.Add(report);
 

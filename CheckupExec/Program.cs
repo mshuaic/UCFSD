@@ -17,18 +17,18 @@ namespace CheckupExec
 
             if (de.PowershellInstanceCreated)
             {
-                var cats = de.GetAlertCategoryNames();
-                var jess = de.GetJobErrorStatuses();
+                //var cats = de.GetAlertCategoryNames();
+                //var jess = de.GetJobErrorStatuses();
 
-                foreach (var cat in cats)
-                {
-                    Console.WriteLine(cat);
-                }
+                //foreach (var cat in cats)
+                //{
+                //    Console.WriteLine(cat);
+                //}
 
-                foreach (var jes in jess)
-                {
-                    Console.WriteLine(jes);
-                }
+                //foreach (var jes in jess)
+                //{
+                //    Console.WriteLine(jes);
+                //}
 
                 //get storage device names
                 var storageNames = de.GetStorageDeviceNames();
@@ -47,9 +47,10 @@ namespace CheckupExec
                 }
 
                 //whatever report is ran by the user
-                de.FrontEndAnalysis("");//, jobNames, null);
+                de.FrontEndAnalysis(null);//, jobNames, null);
                 //dispose our runspace and powershell instances
                 de.CleanUp();
+
                 Console.WriteLine("Done.");
                 Console.ReadLine();
             }

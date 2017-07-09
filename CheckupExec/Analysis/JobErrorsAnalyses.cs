@@ -21,7 +21,8 @@ namespace CheckupExec.Analysis
             Successful = true;
 
             _jobHistories = new List<JobHistory>();
-
+            
+            //***************************************
             var jobHistoryPipeline = new Dictionary<string, string>
             {
                 ["FromStartTime"] = (start == null) ? "'" + DateTime.MinValue.Date.ToString() + "'" : "'" + start.ToString() + "'",
@@ -128,7 +129,7 @@ namespace CheckupExec.Analysis
                     //bemcli returns an int -> get the corresponding string
                     jobHistory.JobStatus = Constants.JobErrorStatuses[jobHistory.JobStatus];
 
-                    if (Convert.ToInt32(jobHistory.JobStatus) == JobHistory.SuccessfulFinalStatus)
+                    if (Convert.ToInt32(jobHistory.JobStatus) == Constants.SUCCESSFUL_JOB_STATUS)
                     {
                         filteredJobHistories.Add(jobHistory);
                     }

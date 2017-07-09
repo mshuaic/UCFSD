@@ -16,6 +16,10 @@ namespace CheckupExec.Models.ReportModels
 
         public List<Storage> StorageDevices { get; set; }
 
+        public double Slope { get; set; }
+
+        public double Intercept { get; set; }
+
         public double MaxCapacity { get; set; }
 
         public double UsedCapacity { get; set; }
@@ -29,5 +33,22 @@ namespace CheckupExec.Models.ReportModels
         public double DaysToFull { get; set; }
 
         //license information if applicable
+        public bool LicensingApplicable { get; set; }
+
+        public int TotalDataCoverageTB { get; set; }
+
+        public int TotalDataCoverageUsedTB { get; set; }
+
+        public bool NormalToLite { get; set; }
+
+        public List<string> LiteToNormal { get; set; }
+
+        //if recommended to purchase based on forecast
+        public int RecommendedEditionCountToPurchase { get; set; }
+
+        public string RecommendedTier { get; set; }
+
+        public double DaysToLicenseExceeded { get; set; }
+        //end if recommended to purchase based on forecast
     }
 }

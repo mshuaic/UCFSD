@@ -74,8 +74,6 @@ namespace CheckupExec.Models
 
         public string ErrorCategoryType { get; set; }
 
-        public const int SuccessfulFinalStatus = 9;
-
         //update later
         public static string GetJobStatusString(string id)
         {
