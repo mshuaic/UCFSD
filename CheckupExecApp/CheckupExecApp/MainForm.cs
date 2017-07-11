@@ -23,6 +23,10 @@ namespace CheckupExecApp
         {
             InitializeComponent();
             GlobalSettingsTextBox_Load();
+
+            // Set intial StartDateTimePickers dates
+            StartDateTimePicker.Value = DateTimePicker.MinimumDateTime;
+            StartDateTimePicker4.Value = DateTimePicker.MinimumDateTime;
             
             // Load Disk Analysis checked list boxes
             Helpers.LoadStorageDevicesCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox5);
