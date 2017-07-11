@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{20B3240F-E2D7-4F5B-BE7A-415161DA7940}</ProjectGuid>
+    <ProjectGuid>{4A4649CE-383B-4931-B80E-4AB6703839E9}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>ReportGen</RootNamespace>
     <AssemblyName>ReportGen</AssemblyName>
@@ -32,9 +32,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,16 +45,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Driver.cs" />
-    <Compile Include="HtmlGen.cs" />
-    <Compile Include="SectionGen.cs" />
+    <Compile Include="AlertsReport\BarJsGen.cs" />
+    <Compile Include="AlertsReport\AlertsReportInfo.cs" />
+    <Compile Include="AlertsReport\AlertsReportGen.cs" />
+    <Compile Include="AlertsReport\PieJsGen.cs" />
+    <Compile Include="ErrorsReport\BarJsGen.cs" />
+    <Compile Include="ErrorsReport\ErrorsReportGen.cs" />
+    <Compile Include="Utilities\JsGen.cs" />
+    <Compile Include="ErrorsReport\PieJsGen.cs" />
+    <Compile Include="ErrorsReport\ErrorsReportInfo.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="template.html" />
+    <ProjectReference Include="..\UCFSD-master\CheckupExec\CheckupExec.csproj">
+      <Project>{59ec6bcd-6f42-452b-bc48-cb271f107e00}</Project>
+      <Name>CheckupExec</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AlertsReport\template.html" />
+    <Content Include="ErrorsReport\template.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

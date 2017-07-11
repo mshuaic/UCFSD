@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--<script src="plotly-latest.min.js"></script>-->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .rows {
+            display: grid;
+            grid-template-rows: 50% 50%;
+        }
+
+        .columns {
+            display: grid;
+            grid-template-columns: 50% 50%;
+        }
+    </style>
+    <title>Checkup Exec Report</title>
+</head>
+<body>
+    <h1 style="text-align:center">CheckUp Report</h1>
+    <!--START REPORT-->
+    <div style="margin: auto; width: 80 %; ">
+        <div class="rows">
+            <div class="columns">
+                <div>
+                    <p>Some Error information</p>
+                </div>
+                <div id="pie">
+                </div>
+            </div>
+            <div id="bar">
+            </div>
+        </div>
+    </div>
+    <script>
+    /**START MY JAVASCRIPT**/Plotly.newPlot(bar,[{"type":"bar","hoverinfo":"text","x":["06/25-06/27","06/27-06/28","06/28-06/30","06/30-07/01","07/01-07/03","07/03-07/04","07/04-07/06","07/06-07/07","07/07-07/09","07/09-07/10"],"y":[3,4,0,4,0,0,0,6,0,0],"hovertext":["(3) Job Failed","(4) Job Failed",null,"(4) Job Failed",null,null,null,"(6) Job Failed",null,null]}],{"autosize":true,"title":"Alerts Report","xaxis":{"tickangle":-45},"barmode":"stack","paper_bgcolor":"rgba(0,0,0,0)","plot_bgcolor":"rgba(0,0,0,0)"});Plotly.newPlot(pie,[{"type":"pie","showlegend":false,"hoverinfo":"label+percent","values":[24,3,3,2,2,3],"labels":["Job Failed","Backup Exec Database Encryption Key Warning","Missed Job","Service Start","Media Information","Database Maintenance Information"]}],{"autosize":true,"height":300,"width":300,"margin":{"l":0,"r":0,"b":0,"t":0},"paper_bgcolor":"rgba(0,0,0,0)","plot_bgcolor":"rgba(0,0,0,0)"});
+    /**END MY JAVASCRIPT**/
+    </script>
+    <!--END REPORT-->
+    <script>
+        window.onresize = function () {
+            location.reload();
+        };
+    </script>
+</body>
+</html>
