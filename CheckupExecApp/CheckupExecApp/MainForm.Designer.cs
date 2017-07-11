@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.FrontEndAnalysisTab = new System.Windows.Forms.TabPage();
             this.SettingsProgressBar = new System.Windows.Forms.ProgressBar();
@@ -492,18 +492,18 @@
             // 
             // DriveUsageChart
             // 
-            chartArea1.Name = "ChartArea1";
-            this.DriveUsageChart.ChartAreas.Add(chartArea1);
+            chartArea3.Name = "ChartArea1";
+            this.DriveUsageChart.ChartAreas.Add(chartArea3);
             this.DriveUsageChart.Location = new System.Drawing.Point(541, 58);
             this.DriveUsageChart.Name = "DriveUsageChart";
             this.DriveUsageChart.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
             this.DriveUsageChart.PaletteCustomColors = new System.Drawing.Color[] {
         System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(160)))), ((int)(((byte)(218))))),
         System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))))};
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
-            series1.Name = "DriveUsage";
-            this.DriveUsageChart.Series.Add(series1);
+            series3.ChartArea = "ChartArea1";
+            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
+            series3.Name = "DriveUsage";
+            this.DriveUsageChart.Series.Add(series3);
             this.DriveUsageChart.Size = new System.Drawing.Size(446, 433);
             this.DriveUsageChart.TabIndex = 14;
             this.DriveUsageChart.Text = "Drive Usage";
@@ -1114,6 +1114,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1556, 872);
             this.Controls.Add(this.tabControl1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "MainForm";
             this.Text = "Checkup Exec";
             this.tabControl1.ResumeLayout(false);
