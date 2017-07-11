@@ -147,7 +147,6 @@ namespace CheckupExec.Analysis
             }
         }
 
-        //
         public List<JobHistory> GetJobHistories() 
         {
             return _jobHistories;
