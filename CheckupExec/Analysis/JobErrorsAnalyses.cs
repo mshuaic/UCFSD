@@ -146,5 +146,11 @@ namespace CheckupExec.Analysis
                 Successful = false;
             }
         }
+
+        //
+        public List<JobHistory> GetJobHistories() 
+        {
+            return _jobHistories;
+        }
     }
 }

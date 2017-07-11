@@ -157,5 +157,10 @@ namespace CheckupExec.Analysis
                 Successful = false;
             }
         }
+
+        public List<Alert> GetAlerts()
+        {
+            return _allAlerts;
+        }
     }
 }

@@ -5,7 +5,7 @@ using CheckupExec.Models.ReportModels;
 using CheckupExec.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Linq; 
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,7 +16,7 @@ namespace CheckupExec.Analysis
     public class LicenseAnalysis
     {
         public int TotalDataCoverageTB { get; }
-
+        
         public int TotalDataCoverageUsedTB { get; }
 
         //likely will be called straight from frontend forecast to tie the forecast with the user's licensing setup

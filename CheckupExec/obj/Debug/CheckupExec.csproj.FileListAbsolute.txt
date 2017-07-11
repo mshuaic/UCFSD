@@ -1,0 +1,12 @@
+C:\Users\Galic\documents\visual studio 2017\Projects\CheckupExec\CheckupExec\bin\Debug\Accord.dll.config
+C:\Users\Galic\documents\visual studio 2017\Projects\CheckupExec\CheckupExec\bin\Debug\CheckupExec.exe.config
+C:\Users\Galic\documents\visual studio 2017\Projects\CheckupExec\CheckupExec\bin\Debug\CheckupExec.exe
+C:\Users\Galic\documents\visual studio 2017\Projects\CheckupExec\CheckupExec\bin\Debug\CheckupExec.pdb
+C:\Users\Galic\documents\visual studio 2017\Projects\CheckupExec\CheckupExec\bin\Debug\Accord.dll
+C:\Users\Galic\documents\visual studio 2017\Projects\CheckupExec\CheckupExec\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Galic\documents\visual studio 2017\Projects\CheckupExec\CheckupExec\bin\Debug\System.Management.Automation.dll
+C:\Users\Galic\documents\visual studio 2017\Projects\CheckupExec\CheckupExec\bin\Debug\Accord.xml
+C:\Users\Galic\documents\visual studio 2017\Projects\CheckupExec\CheckupExec\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Galic\documents\visual studio 2017\Projects\CheckupExec\CheckupExec\obj\Debug\CheckupExec.exe
+C:\Users\Galic\documents\visual studio 2017\Projects\CheckupExec\CheckupExec\obj\Debug\CheckupExec.pdb
+C:\Users\Galic\documents\visual studio 2017\Projects\CheckupExec\CheckupExec\obj\Debug\CheckupExec.csprojResolveAssemblyReference.cache
