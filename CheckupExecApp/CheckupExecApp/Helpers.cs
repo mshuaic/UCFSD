@@ -78,8 +78,11 @@ namespace CheckupExecApp
         }
 
         // Populates the BackupJobsCheckedListBox with the list of Backup Jobs for the selected storage device
-        public static void LoadBackupJobsCheckedListBox(DataExtraction dataExtractionInstance, List<string> storageDevices, CheckedListBox BackupJobsCheckedListBox)
+        public static void LoadBackupJobsCheckedListBox(DataExtraction dataExtractionInstance, List<string> storageDevices, CheckedListBox BackupJobsCheckedListBox, CheckBox SelectAllCheckBox)
         {
+            // Uncheck the "Select All" check box
+            SelectAllCheckBox.Checked = false;
+
             // Clear the checked list box
             BackupJobsCheckedListBox.Items.Clear();
 

@@ -33,16 +33,16 @@ namespace CheckupExecApp
             
             // Load Backup Jobs Analysis checked list boxes
             Helpers.LoadStorageDevicesCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox6);
-            Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, dataExtractionInstance.GetStorageDeviceNames(), BackupJobsCheckedListBox6);
+            Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, dataExtractionInstance.GetStorageDeviceNames(), BackupJobsCheckedListBox6, SelectAllBackupJobsCheckBox6);
 
             // Load Alerts Analysis checked list boxes
             Helpers.LoadStorageDevicesCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox);
-            Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, dataExtractionInstance.GetStorageDeviceNames(), BackupJobsCheckedListBox);
+            Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, dataExtractionInstance.GetStorageDeviceNames(), BackupJobsCheckedListBox, SelectAllBackupJobsCheckBox);
             Helpers.LoadAlertTypesCheckedListBox(dataExtractionInstance, AlertTypesCheckedListBox);
 
             // Load Job Errors Analysis checked list boxes
             Helpers.LoadStorageDevicesCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox4);
-            Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, dataExtractionInstance.GetStorageDeviceNames(), BackupJobsCheckedListBox4);
+            Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, dataExtractionInstance.GetStorageDeviceNames(), BackupJobsCheckedListBox4, SelectAllBackupJobsCheckBox4);
             Helpers.LoadJobErrorTypesCheckedListBox(dataExtractionInstance, AlertTypesCheckedListBox4);
         }
 
@@ -304,7 +304,7 @@ namespace CheckupExecApp
 
         private void RefreshJobsButton6_Click(object sender, EventArgs e)
         {
-            Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox6.CheckedItems.Cast<string>().ToList(), BackupJobsCheckedListBox6);
+            Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox6.CheckedItems.Cast<string>().ToList(), BackupJobsCheckedListBox6, SelectAllBackupJobsCheckBox6);
         }
         #endregion
 
@@ -363,7 +363,7 @@ namespace CheckupExecApp
         // Reload the BackupJobsCheckedListBox based on selected storage devices
         private void RefreshJobsButton_Click(object sender, EventArgs e)
         {
-            Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox.CheckedItems.Cast<string>().ToList(), BackupJobsCheckedListBox);
+            Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox.CheckedItems.Cast<string>().ToList(), BackupJobsCheckedListBox, SelectAllBackupJobsCheckBox);
         }
         #endregion
 
@@ -422,7 +422,7 @@ namespace CheckupExecApp
         // Reload the BackupJobsCheckedListBox based on selected storage devices
         private void RefreshJobsButton4_Click(object sender, EventArgs e)
         {
-            Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox4.CheckedItems.Cast<string>().ToList(), BackupJobsCheckedListBox4);
+            Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox4.CheckedItems.Cast<string>().ToList(), BackupJobsCheckedListBox4, SelectAllBackupJobsCheckBox4);
         }
         #endregion
 
