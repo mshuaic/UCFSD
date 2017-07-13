@@ -5,11 +5,11 @@ using CheckupExec.Models.AnalysisModels;
 using CheckupExec.Models.BEMCLIModels;
 using CheckupExec.Models.ReportModels;
 using CheckupExec.Utilities;
-//using ReportGen.AlertsReport;
-//using ReportGen.ErrorsReport;
+using ReportGen;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 
 namespace CheckupExec
 {
@@ -55,7 +55,7 @@ namespace CheckupExec
             try
             {
                 //new BEMCLIHelper(isRemoteUser, password, serverName, userName);
-                new BEMCLIHelper(true, "Veritas4935", "server", "Administrator");
+                new BEMCLIHelper(true, "mshuaic", "VM", "mshuaic");
             }
             catch
             {
@@ -548,9 +548,9 @@ namespace CheckupExec
             var alertsAnalysis = new AlertsAnalyses(start, end, jobNames, splitTypes);
 
             //pass to report generator
-            //new AlertsReportGen(reportPath, alertsAnalysis.GetAlerts());
+            var reportGen = new ReportGenerator(reportPath, alertsAnalysis.GetAlerts()); 
 
-            if (alertsAnalysis.Successful)
+            if (alertsAnalysis.Successful && reportGen.Successful)
                 return true;
             return false;
         }
@@ -569,9 +569,9 @@ namespace CheckupExec
             var jobErrorsAnalysis = new JobErrorsAnalyses(start, end, errorStatuses, jobNames);
 
             //pass to report generator
-            //new ErrorsReportGen(reportPath, jobErrorsAnalysis.GetJobHistories());
+            var reportGen = new ReportGenerator(reportPath, jobErrorsAnalysis.GetJobHistories());
 
-            if (jobErrorsAnalysis.Successful)
+            if (jobErrorsAnalysis.Successful && reportGen.Successful)
                 return true;
             return false;
         }
