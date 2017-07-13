@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckupExec", "CheckupExec\CheckupExec.csproj", "{59EC6BCD-6F42-452B-BC48-CB271F107E00}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckupExecApp", "..\..\..\..\Desktop\UCFSD-Dev\CheckupExecApp\CheckupExecApp\CheckupExecApp.csproj", "{F9A78DD2-C6CC-4F90-8ED9-3CB166576D1C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportGen", "..\..\..\..\Desktop\UCFSD-Dev\ReportGen\ReportGen.csproj", "{4A4649CE-383B-4931-B80E-4AB6703839E9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{59EC6BCD-6F42-452B-BC48-CB271F107E00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59EC6BCD-6F42-452B-BC48-CB271F107E00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59EC6BCD-6F42-452B-BC48-CB271F107E00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9A78DD2-C6CC-4F90-8ED9-3CB166576D1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9A78DD2-C6CC-4F90-8ED9-3CB166576D1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9A78DD2-C6CC-4F90-8ED9-3CB166576D1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9A78DD2-C6CC-4F90-8ED9-3CB166576D1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A4649CE-383B-4931-B80E-4AB6703839E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A4649CE-383B-4931-B80E-4AB6703839E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A4649CE-383B-4931-B80E-4AB6703839E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A4649CE-383B-4931-B80E-4AB6703839E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

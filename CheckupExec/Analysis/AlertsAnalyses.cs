@@ -43,15 +43,6 @@ namespace CheckupExec.Analysis
 
                 var jobs = DataExtraction.JobController.GetJobs(jobsPipeline);
 
-                string fullTypeString = "";
-
-                foreach (string type in alertTypes)
-                {
-                    fullTypeString += "'" + type + "'" + ((alertTypes.ElementAt(alertTypes.Count - 1).Equals(type)) ? "" : ", ");
-                }
-
-                alertsPipeline["category"] = fullTypeString;
-
                 try
                 {
                     _allAlerts.AddRange(DataExtraction.AlertController.GetAlerts(alertsPipeline));
@@ -62,14 +53,35 @@ namespace CheckupExec.Analysis
                     //log
                 }
 
+                var temp = new List<Alert>();
+
+                foreach (Alert alert in _allAlerts)
+                {
+                    if (!alertTypes.Contains(alert.Category))
+                    {
+                        temp.Add(alert);
+                    }
+                }
+
+                foreach (Alert alert in temp)
+                {
+                    _allAlerts.Remove(alert);
+                }
+
                 if (_allAlerts.Count > 0)
                 {
+                    temp = new List<Alert>();
                     foreach (Alert alert in _allAlerts)
                     {
                         if (!jobs.Exists(x => x.Id.Equals(alert.JobId)))
                         {
-                            _allAlerts.Remove(alert);
+                            temp.Add(alert);
                         }
+                    }
+
+                    foreach (Alert alert in temp)
+                    {
+                        _allAlerts.Remove(alert);
                     }
                 }
             }
@@ -100,15 +112,6 @@ namespace CheckupExec.Analysis
             }
             else if (alertTypes.Count > 0)
             {
-                string fullTypeString = "";
-
-                foreach (string type in alertTypes)
-                {
-                    fullTypeString += "'" + type + "'" + ((alertTypes.ElementAt(alertTypes.Count - 1).Equals(type)) ? "" : ", ");
-                }
-
-                alertsPipeline["category"] = fullTypeString;
-
                 try
                 {
                     _allAlerts.AddRange(DataExtraction.AlertController.GetAlerts(alertsPipeline));
@@ -117,6 +120,21 @@ namespace CheckupExec.Analysis
                 catch
                 {
                     //log
+                }
+
+                var temp = new List<Alert>();
+
+                foreach (Alert alert in _allAlerts)
+                {
+                    if (!alertTypes.Contains(alert.Category))
+                    {
+                        temp.Add(alert);
+                    }
+                }
+
+                foreach (Alert alert in temp)
+                {
+                    _allAlerts.Remove(alert);
                 }
             }
             else

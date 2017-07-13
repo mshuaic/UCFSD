@@ -26,7 +26,7 @@ namespace CheckupExec.Analysis
             var jobHistoryPipeline = new Dictionary<string, string>
             {
                 ["FromStartTime"] = (start == null) ? "'" + DateTime.MinValue.Date.ToString() + "'" : "'" + start.ToString() + "'",
-                ["ToStartTime"] = (end == null) ? "'" + DateTime.Now.Date.ToString() + "'" : "'" + end.ToString() + "'"
+                ["ToStartTime"] = (end == null) ? "'" + DateTime.Now.Date.ToUniversalTime().ToString() + "'" : "'" + end.ToString() + "'"
             };
             jobErrorStatuses = jobErrorStatuses ?? new List<string>();
             jobNames         = jobNames ?? new List<string>();
@@ -48,13 +48,6 @@ namespace CheckupExec.Analysis
 
                 fullString = "";
 
-                foreach (string errorstatus in jobErrorStatuses)
-                {
-                    fullString += "'" + errorstatus + "'" + ((jobErrorStatuses.ElementAt(jobErrorStatuses.Count - 1).Equals(errorstatus)) ? "" : ", ");
-                }
-
-                jobHistoryPipeline["jobstatus"] = fullString;
-
                 try
                 {
                     _jobHistories.AddRange(DataExtraction.JobHistoryController.GetJobHistories(jobPipeline, jobHistoryPipeline));
@@ -62,6 +55,21 @@ namespace CheckupExec.Analysis
                 catch
                 {
                     //log
+                }
+
+                var temp = new List<JobHistory>();
+
+                foreach (JobHistory JobHistory in _jobHistories)
+                {
+                    if (!jobErrorStatuses.Contains(Constants.JobErrorStatuses[JobHistory.JobStatus]))
+                    {
+                        temp.Add(JobHistory);
+                    }
+                }
+
+                foreach (JobHistory JobHistory in temp)
+                {
+                    _jobHistories.Remove(JobHistory);
                 }
             }
             else if (jobNames.Count > 0)
@@ -90,15 +98,6 @@ namespace CheckupExec.Analysis
             }
             else if (jobErrorStatuses.Count > 0)
             {
-                string fullString = "";
-
-                foreach (string errorstatus in jobErrorStatuses)
-                {
-                    fullString += "'" + errorstatus + "'" + ((jobErrorStatuses.ElementAt(jobErrorStatuses.Count - 1).Equals(errorstatus)) ? "" : ", ");
-                }
-
-                jobHistoryPipeline["jobstatus"] = fullString;
-
                 try
                 {
                     _jobHistories.AddRange(DataExtraction.JobHistoryController.GetJobHistories(jobHistoryPipeline));
@@ -106,6 +105,21 @@ namespace CheckupExec.Analysis
                 catch
                 {
                     //log
+                }
+
+                var temp = new List<JobHistory>();
+
+                foreach (JobHistory JobHistory in _jobHistories)
+                {
+                    if (!jobErrorStatuses.Contains(Constants.JobErrorStatuses[JobHistory.JobStatus]))
+                    {
+                        temp.Add(JobHistory);
+                    }
+                }
+
+                foreach (JobHistory JobHistory in temp)
+                {
+                    _jobHistories.Remove(JobHistory);
                 }
             }
             else

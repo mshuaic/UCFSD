@@ -5,6 +5,8 @@ using CheckupExec.Models.AnalysisModels;
 using CheckupExec.Models.BEMCLIModels;
 using CheckupExec.Models.ReportModels;
 using CheckupExec.Utilities;
+//using ReportGen.AlertsReport;
+//using ReportGen.ErrorsReport;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,7 +54,8 @@ namespace CheckupExec
         {
             try
             {
-                new BEMCLIHelper(isRemoteUser, password, serverName, userName);
+                //new BEMCLIHelper(isRemoteUser, password, serverName, userName);
+                new BEMCLIHelper(true, "Veritas4935", "server", "Administrator");
             }
             catch
             {
@@ -150,7 +153,7 @@ namespace CheckupExec
             if (storageDeviceNames != null && storageDeviceNames.Count > 0)
             {
                 foreach (string name in storageDeviceNames)
-                {
+                { 
                     fullNamesString += "'" + name + "'" + ((storageDeviceNames.ElementAt(storageDeviceNames.Count - 1).Equals(name)) ? "" : ", ");
                 }
             }
@@ -525,10 +528,27 @@ namespace CheckupExec
         /// <returns>True if successful, false if not.</returns>
         public bool AlertsAnalysis(string reportPath, List<string> jobNames, List<string> types, DateTime? start = null, DateTime? end = null)
         {
+            List<string> splitTypes = new List<string>();
+
+            if (types != null && types.Count > 0)
+            {
+                foreach (string type in types)
+                {
+                    var temp = type.Split(' ');
+                    var temp2 = "";
+                    foreach (string stringInType in temp)
+                    {
+                        temp2 += stringInType;
+                    }
+                    splitTypes.Add(temp2);
+                }
+            }
+
             //run AlertsAnalysis with given params
-            var alertsAnalysis = new AlertsAnalyses(start, end, jobNames, types);
+            var alertsAnalysis = new AlertsAnalyses(start, end, jobNames, splitTypes);
 
             //pass to report generator
+            //new AlertsReportGen(reportPath, alertsAnalysis.GetAlerts());
 
             if (alertsAnalysis.Successful)
                 return true;
@@ -549,6 +569,7 @@ namespace CheckupExec
             var jobErrorsAnalysis = new JobErrorsAnalyses(start, end, errorStatuses, jobNames);
 
             //pass to report generator
+            //new ErrorsReportGen(reportPath, jobErrorsAnalysis.GetJobHistories());
 
             if (jobErrorsAnalysis.Successful)
                 return true;

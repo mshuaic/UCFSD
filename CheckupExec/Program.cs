@@ -8,12 +8,12 @@ namespace CheckupExec
         static void Main(string[] args)
         {
             //remote bool and server credentials [since remote]
-            bool remoteAccess = true;
-            string password = "Veritas4935";
-            string serverName = "server";
-            string userName = "Administrator";
+            bool remoteAccess = false;
+            //string password = "Veritas4935";
+            //string serverName = "server";
+            //string userName = "Administrator";
 
-            var de = new DataExtraction(remoteAccess, password, serverName, userName);
+            var de = new DataExtraction(remoteAccess);//, password, serverName, userName);
 
             if (de.PowershellInstanceCreated)
             {
@@ -47,7 +47,7 @@ namespace CheckupExec
                 }
 
                 //whatever report is ran by the user
-                de.FrontEndAnalysis(null);//, jobNames, null);
+                de.JobErrorsAnalysis(null, jobNames, null);
                 //dispose our runspace and powershell instances
                 de.CleanUp();
 
