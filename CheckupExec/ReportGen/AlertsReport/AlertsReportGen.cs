@@ -10,8 +10,6 @@ namespace ReportGen.AlertsReport
     {
         private const string START_JS = "/**START MY JAVASCRIPT**/";
 
-        private const string TEMPLATE_PATH = @".\ReportGen\AlertsReport\template.html";
-
         public AlertsReportGen(string output, List<Alert> alerts, int numOfTrunk = 10)
         {
             AlertsReportInfo info = new AlertsReportInfo(alerts, numOfTrunk);
@@ -32,7 +30,7 @@ namespace ReportGen.AlertsReport
             //Generate HTML
             try
             {
-                string template = File.ReadAllText(TEMPLATE_PATH);
+                string template = CheckupExec.Properties.Resources.template_alerts;
                 string html = template.Insert(template.IndexOf(START_JS) + START_JS.Length, barJs.Gen() + pieJs.Gen());
                 //Console.WriteLine(html);
                 File.WriteAllText(output, html);

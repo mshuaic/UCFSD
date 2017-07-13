@@ -21,5 +21,5 @@ E:\SkyDrive\UCF\SD\UCFSD-master\CheckupExec\bin\Debug\Accord.dll
 E:\SkyDrive\UCF\SD\UCFSD-master\CheckupExec\bin\Debug\Newtonsoft.Json.dll
 E:\SkyDrive\UCF\SD\UCFSD-master\CheckupExec\bin\Debug\Accord.xml
 E:\SkyDrive\UCF\SD\UCFSD-master\CheckupExec\bin\Debug\Newtonsoft.Json.xml
-E:\SkyDrive\UCF\SD\UCFSD-master\CheckupExec\bin\Debug\ReportGen\AlertsReport\template.html
-E:\SkyDrive\UCF\SD\UCFSD-master\CheckupExec\bin\Debug\ReportGen\ErrorsReport\template.html
+E:\SkyDrive\UCF\SD\UCFSD-master\CheckupExec\obj\Debug\CheckupExec.Properties.Resources.resources
+E:\SkyDrive\UCF\SD\UCFSD-master\CheckupExec\obj\Debug\CheckupExec.csproj.GenerateResource.Cache
