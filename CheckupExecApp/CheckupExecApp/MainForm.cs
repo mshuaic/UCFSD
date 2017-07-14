@@ -156,7 +156,7 @@ namespace CheckupExecApp
                 OpenFileDialog ofd = new OpenFileDialog();
 
                 // Filter the file extension to only allow user to open .bkf files
-                ofd.Filter = "XML|*.xml";
+                ofd.Filter = "BKF|*.bkf";
 
                 if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
