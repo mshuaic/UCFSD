@@ -21,9 +21,6 @@ namespace ReportGen.ErrorsReport
             Labels = new List<string>();
             TotalErrors = jobHistory.Count;
 
-            // maybe not necessary 
-            jobHistory.Sort();
-
             int elapsedTime = (jobHistory[jobHistory.Count - 1].EndTime - jobHistory[0].EndTime).Days + 1;
             DateTime tempDate = jobHistory[0].EndTime;
             double interval = (double)elapsedTime / numOfTrunk;

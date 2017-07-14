@@ -20,8 +20,6 @@ namespace ReportGen.AlertsReport
         public AlertsReportInfo(List<Alert> alerts, int numOfTrunk)
         {
             TotalAlters = alerts.Count;
-            // maybe not necessary 
-            alerts.Sort();
 
             int elapsedTime = (alerts[alerts.Count - 1].Date - alerts[0].Date).Days + 1;
             double interval = (double)elapsedTime / numOfTrunk;
