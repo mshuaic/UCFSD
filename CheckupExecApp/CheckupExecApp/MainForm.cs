@@ -228,8 +228,8 @@ namespace CheckupExecApp
         {
             try
             {
-                // Make sure a file path and report destination folder path was specified
-                if(FolderPathTextBox2.Text != "" && FilePathTextBox.Text != "")
+                // Make sure a report destination folder path was specified
+                if(FolderPathTextBox2.Text != "")
                 {
                     // Get storage devices
                     dataExtractionInstance.GetStorageDeviceNames();
@@ -246,7 +246,7 @@ namespace CheckupExecApp
                 }
                 else
                 {
-                    MessageBox.Show("Please select a valid file and destination folder.", "Invalid file/destination folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Please select a destination folder.", "Invalid file/destination folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch(Exception ex)
