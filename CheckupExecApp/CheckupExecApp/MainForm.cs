@@ -155,8 +155,8 @@ namespace CheckupExecApp
                 // Allow user to select a desired Backup Job file to analyze
                 OpenFileDialog ofd = new OpenFileDialog();
 
-                // Filter the file extension to only allow user to open .bkf files
-                ofd.Filter = "BKF|*.bkf";
+                // Filter the file extension to only allow user to open .xml files
+                ofd.Filter = "XML|*.xml";
 
                 if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
@@ -228,8 +228,8 @@ namespace CheckupExecApp
         {
             try
             {
-                // Make sure a report destination folder path was specified
-                if(FolderPathTextBox2.Text != "")
+                // Make sure a file path and report destination folder path was specified
+                if(FolderPathTextBox2.Text != "" && FilePathTextBox.Text != "")
                 {
                     // Get storage devices
                     dataExtractionInstance.GetStorageDeviceNames();
@@ -246,7 +246,7 @@ namespace CheckupExecApp
                 }
                 else
                 {
-                    MessageBox.Show("Please select a destination folder.", "Invalid file/destination folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Please select a valid file and destination folder.", "Invalid file/destination folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch(Exception ex)
