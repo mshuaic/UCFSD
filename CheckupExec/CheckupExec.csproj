@@ -128,11 +128,11 @@
     <Compile Include="Utilities\BEMCLIHelper.cs" />
     <Compile Include="Utilities\Constants.cs" />
     <Compile Include="Utilities\Forecast.cs" />
-    <Compile Include="Utilities\HtmlGen.cs" />
+    <Compile Include="ReportGen\ForecastReports\HtmlGen.cs" />
     <Compile Include="Utilities\JsGen.cs" />
     <Compile Include="Utilities\JsonHelper.cs" />
     <Compile Include="Utilities\LogUtility.cs" />
-    <Compile Include="Utilities\SectionGen.cs" />
+    <Compile Include="ReportGen\ForecastReports\SectionGen.cs" />
     <Compile Include="Utilities\SortingUtility.cs" />
   </ItemGroup>
   <ItemGroup>
