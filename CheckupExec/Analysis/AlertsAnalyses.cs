@@ -160,7 +160,7 @@ namespace CheckupExec.Analysis
                 {
                     if (alert.Date < start || alert.Date > end)
                     {
-                        filteredAlerts.Remove(alert);
+                        filteredAlerts.Add(alert);
                     }
                 }
 

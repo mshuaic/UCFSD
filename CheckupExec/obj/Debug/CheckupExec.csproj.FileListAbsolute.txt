@@ -7,6 +7,8 @@ C:\Users\Galic\documents\visual studio 2017\Projects\CheckupExec\CheckupExec\bin
 C:\Users\Galic\documents\visual studio 2017\Projects\CheckupExec\CheckupExec\bin\Debug\System.Management.Automation.dll
 C:\Users\Galic\documents\visual studio 2017\Projects\CheckupExec\CheckupExec\bin\Debug\Accord.xml
 C:\Users\Galic\documents\visual studio 2017\Projects\CheckupExec\CheckupExec\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Galic\documents\visual studio 2017\Projects\CheckupExec\CheckupExec\obj\Debug\CheckupExec.Properties.Resources.resources
+C:\Users\Galic\documents\visual studio 2017\Projects\CheckupExec\CheckupExec\obj\Debug\CheckupExec.csproj.GenerateResource.Cache
 C:\Users\Galic\documents\visual studio 2017\Projects\CheckupExec\CheckupExec\obj\Debug\CheckupExec.exe
 C:\Users\Galic\documents\visual studio 2017\Projects\CheckupExec\CheckupExec\obj\Debug\CheckupExec.pdb
 C:\Users\Galic\documents\visual studio 2017\Projects\CheckupExec\CheckupExec\obj\Debug\CheckupExec.csprojResolveAssemblyReference.cache

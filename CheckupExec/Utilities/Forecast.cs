@@ -15,9 +15,9 @@ namespace CheckupExec.Utilities
         private const int _maxSubsetSizeBE = 120;
         private const int _minSubsetSizeBE = 5;
 
-        //DiskCapacities subset
-        private const int _maxSubsetSizeDC = 30;
-        private const int _minSubsetSizeDC = 10;
+        //DiskCapacities subset 
+        private const int _maxSubsetSizeDC = 100;
+        private const int _minSubsetSizeDC = 5;
 
         private DateTime _currentTime;
 

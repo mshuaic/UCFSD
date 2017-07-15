@@ -5,8 +5,7 @@ using CheckupExec.Models.AnalysisModels;
 using CheckupExec.Models.BEMCLIModels;
 using CheckupExec.Models.ReportModels;
 using CheckupExec.Utilities;
-//using ReportGen.AlertsReport;
-//using ReportGen.ErrorsReport;
+using ReportGen;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -549,6 +548,7 @@ namespace CheckupExec
 
             //pass to report generator
             //new AlertsReportGen(reportPath, alertsAnalysis.GetAlerts());
+            new ReportGenerator(reportPath, alertsAnalysis.GetAlerts());
 
             if (alertsAnalysis.Successful)
                 return true;
@@ -570,6 +570,7 @@ namespace CheckupExec
 
             //pass to report generator
             //new ErrorsReportGen(reportPath, jobErrorsAnalysis.GetJobHistories());
+            new ReportGenerator(reportPath, jobErrorsAnalysis.GetJobHistories());
 
             if (jobErrorsAnalysis.Successful)
                 return true;
@@ -581,68 +582,116 @@ namespace CheckupExec
             return BEMCLIHelper.CleanUp();
         }
 
-        //public bool DemoTest()
-        //{
-        //    var instances = new List<JobHistory>();
-        //    Random j = new Random();
-        //    long bytes = 10000000000;
+        public bool DemoTest()
+        {
+            var instances = new List<UsedCapacity>();
+            Random j = new Random();
+            long bytes = 0;
 
-        //    for (int i = 0, k = 100; i <= 100; i++, k--)
-        //    {
-        //        bytes = bytes + j.Next(-100000, 10000000);
+            for (int i = 0, k = 100; i <= 30; i++, k--)
+            {
+                bytes = bytes + j.Next(-100000, 300000000);
 
-        //        instances.Add(new JobHistory
-        //        {
-        //            TotalDataSizeBytes = bytes,
-        //            StartTime = DateTime.Now.Date.AddDays(-k)
-        //        });
-        //    }
+                instances.Add(new UsedCapacity
+                {
+                    Bytes = bytes,
+                    Date = DateTime.Now.Date.AddDays(-k)
+                });
+            }
 
-        //    double maxCapacity = 20;
+            for (int i = 30, k = 70; i <= 80; i++, k--)
+            {
+                bytes = bytes + j.Next(-100000, 500000000);
 
-        //    var fc = new Forecast<JobHistory>();
+                instances.Add(new UsedCapacity
+                {
+                    Bytes = bytes,
+                    Date = DateTime.Now.Date.AddDays(-k)
+                });
+            }
 
-        //    var fr = fc.doForecast(instances);
+            for (int i = 80, k = 20; i <= 100; i++, k--)
+            {
+                bytes = bytes + j.Next(-100000, 1000000000);
 
-        //    var report = new BackupJobReport();
+                instances.Add(new UsedCapacity
+                {
+                    Bytes = bytes,
+                    Date = DateTime.Now.Date.AddDays(-k)
+                });
+            }
 
-        //    report.HistoricalPoints = fr.plot;
+            double maxCapacity = 40;
 
-        //    report.ForecastPoints = new List<PlotPoint>();
+            var fc = new Forecast<UsedCapacity>();
 
-        //    report.DaysTo50 = ((maxCapacity * .5) - fr.FinalIntercept) / fr.FinalSlope;
-        //    report.ForecastPoints.Add(new PlotPoint
-        //    {
-        //        Days = report.DaysTo50,
-        //        GB = (maxCapacity * .5)
-        //    });
+            var fr = fc.doForecast(instances);
 
-        //    report.DaysTo75 = ((maxCapacity * .75) - fr.FinalIntercept) / fr.FinalSlope;
-        //    report.ForecastPoints.Add(new PlotPoint
-        //    {
-        //        Days = report.DaysTo75,
-        //        GB = (maxCapacity * .75)
-        //    });
+            var report = new DiskCapacityReport();
 
-        //    report.DaysTo90 = ((maxCapacity * .9) - fr.FinalIntercept) / fr.FinalSlope;
-        //    report.ForecastPoints.Add(new PlotPoint
-        //    {
-        //        Days = report.DaysTo90,
-        //        GB = (maxCapacity * .9)
-        //    });
+            report.HistoricalPoints = fr.plot;
 
-        //    report.DaysToFull = (maxCapacity - fr.FinalIntercept) / fr.FinalSlope;
-        //    report.ForecastPoints.Add(new PlotPoint
-        //    {
-        //        Days = report.DaysToFull,
-        //        GB = (maxCapacity)
-        //    });
+            report.ForecastPoints = new List<PlotPoint>();
 
-        //    report.MaxCapacity = maxCapacity;
-        //    report.UsedCapacity = (double) (bytes >> 20) / 1024;
-        //    report.JobName = "Demo Test Job";
+            report.ForecastPoints.Add(new PlotPoint
+            {
+                Days = report.HistoricalPoints.First().Days,
+                GB = fr.FinalIntercept + fr.FinalSlope * report.HistoricalPoints.First().Days
+            });
 
-        //    return true;
-        //}
+            report.DaysTo50 = ((maxCapacity * .5) - fr.FinalIntercept) / fr.FinalSlope;
+            report.ForecastPoints.Add(new PlotPoint
+            {
+                Days = report.DaysTo50,
+                GB = (maxCapacity * .5)
+            });
+
+            report.DaysTo75 = ((maxCapacity * .75) - fr.FinalIntercept) / fr.FinalSlope;
+            report.ForecastPoints.Add(new PlotPoint
+            {
+                Days = report.DaysTo75,
+                GB = (maxCapacity * .75)
+            });
+
+            report.DaysTo90 = ((maxCapacity * .9) - fr.FinalIntercept) / fr.FinalSlope;
+            report.ForecastPoints.Add(new PlotPoint
+            {
+                Days = report.DaysTo90,
+                GB = (maxCapacity * .9)
+            });
+
+            report.DaysToFull = (maxCapacity - fr.FinalIntercept) / fr.FinalSlope;
+            report.ForecastPoints.Add(new PlotPoint
+            {
+                Days = report.DaysToFull,
+                GB = (maxCapacity)
+            });
+
+            report.HistoricalPoints.Add(new PlotPoint
+            {
+                Days = report.DaysToFull,
+                GB = (maxCapacity)
+            });
+
+            report.MaxCapacity = maxCapacity;
+            report.UsedCapacity = (double)(bytes >> 20) / 1024;
+            report.DiskName = "Demo Test Job";
+
+            var reports = new List<DiskCapacityReport>();
+            reports.Add(report);
+
+            var reportGen = new HtmlGen();
+
+            try
+            {
+                reportGen.makeReportDisk(reports, @"C:\Users\Galic\Desktop");
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }
