@@ -12,3 +12,16 @@ C:\Users\Galic\documents\visual studio 2017\Projects\CheckupExec\CheckupExec\obj
 C:\Users\Galic\documents\visual studio 2017\Projects\CheckupExec\CheckupExec\obj\Debug\CheckupExec.exe
 C:\Users\Galic\documents\visual studio 2017\Projects\CheckupExec\CheckupExec\obj\Debug\CheckupExec.pdb
 C:\Users\Galic\documents\visual studio 2017\Projects\CheckupExec\CheckupExec\obj\Debug\CheckupExec.csprojResolveAssemblyReference.cache
+E:\SkyDrive\UCF\SD\UCFSD-master\CheckupExec\obj\Debug\CheckupExec.csprojResolveAssemblyReference.cache
+E:\SkyDrive\UCF\SD\UCFSD-master\CheckupExec\obj\Debug\CheckupExec.exe
+E:\SkyDrive\UCF\SD\UCFSD-master\CheckupExec\obj\Debug\CheckupExec.pdb
+E:\SkyDrive\UCF\SD\UCFSD-master\CheckupExec\bin\Debug\Accord.dll.config
+E:\SkyDrive\UCF\SD\UCFSD-master\CheckupExec\bin\Debug\CheckupExec.exe.config
+E:\SkyDrive\UCF\SD\UCFSD-master\CheckupExec\bin\Debug\CheckupExec.exe
+E:\SkyDrive\UCF\SD\UCFSD-master\CheckupExec\bin\Debug\CheckupExec.pdb
+E:\SkyDrive\UCF\SD\UCFSD-master\CheckupExec\bin\Debug\Accord.dll
+E:\SkyDrive\UCF\SD\UCFSD-master\CheckupExec\bin\Debug\Newtonsoft.Json.dll
+E:\SkyDrive\UCF\SD\UCFSD-master\CheckupExec\bin\Debug\Accord.xml
+E:\SkyDrive\UCF\SD\UCFSD-master\CheckupExec\bin\Debug\Newtonsoft.Json.xml
+E:\SkyDrive\UCF\SD\UCFSD-master\CheckupExec\obj\Debug\CheckupExec.Properties.Resources.resources
+E:\SkyDrive\UCF\SD\UCFSD-master\CheckupExec\obj\Debug\CheckupExec.csproj.GenerateResource.Cache
