@@ -48,5 +48,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="E:\SkyDrive\UCF\SD\UCFSD-master\CheckupExec\CheckupExec.csproj">
+      <Project>{59ec6bcd-6f42-452b-bc48-cb271f107e00}</Project>
+      <Name>CheckupExec</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
