@@ -18,9 +18,12 @@ namespace CheckupExecApp
     public partial class MainForm : Form
     {
         private static Logger log = LogManager.GetCurrentClassLogger();
+        public CheckupExec.DataExtraction dataExtractionInstance;
 
-        public MainForm()
+        public MainForm(bool isRemoteUser, string password, string serverName, string userName)
         {
+            // Create new DataExtraction instance to handle creation of reports/forecasts
+            dataExtractionInstance = new CheckupExec.DataExtraction(isRemoteUser, password, serverName, userName);
             InitializeComponent();
             GlobalSettingsTextBox_Load();
 
@@ -45,10 +48,7 @@ namespace CheckupExecApp
             Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, dataExtractionInstance.GetStorageDeviceNames(), BackupJobsCheckedListBox4, SelectAllBackupJobsCheckBox4);
             Helpers.LoadJobErrorTypesCheckedListBox(dataExtractionInstance, AlertTypesCheckedListBox4);
         }
-
-        // Create new DataExtraction instance to handle creation of reports/forecasts
-        CheckupExec.DataExtraction dataExtractionInstance = new CheckupExec.DataExtraction(false, null, null, null);
-
+        
         #region Configuration Settings Overview/Front End Analysis
         // Load global Backup Exec Settings
         private void GlobalSettingsTextBox_Load()
@@ -425,6 +425,5 @@ namespace CheckupExecApp
             Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox4.CheckedItems.Cast<string>().ToList(), BackupJobsCheckedListBox4, SelectAllBackupJobsCheckBox4);
         }
         #endregion
-
     }   
 }
