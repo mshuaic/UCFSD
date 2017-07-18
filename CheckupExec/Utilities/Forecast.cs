@@ -2,9 +2,6 @@
 using CheckupExec.Models.AnalysisModels;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CheckupExec.Utilities
 {
@@ -31,8 +28,8 @@ namespace CheckupExec.Utilities
         public ForecastResults doForecast(List<JobHistory> jobHistories)
         {
             _forecastResults.ForecastSuccessful = true;
-            _forecastResults.isDiskForecast     = false;
-            _forecastResults.plot               = new List<PlotPoint>();
+            _forecastResults.IsDiskForecast = false;
+            _forecastResults.Plot = new List<PlotPoint>();
 
             if (jobHistories != null && jobHistories.Count > 0)
             {
@@ -53,8 +50,8 @@ namespace CheckupExec.Utilities
         public ForecastResults doForecast(List<UsedCapacity> usedCapacities)
         {
             _forecastResults.ForecastSuccessful = true;
-            _forecastResults.isDiskForecast     = true;
-            _forecastResults.plot               = new List<PlotPoint>();
+            _forecastResults.IsDiskForecast = true;
+            _forecastResults.Plot = new List<PlotPoint>();
 
             if (usedCapacities != null && usedCapacities.Count > 0)
             {
@@ -138,12 +135,12 @@ namespace CheckupExec.Utilities
         //Ultimately, the subset that had the highest pearson correlation is chosen (slope and intercept).
         private void pWLinearRegression(List<JobHistory> jobHistories, int maxSubsetSize, int minSubsetSize)
         {
-            int recentIndex       = jobHistories.Count - 1;
-            int finalSubsetSize   = minSubsetSize;
+            int recentIndex = jobHistories.Count - 1;
+            int finalSubsetSize = minSubsetSize;
             int currentSubsetSize = 2;// minSubsetSize;
-            int boundaryIndex     = recentIndex - currentSubsetSize + 1;
+            int boundaryIndex = recentIndex - currentSubsetSize + 1;
 
-            double maxCorr = Double.MinValue;
+            double maxCorr = double.MinValue;
             double sumy = 0, sumx = 0;
             double candidateSlope = 0, candidateIntercept = 0;
 
@@ -174,8 +171,8 @@ namespace CheckupExec.Utilities
                     //log
                 }
 
-                double sumdevy  = 0, sumdevy2 = 0;
-                double sumdevx  = 0, sumdevx2 = 0;
+                double sumdevy = 0, sumdevy2 = 0;
+                double sumdevx = 0, sumdevx2 = 0;
                 double sumdevyx = 0;
 
                 for (int i = recentIndex; i >= boundaryIndex && i >= 0; i--)
@@ -217,12 +214,12 @@ namespace CheckupExec.Utilities
                     //log, although i don't think it can get to this point (corr = NaN if denominator == 0)
                 }
 
-                double slope     = 0;
+                double slope = 0;
                 double intercept = 0;
 
                 try
                 {
-                    slope     = corr * (stdevy / stdevx);
+                    slope = corr * (stdevy / stdevx);
                     intercept = meany - slope * meanx;
                 }
                 catch
@@ -231,9 +228,9 @@ namespace CheckupExec.Utilities
                 }
                 if (corr > maxCorr)
                 {
-                    maxCorr            = corr;
-                    finalSubsetSize    = currentSubsetSize;
-                    candidateSlope     = slope;
+                    maxCorr = corr;
+                    finalSubsetSize = currentSubsetSize;
+                    candidateSlope = slope;
                     candidateIntercept = intercept;
                 }
 
@@ -241,7 +238,7 @@ namespace CheckupExec.Utilities
                 currentSubsetSize++;
             }
 
-            _forecastResults.FinalSlope     = candidateSlope;
+            _forecastResults.FinalSlope = candidateSlope;
             _forecastResults.FinalIntercept = candidateIntercept;
         }
 
@@ -250,10 +247,10 @@ namespace CheckupExec.Utilities
         //Ultimately, the subset that had the highest pearson correlation is chosen (slope and intercept).
         private void pWLinearRegression(List<UsedCapacity> usedCapacities, int maxSubsetSize, int minSubsetSize)
         {
-            int recentIndex       = usedCapacities.Count - 1;
-            int finalSubsetSize   = minSubsetSize;
+            int recentIndex = usedCapacities.Count - 1;
+            int finalSubsetSize = minSubsetSize;
             int currentSubsetSize = minSubsetSize;
-            int boundaryIndex     = recentIndex - currentSubsetSize + 1;
+            int boundaryIndex = recentIndex - currentSubsetSize + 1;
 
             double maxCorr = Double.MinValue;
             double sumy = 0, sumx = 0;
@@ -286,8 +283,8 @@ namespace CheckupExec.Utilities
                     //log
                 }
 
-                double sumdevy  = 0, sumdevy2 = 0;
-                double sumdevx  = 0, sumdevx2 = 0;
+                double sumdevy = 0, sumdevy2 = 0;
+                double sumdevx = 0, sumdevx2 = 0;
                 double sumdevyx = 0;
 
                 for (int i = recentIndex; i >= boundaryIndex && i >= 0; i--)
@@ -329,12 +326,12 @@ namespace CheckupExec.Utilities
                     //log, although i don't think it can get to this point (corr = NaN if denominator == 0)
                 }
 
-                double slope     = 0;
+                double slope = 0;
                 double intercept = 0;
 
                 try
                 {
-                    slope     = corr * (stdevy / stdevx);
+                    slope = corr * (stdevy / stdevx);
                     intercept = meany - slope * meanx;
                 }
                 catch
@@ -344,9 +341,9 @@ namespace CheckupExec.Utilities
 
                 if (corr > maxCorr)
                 {
-                    maxCorr            = corr;
-                    finalSubsetSize    = currentSubsetSize;
-                    candidateSlope     = slope;
+                    maxCorr = corr;
+                    finalSubsetSize = currentSubsetSize;
+                    candidateSlope = slope;
                     candidateIntercept = intercept;
                 }
 
@@ -354,7 +351,7 @@ namespace CheckupExec.Utilities
                 currentSubsetSize++;
             }
 
-            _forecastResults.FinalSlope     = candidateSlope;
+            _forecastResults.FinalSlope = candidateSlope;
             _forecastResults.FinalIntercept = candidateIntercept;
         }
 
@@ -363,10 +360,10 @@ namespace CheckupExec.Utilities
         {
             foreach (JobHistory jobHistory in jobHistories)
             {
-                _forecastResults.plot.Add(new PlotPoint
+                _forecastResults.Plot.Add(new PlotPoint
                 {
                     Days = jobHistory.StartTime.Date.Subtract(_currentTime.Date).TotalDays,
-                    GB   = (double)(jobHistory.TotalDataSizeBytes >> 20) / 1024
+                    GB = (double)(jobHistory.TotalDataSizeBytes >> 20) / 1024
                 });
             }
         }
@@ -376,10 +373,10 @@ namespace CheckupExec.Utilities
         {
             foreach (var usedCapacity in usedCapacities)
             {
-                _forecastResults.plot.Add(new PlotPoint
+                _forecastResults.Plot.Add(new PlotPoint
                 {
                     Days = usedCapacity.Date.Date.Subtract(_currentTime.Date).TotalDays,
-                    GB   = (double)(usedCapacity.Bytes >> 20) / 1024
+                    GB = (double)(usedCapacity.Bytes >> 20) / 1024
                 });
             }
         }

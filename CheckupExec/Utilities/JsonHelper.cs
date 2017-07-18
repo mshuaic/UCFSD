@@ -1,10 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CheckupExec.Utilities
 {
@@ -17,9 +13,9 @@ namespace CheckupExec.Utilities
             if (token is JArray)
             {
                 //LogUtility.LogInfoFunction("Calling JsonHelper function JsonDeserialize<List<Alert>>(JsonString); ");
-                var Objects = JsonDeserialize<List<T>>(jsonString);
+                var objects = JsonDeserialize<List<T>>(jsonString);
                 //LogUtility.LogInfoFunctionFinished();
-                return Objects;
+                return objects;
             }
             else
             {
@@ -30,14 +26,14 @@ namespace CheckupExec.Utilities
                 return result;
             }
         }
-        
+
         //string -> model
         public static T JsonDeserialize<T>(string jsonString)
         {
             //LogUtility.LogInfoFunction("Entered JsonDeserialize.");
             return JsonConvert.DeserializeObject<T>(jsonString);
         }
- 
+
         //string <- model
         public static string JsonSerializer<T>(T dataObject)
         {

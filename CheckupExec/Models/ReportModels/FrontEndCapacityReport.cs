@@ -1,15 +1,13 @@
 ﻿using CheckupExec.Models.AnalysisModels;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CheckupExec.Models.ReportModels
 {
     //todo: add license analysis props (w/e those are going to be)
     public class FrontEndCapacityReport
     {
+        public List<BackupJobReport> BackupJobs { get; set; }
+
         public List<PlotPoint> HistoricalPoints { get; set; }
 
         public List<PlotPoint> ForecastPoints { get; set; }

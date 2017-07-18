@@ -1,11 +1,7 @@
-﻿using CheckupExec.Models;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Collections;
+﻿using System;
 
 namespace CheckupExec.Models
-{   
+{
     public class Alert : IComparable<Alert>
     {
         public string Name { get; set; }

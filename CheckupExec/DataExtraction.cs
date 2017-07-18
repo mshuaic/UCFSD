@@ -2,7 +2,6 @@
 using CheckupExec.Controllers;
 using CheckupExec.Models;
 using CheckupExec.Models.AnalysisModels;
-using CheckupExec.Models.BEMCLIModels;
 using CheckupExec.Models.ReportModels;
 using CheckupExec.Utilities;
 using ReportGen;
@@ -58,35 +57,35 @@ namespace CheckupExec
             }
             catch
             {
-
+                // ignored for now
             }
 
-            if (BEMCLIHelper.powershell != null)
+            if (BEMCLIHelper.Powershell != null)
             {
-                PowershellInstanceCreated    = true;
+                PowershellInstanceCreated = true;
 
-                AlertController              = new AlertController();
+                AlertController = new AlertController();
 
-                AlertHistoryController       = new AlertHistoryController();
+                AlertHistoryController = new AlertHistoryController();
 
-                AlertCategoryController      = new AlertCategoryController();
+                AlertCategoryController = new AlertCategoryController();
 
-                JobController                = new JobController();
+                JobController = new JobController();
 
-                JobHistoryController         = new JobHistoryController();
+                JobHistoryController = new JobHistoryController();
 
                 LicenseInformationController = new LicenseInformationController();
 
-                StorageController            = new StorageController();
+                StorageController = new StorageController();
 
-                StorageDevicePoolController  = new StorageDevicePoolController();
+                StorageDevicePoolController = new StorageDevicePoolController();
 
                 EditionInformationController = new EditionInformationController();
             }
             else
             {
                 PowershellInstanceCreated = false;
-            }  
+            }
         }
 
         /// <summary>
@@ -104,9 +103,9 @@ namespace CheckupExec
             if (_storageDevices != null && _storageDevices.Count > 0
                 && poolDevices != null && poolDevices.Count > 0)
             {
-                Storage temp = null;
                 foreach (var device in poolDevices)
                 {
+                    Storage temp = null;
                     if ((temp = _storageDevices.Find(x => x.Name.Equals(device.Name))) != null)
                     {
                         _storageDevices.Remove(temp);
@@ -116,10 +115,7 @@ namespace CheckupExec
 
             if (_storageDevices != null && _storageDevices.Count > 0)
             {
-                foreach (Storage storageDevice in _storageDevices)
-                {
-                    names.Add(storageDevice.Name);
-                }
+                names.AddRange(_storageDevices.Select(storageDevice => storageDevice.Name));
             }
 
             return names;
@@ -132,8 +128,6 @@ namespace CheckupExec
         /// <returns>List of strings representing job names.</returns>
         public List<string> GetJobNames(List<string> storageDeviceNames)
         {
-            var jobNames = new List<string>();
-
             var jobHistoryPipeline = new Dictionary<string, Dictionary<string, string>>
             {
                 [Constants.GetStorages] = new Dictionary<string, string>
@@ -151,17 +145,17 @@ namespace CheckupExec
 
             if (storageDeviceNames != null && storageDeviceNames.Count > 0)
             {
-                foreach (string name in storageDeviceNames)
-                { 
-                    fullNamesString += "'" + name + "'" + ((storageDeviceNames.ElementAt(storageDeviceNames.Count - 1).Equals(name)) ? "" : ", ");
-                }
+                fullNamesString = storageDeviceNames
+                                 .Aggregate(fullNamesString, (current, name) => current + ("'" + name + "'" + ((storageDeviceNames
+                                                                                                                .ElementAt(storageDeviceNames.Count - 1)
+                                                                                                                .Equals(name)) ? "" : ", ")));
             }
             else
             {
-                foreach (Storage storage in _storageDevices)
-                {
-                    fullNamesString += "'" + storage.Name + "'" + ((_storageDevices.ElementAt(_storageDevices.Count - 1).Equals(storage)) ? "" : ", ");
-                }
+                fullNamesString = _storageDevices
+                                .Aggregate(fullNamesString, (current, storage) => current + ("'" + storage.Name + "'" + ((_storageDevices
+                                                                                                                        .ElementAt(_storageDevices.Count - 1)
+                                                                                                                        .Equals(storage)) ? "" : ", ")));
             }
 
             jobHistoryPipeline[Constants.GetStorages]["Name"] = fullNamesString;
@@ -180,24 +174,19 @@ namespace CheckupExec
                 }
             }
 
-            List<Job> jobTemp = null;
             _jobs = new List<Job>();
             foreach (string name in names)
             {
                 jobParams["Name"] = "'" + name + "'";
 
+                List<Job> jobTemp = null;
                 if ((jobTemp = JobController.GetJobs(jobParams) ?? new List<Job>()).Count > 0)
                 {
                     _jobs.AddRange(jobTemp);
                 }
             }
-            
-            foreach (Job job in _jobs)
-            {
-                jobNames.Add(job.Name);
-            }
-            
-            return jobNames;
+
+            return _jobs.Select(job => job.Name).ToList();
         }
 
         public List<string> GetAlertCategoryNames()
@@ -207,10 +196,7 @@ namespace CheckupExec
 
             if (alertCategories != null && alertCategories.Count > 0)
             {
-                foreach (AlertCategory category in alertCategories)
-                {
-                    alertCategoryNames.Add(category.Name);
-                }
+                alertCategoryNames.AddRange(alertCategories.Select(category => category.Name));
             }
 
             return alertCategoryNames;
@@ -218,14 +204,7 @@ namespace CheckupExec
 
         public List<string> GetJobErrorStatuses()
         {
-            var errorStatuses = new List<string>();
-
-            foreach (KeyValuePair<string, string> errorStatus in Constants.JobErrorStatuses)
-            {
-                errorStatuses.Add(errorStatus.Value);
-            }
-
-            return errorStatuses;
+            return Constants.JobErrorStatuses.Select(errorStatus => errorStatus.Value).ToList();
         }
 
         /// <summary>
@@ -243,10 +222,10 @@ namespace CheckupExec
 
             //get editioninformation here, then licenseinformation (count of used licenses that correspond to each tier * TB and compare with usedcap.)
 
-            foreach (FE_Forecast FE_Forecast in feuc.Fe_Forecasts)
+            foreach (FeForecast feForecast in feuc.FeForecasts)
             {
-                maxCapacity += FE_Forecast.MaxCapacity;
-                usedCapacity += FE_Forecast.UsedCapacity;
+                maxCapacity += feForecast.MaxCapacity;
+                usedCapacity += feForecast.UsedCapacity;
             };
 
             // || true to test with our sets
@@ -254,38 +233,94 @@ namespace CheckupExec
             //if it was, organize the data so it can be concisely passed to report generator
             if (feuc.FrontEndForecast.ForecastsSuccessful || true)
             {
-                var fullPlot         = new List<PlotPoint>();
-                double fullSlope     = 0;
+                var fullPlot = new List<PlotPoint>();
+                List<BackupJobReport> backupJobs = new List<BackupJobReport>();
+                double fullSlope = 0;
                 double fullIntercept = 0;
 
-                foreach (FE_Forecast forecast in feuc.Fe_Forecasts)
+                foreach (FeForecast forecast in feuc.FeForecasts)
                 {
-                    foreach (PlotPoint point in forecast.ForecastResults.plot)
+                    BackupJobReport temp = new BackupJobReport
                     {
-                        fullPlot.Add( new PlotPoint
-                        {
-                            Days = point.Days,
-                            GB = point.GB
-                        });
-                    }
+                        HistoricalPoints = new List<PlotPoint>(),
+                        ForecastPoints = new List<PlotPoint>()
+                    };
 
-                    fullSlope     += forecast.ForecastResults.FinalSlope;
+                    fullPlot.AddRange(forecast.ForecastResults.Plot.Select(point => new PlotPoint
+                    {
+                        Days = point.Days,
+                        GB = point.GB
+                    }));
+
+                    temp.HistoricalPoints.AddRange(forecast.ForecastResults.Plot.Select(point => new PlotPoint
+                    {
+                        Days = point.Days,
+                        GB = point.GB
+                    }));
+
+                    temp.StorageName = forecast.Storage.Name;
+
+                    double maxCapacityTemp = (double)(forecast.Storage.TotalCapacityBytes >> 20) / 1024;
+
+                    temp.DaysTo50 = (maxCapacity * .5 - forecast.ForecastResults.FinalIntercept)
+                                      / forecast.ForecastResults.FinalSlope;
+
+                    temp.ForecastPoints.Add(new PlotPoint
+                    {
+                        Days = temp.DaysTo50,
+                        GB = (maxCapacity * .5)
+                    });
+
+                    temp.DaysTo75 = (maxCapacity * .75 - forecast.ForecastResults.FinalIntercept)
+                                      / forecast.ForecastResults.FinalSlope;
+
+                    temp.ForecastPoints.Add(new PlotPoint
+                    {
+                        Days = temp.DaysTo75,
+                        GB = (maxCapacity * .75)
+                    });
+
+                    temp.DaysTo90 = (maxCapacity * .9 - forecast.ForecastResults.FinalIntercept)
+                                      / forecast.ForecastResults.FinalSlope;
+
+                    temp.ForecastPoints.Add(new PlotPoint
+                    {
+                        Days = temp.DaysTo90,
+                        GB = (maxCapacity * .9)
+                    });
+
+                    temp.DaysToFull = (maxCapacity - forecast.ForecastResults.FinalIntercept)
+                                        / forecast.ForecastResults.FinalSlope;
+
+                    temp.ForecastPoints.Add(new PlotPoint
+                    {
+                        Days = temp.DaysToFull,
+                        GB = (maxCapacity)
+                    });
+
+                    temp.MaxCapacity = maxCapacityTemp;
+                    temp.UsedCapacity = (double)(forecast.Storage.UsedCapacityBytes >> 20) / 1024;
+                    temp.JobName = forecast.JobName;
+
+                    backupJobs.Add(temp);
+
+                    fullSlope += forecast.ForecastResults.FinalSlope;
                     fullIntercept += forecast.ForecastResults.FinalIntercept;
                 }
 
                 //call license analysis and pass used cap.
                 //brings back analysis and max cap. support by current licensing
 
-                var report = new FrontEndCapacityReport();
+                var report = new FrontEndCapacityReport
+                {
+                    HistoricalPoints = fullPlot,
+                    ForecastPoints = new List<PlotPoint>(),
+                    Slope = fullSlope,
+                    Intercept = fullIntercept,
+                    DaysTo50 = ((maxCapacity * .5) - fullIntercept) / fullSlope,
+                    BackupJobs = new List<BackupJobReport>()
+                };
 
-                report.HistoricalPoints = fullPlot;
-
-                report.ForecastPoints = new List<PlotPoint>();
-
-                report.Slope = fullSlope;
-                report.Intercept = fullIntercept;
-
-                report.DaysTo50 = ((maxCapacity * .5) - fullIntercept) / fullSlope;
                 report.ForecastPoints.Add(new PlotPoint
                 {
                     Days = report.DaysTo50,
@@ -315,7 +350,7 @@ namespace CheckupExec
 
                 report.StorageDevices = new List<Storage>();
 
-                foreach (FE_Forecast fe_forecast in feuc.Fe_Forecasts)
+                foreach (FeForecast fe_forecast in feuc.FeForecasts)
                 {
                     report.StorageDevices.Add(fe_forecast.Storage);
                 }
@@ -348,21 +383,11 @@ namespace CheckupExec
             //if we have a subset of total jobs passed to us, for each of these run backupjobestimate on it and add to a list for report generator
             if (jobNames != null && jobNames.Count > 0)
             {
-                var jobIds = new List<string>();
-
-                foreach (string jobName in jobNames)
-                {
-                    jobIds.Add(_jobs.ElementAt(_jobs.FindIndex(x => x.Name.Equals(jobName))).Id);
-                }
+                var jobIds = jobNames.Select(jobName => _jobs.ElementAt(_jobs.FindIndex(x => x.Name.Equals(jobName))).Id).ToList();
 
                 if (jobIds.Count > 0)
                 {
-                    foreach (string jobId in jobIds)
-                    {
-                        var buje = new BackupJobEstimate(jobId).BackupJobEstimateModel;
-
-                        buJobEstimates.Add(buje);
-                    }
+                    buJobEstimates.AddRange(jobIds.Select(jobId => new BackupJobEstimate(jobId).BackupJobEstimateModel));
                 }
             }
             //if no subset is passed, do the same thing but for every job
@@ -370,12 +395,7 @@ namespace CheckupExec
             {
                 if (_jobs != null && _jobs.Count > 0)
                 {
-                    foreach (Job job in _jobs)
-                    {
-                        var buje = new BackupJobEstimate(job.Id).BackupJobEstimateModel;
-
-                        buJobEstimates.Add(buje);
-                    }
+                    buJobEstimates.AddRange(_jobs.Select(job => new BackupJobEstimate(job.Id).BackupJobEstimateModel));
                 }
             }
 
@@ -383,11 +403,11 @@ namespace CheckupExec
 
             foreach (BackupJobEstimateModel buje in buJobEstimates)
             {
-                var report = new BackupJobReport();
-
-                report.HistoricalPoints = buje.ForecastResults.plot;
-
-                report.ForecastPoints = new List<PlotPoint>();
+                var report = new BackupJobReport
+                {
+                    HistoricalPoints = buje.ForecastResults.Plot,
+                    ForecastPoints = new List<PlotPoint>()
+                };
 
                 var storage = _storageDevices.Find(x => x.Name.Equals(buje.StorageName));
 
@@ -396,7 +416,7 @@ namespace CheckupExec
 
                 double maxCapacity = (double)(storage.TotalCapacityBytes >> 20) / 1024;
 
-                report.DaysTo50 = (maxCapacity * .5 - buje.ForecastResults.FinalIntercept) 
+                report.DaysTo50 = (maxCapacity * .5 - buje.ForecastResults.FinalIntercept)
                     / buje.ForecastResults.FinalSlope;
 
                 report.ForecastPoints.Add(new PlotPoint
@@ -405,7 +425,7 @@ namespace CheckupExec
                     GB = (maxCapacity * .5)
                 });
 
-                report.DaysTo75 = (maxCapacity * .75 - buje.ForecastResults.FinalIntercept) 
+                report.DaysTo75 = (maxCapacity * .75 - buje.ForecastResults.FinalIntercept)
                     / buje.ForecastResults.FinalSlope;
 
                 report.ForecastPoints.Add(new PlotPoint
@@ -414,7 +434,7 @@ namespace CheckupExec
                     GB = (maxCapacity * .75)
                 });
 
-                report.DaysTo90 = (maxCapacity * .9 - buje.ForecastResults.FinalIntercept) 
+                report.DaysTo90 = (maxCapacity * .9 - buje.ForecastResults.FinalIntercept)
                     / buje.ForecastResults.FinalSlope;
 
                 report.ForecastPoints.Add(new PlotPoint
@@ -423,7 +443,7 @@ namespace CheckupExec
                     GB = (maxCapacity * .9)
                 });
 
-                report.DaysToFull = (maxCapacity - buje.ForecastResults.FinalIntercept) 
+                report.DaysToFull = (maxCapacity - buje.ForecastResults.FinalIntercept)
                     / buje.ForecastResults.FinalSlope;
 
                 report.ForecastPoints.Add(new PlotPoint
@@ -432,13 +452,13 @@ namespace CheckupExec
                     GB = (maxCapacity)
                 });
 
-                report.MaxCapacity            = maxCapacity;
-                report.UsedCapacity           = (double)(storage.UsedCapacityBytes >> 20) / 1024;
-                report.JobName                = buje.JobName;
-                report.NextDataSize           = buje.EstimateDataSizeMB;
+                report.MaxCapacity = maxCapacity;
+                report.UsedCapacity = (double)(storage.UsedCapacityBytes >> 20) / 1024;
+                report.JobName = buje.JobName;
+                report.NextDataSize = buje.EstimateDataSizeMB;
                 report.NextElapsedTimeSeconds = buje.EstimateOfElapsedTimeSec;
-                report.NextJobDate            = buje.NextStartDate;
-                report.NextJobRate            = buje.EstimateOfJobRateMBMin;
+                report.NextJobDate = buje.NextStartDate;
+                report.NextJobRate = buje.EstimateOfJobRateMBMin;
 
                 reports.Add(report);
 
@@ -461,11 +481,11 @@ namespace CheckupExec
 
             foreach (UsedCapacityForecastModel ucm in diskAnalyses)
             {
-                var report = new DiskCapacityReport();
-
-                report.HistoricalPoints = ucm.ForecastResults.plot;
-
-                report.ForecastPoints = new List<PlotPoint>();
+                var report = new DiskCapacityReport
+                {
+                    HistoricalPoints = ucm.ForecastResults.Plot,
+                    ForecastPoints = new List<PlotPoint>()
+                };
 
                 double maxCapacity = (double)(ucm.TotalCapacity >> 20) / 1024;
 
@@ -508,7 +528,7 @@ namespace CheckupExec
                 report.MaxCapacity = maxCapacity;
                 report.UsedCapacity = (double)(ucm.UsedCapacityInstances.Last().Bytes >> 20) / 1024;
                 report.DiskName = ucm.StorageName;
-                
+
                 reports.Add(report);
 
                 //pass list to report generator
@@ -520,6 +540,7 @@ namespace CheckupExec
         /// <summary>
         /// Runs Alert analysis on the alerts corresponding to the passed parameters.
         /// </summary>
+        /// <param name="reportPath"></param>
         /// <param name="jobNames">Optional. List of job names whose alerts we should check.</param>
         /// <param name="start">Optional. Start date of time window.</param>
         /// <param name="end">Optional. End date of time window.</param>
@@ -531,16 +552,7 @@ namespace CheckupExec
 
             if (types != null && types.Count > 0)
             {
-                foreach (string type in types)
-                {
-                    var temp = type.Split(' ');
-                    var temp2 = "";
-                    foreach (string stringInType in temp)
-                    {
-                        temp2 += stringInType;
-                    }
-                    splitTypes.Add(temp2);
-                }
+                splitTypes.AddRange(types.Select(type => type.Split(' ')).Select(temp => temp.Aggregate("", (current, stringInType) => current + stringInType)));
             }
 
             //run AlertsAnalysis with given params
@@ -550,9 +562,7 @@ namespace CheckupExec
             //new AlertsReportGen(reportPath, alertsAnalysis.GetAlerts());
             new ReportGenerator(reportPath, alertsAnalysis.GetAlerts());
 
-            if (alertsAnalysis.Successful)
-                return true;
-            return false;
+            return alertsAnalysis.Successful;
         }
 
         /// <summary>
@@ -572,9 +582,7 @@ namespace CheckupExec
             //new ErrorsReportGen(reportPath, jobErrorsAnalysis.GetJobHistories());
             new ReportGenerator(reportPath, jobErrorsAnalysis.GetJobHistories());
 
-            if (jobErrorsAnalysis.Successful)
-                return true;
-            return false;
+            return jobErrorsAnalysis.Successful;
         }
 
         public bool CleanUp()
@@ -629,7 +637,7 @@ namespace CheckupExec
 
             var report = new DiskCapacityReport();
 
-            report.HistoricalPoints = fr.plot;
+            report.HistoricalPoints = fr.Plot;
 
             report.ForecastPoints = new List<PlotPoint>();
 
@@ -677,8 +685,7 @@ namespace CheckupExec
             report.UsedCapacity = (double)(bytes >> 20) / 1024;
             report.DiskName = "Demo Test Job";
 
-            var reports = new List<DiskCapacityReport>();
-            reports.Add(report);
+            var reports = new List<DiskCapacityReport> { report };
 
             var reportGen = new HtmlGen();
 

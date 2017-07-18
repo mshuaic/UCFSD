@@ -1,27 +1,25 @@
 ﻿using System;
-using System.Collections.ObjectModel;
+using System.Linq;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
-using System.Management.Automation.Remoting;
 using System.Security;
-using System.Linq;
 
 namespace CheckupExec.Utilities
 {
     public class BEMCLIHelper
     {
-        public static WSManConnectionInfo connectionInfo = null;
-        public static Runspace runspace     = null;
-        public static PowerShell powershell = null;
+        public static WSManConnectionInfo ConnectionInfo = null;
+        public static Runspace Runspace = null;
+        public static PowerShell Powershell = null;
 
-        private const int port        = 5985;
-        private const string appName  = "/wsman";
+        private const int port = 5985;
+        private const string appName = "/wsman";
         private const string shellUri = "http://schemas.microsoft.com/powershell/Microsoft.PowerShell";
 
-        public BEMCLIHelper(Boolean isRemoteUser, string pass, string serverName = null, string serverUsername = null)
-        {    
+        public BEMCLIHelper(bool isRemoteUser, string pass, string serverName = null, string serverUsername = null)
+        {
             //remote user and credential params fit
-            if (isRemoteUser && !String.IsNullOrWhiteSpace(pass) && !String.IsNullOrWhiteSpace(serverName) && !String.IsNullOrWhiteSpace(serverUsername))
+            if (isRemoteUser && !string.IsNullOrWhiteSpace(pass) && !string.IsNullOrWhiteSpace(serverName) && !string.IsNullOrWhiteSpace(serverUsername))
             {
                 try
                 {
@@ -33,18 +31,18 @@ namespace CheckupExec.Utilities
 
                     var cred = new PSCredential(serverUsername, password);
 
-                    connectionInfo = new WSManConnectionInfo(false, serverName, port, appName, shellUri, cred);
+                    ConnectionInfo = new WSManConnectionInfo(false, serverName, port, appName, shellUri, cred);
 
-                    runspace = RunspaceFactory.CreateRunspace(connectionInfo);
+                    Runspace = RunspaceFactory.CreateRunspace(ConnectionInfo);
 
-                    runspace.Open();
+                    Runspace.Open();
 
-                    powershell = PowerShell.Create();
+                    Powershell = PowerShell.Create();
 
-                    powershell.Runspace = runspace;
-                    powershell.AddScript(Constants.ImportBEMCLI);
-                    powershell.Invoke();
-                    powershell.Commands.Clear();
+                    Powershell.Runspace = Runspace;
+                    Powershell.AddScript(Constants.ImportBEMCLI);
+                    Powershell.Invoke();
+                    Powershell.Commands.Clear();
                 }
                 catch (Exception e)
                 {
@@ -60,16 +58,16 @@ namespace CheckupExec.Utilities
                 {
                     //LogUtility.LogInfoFunction("Entered LoadPowerShellScript.");
 
-                    runspace = RunspaceFactory.CreateRunspace();
+                    Runspace = RunspaceFactory.CreateRunspace();
 
-                    runspace.Open();
+                    Runspace.Open();
 
-                    powershell = PowerShell.Create();
+                    Powershell = PowerShell.Create();
 
-                    powershell.Runspace = runspace;
-                    powershell.AddScript(Constants.ImportBEMCLI);
-                    powershell.Invoke();
-                    powershell.Commands.Clear();
+                    Powershell.Runspace = Runspace;
+                    Powershell.AddScript(Constants.ImportBEMCLI);
+                    Powershell.Invoke();
+                    Powershell.Commands.Clear();
                 }
                 catch (Exception e)
                 {
@@ -91,8 +89,8 @@ namespace CheckupExec.Utilities
         {
             try
             {
-                runspace.Close();
-                powershell.Dispose();
+                Runspace.Close();
+                Powershell.Dispose();
                 return true;
             }
             catch (Exception e)

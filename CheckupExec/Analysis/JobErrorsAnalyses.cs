@@ -1,11 +1,8 @@
-﻿using CheckupExec.Controllers;
-using CheckupExec.Models;
+﻿using CheckupExec.Models;
 using CheckupExec.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CheckupExec.Analysis
 {
@@ -21,32 +18,28 @@ namespace CheckupExec.Analysis
             Successful = true;
 
             _jobHistories = new List<JobHistory>();
-            
+
             //***************************************
             var jobHistoryPipeline = new Dictionary<string, string>
             {
-                ["FromStartTime"] = (start == null) ? "'" + DateTime.MinValue.Date.ToString() + "'" : "'" + start.ToString() + "'",
-                ["ToStartTime"] = (end == null) ? "'" + DateTime.Now.Date.ToUniversalTime().ToString() + "'" : "'" + end.ToString() + "'"
+                ["FromStartTime"] = (start == null) ? "'" + DateTime.MinValue.Date + "'" : "'" + start + "'",
+                ["ToStartTime"] = (end == null) ? "'" + DateTime.Now.Date.ToUniversalTime() + "'" : "'" + end + "'"
             };
             jobErrorStatuses = jobErrorStatuses ?? new List<string>();
-            jobNames         = jobNames ?? new List<string>();
+            jobNames = jobNames ?? new List<string>();
 
             if (jobErrorStatuses.Count > 0 && jobNames.Count > 0)
             {
-                var jobPipeline      = new Dictionary<string, Dictionary<string, string>>();
+                var jobPipeline = new Dictionary<string, Dictionary<string, string>>();
                 var jobInnerPipeline = new Dictionary<string, string>();
 
-                string fullString = "";
+                string fullString = jobNames
+                                    .Aggregate("", (current, name) => current + ("'" + name + "'" + ((jobNames
+                                                                                                     .ElementAt(jobNames.Count - 1)
+                                                                                                     .Equals(name)) ? "" : ", ")));
 
-                foreach (string name in jobNames)
-                {
-                    fullString += "'" + name + "'" + ((jobNames.ElementAt(jobNames.Count - 1).Equals(name)) ? "" : ", ");
-                }
-
-                jobInnerPipeline["name"]       = fullString;
+                jobInnerPipeline["name"] = fullString;
                 jobPipeline[Constants.GetJobs] = jobInnerPipeline;
-
-                fullString = "";
 
                 try
                 {
@@ -57,34 +50,24 @@ namespace CheckupExec.Analysis
                     //log
                 }
 
-                var temp = new List<JobHistory>();
+                var temp = _jobHistories.Where(jobHistory => !jobErrorStatuses.Contains(Constants.JobErrorStatuses[jobHistory.JobStatus])).ToList();
 
-                foreach (JobHistory JobHistory in _jobHistories)
+                foreach (JobHistory jobHistory in temp)
                 {
-                    if (!jobErrorStatuses.Contains(Constants.JobErrorStatuses[JobHistory.JobStatus]))
-                    {
-                        temp.Add(JobHistory);
-                    }
-                }
-
-                foreach (JobHistory JobHistory in temp)
-                {
-                    _jobHistories.Remove(JobHistory);
+                    _jobHistories.Remove(jobHistory);
                 }
             }
             else if (jobNames.Count > 0)
             {
-                var jobPipeline      = new Dictionary<string, Dictionary<string, string>>();
+                var jobPipeline = new Dictionary<string, Dictionary<string, string>>();
                 var jobInnerPipeline = new Dictionary<string, string>();
 
-                string fullString = "";
+                string fullString = jobNames
+                                    .Aggregate("", (current, name) => current + ("'" + name + "'" + ((jobNames
+                                                                                                      .ElementAt(jobNames.Count - 1)
+                                                                                                      .Equals(name)) ? "" : ", ")));
 
-                foreach (string name in jobNames)
-                {
-                    fullString += "'" + name + "'" + ((jobNames.ElementAt(jobNames.Count - 1).Equals(name)) ? "" : ", ");
-                }
-
-                jobInnerPipeline["name"]       = fullString;
+                jobInnerPipeline["name"] = fullString;
                 jobPipeline[Constants.GetJobs] = jobInnerPipeline;
 
                 try
@@ -107,19 +90,11 @@ namespace CheckupExec.Analysis
                     //log
                 }
 
-                var temp = new List<JobHistory>();
+                var temp = _jobHistories.Where(JobHistory => !jobErrorStatuses.Contains(Constants.JobErrorStatuses[JobHistory.JobStatus])).ToList();
 
-                foreach (JobHistory JobHistory in _jobHistories)
+                foreach (JobHistory jobHistory in temp)
                 {
-                    if (!jobErrorStatuses.Contains(Constants.JobErrorStatuses[JobHistory.JobStatus]))
-                    {
-                        temp.Add(JobHistory);
-                    }
-                }
-
-                foreach (JobHistory JobHistory in temp)
-                {
-                    _jobHistories.Remove(JobHistory);
+                    _jobHistories.Remove(jobHistory);
                 }
             }
             else
@@ -138,17 +113,7 @@ namespace CheckupExec.Analysis
 
             if (_jobHistories != null && _jobHistories.Count > 0)
             {
-                foreach (JobHistory jobHistory in _jobHistories)
-                {
-                    //bemcli returns an int -> get the corresponding string
-                    //Might be accounted for in report generation rather than here
-                    //jobHistory.JobStatus = Constants.JobErrorStatuses[jobHistory.JobStatus];
-
-                    if (Convert.ToInt32(jobHistory.JobStatus) == Constants.SUCCESSFUL_JOB_STATUS)
-                    {
-                        filteredJobHistories.Add(jobHistory);
-                    }
-                }
+                filteredJobHistories.AddRange(_jobHistories.Where(jobHistory => Convert.ToInt32(jobHistory.JobStatus) == Constants.SUCCESSFUL_JOB_STATUS));
 
                 foreach (JobHistory jobHistory in filteredJobHistories)
                 {
@@ -161,7 +126,7 @@ namespace CheckupExec.Analysis
             }
         }
 
-        public List<JobHistory> GetJobHistories() 
+        public List<JobHistory> GetJobHistories()
         {
             return _jobHistories;
         }

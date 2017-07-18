@@ -2,27 +2,24 @@
 using CheckupExec.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CheckupExec.Controllers
 {
     public class JobController
     {
-        private const string _getJobsScript       = Constants.GetJobs + " ";
+        private const string _getJobsScript = Constants.GetJobs + " ";
         private const string _converttoJsonString = "| " + Constants.JsonPipeline;
 
         private List<Job> invokeGetJobs(string scriptToInvoke)
         {
             List<Job> jobs = new List<Job>();
 
-            BEMCLIHelper.powershell.AddScript(scriptToInvoke + _converttoJsonString);
+            BEMCLIHelper.Powershell.AddScript(scriptToInvoke + _converttoJsonString);
 
             try
             {
-                var output = BEMCLIHelper.powershell.Invoke<string>();
-                jobs       = (output.Count > 0) ? JsonHelper.ConvertFromJson<Job>(output[0]) : jobs;
+                var output = BEMCLIHelper.Powershell.Invoke<string>();
+                jobs = (output.Count > 0) ? JsonHelper.ConvertFromJson<Job>(output[0]) : jobs;
             }
             catch (Exception e)
             {
@@ -31,7 +28,7 @@ namespace CheckupExec.Controllers
                 Console.WriteLine("Error: {0}, Message: {1}", e.Message, baseException.Message);
             }
 
-            BEMCLIHelper.powershell.Commands.Clear();
+            BEMCLIHelper.Powershell.Commands.Clear();
 
             return jobs;
         }

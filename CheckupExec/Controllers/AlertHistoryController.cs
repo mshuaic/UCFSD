@@ -2,26 +2,23 @@
 using CheckupExec.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CheckupExec.Controllers
 {
     public class AlertHistoryController
     {
         private const string _getAlertHistoriesScript = Constants.GetAlertHistories + " ";
-        private const string _converttoJsonString     = "| " + Constants.JsonPipeline;
+        private const string _converttoJsonString = "| " + Constants.JsonPipeline;
 
         private List<Alert> invokeGetAlertHistories(string scriptToInvoke)
         {
             List<Alert> alertHistories = new List<Alert>();
 
-            BEMCLIHelper.powershell.AddScript(scriptToInvoke + _converttoJsonString);
-            
+            BEMCLIHelper.Powershell.AddScript(scriptToInvoke + _converttoJsonString);
+
             try
             {
-                var output     = BEMCLIHelper.powershell.Invoke<string>();
+                var output = BEMCLIHelper.Powershell.Invoke<string>();
                 alertHistories = (output.Count > 0) ? JsonHelper.ConvertFromJson<Alert>(output[0]) : alertHistories;
             }
             catch (Exception e)
@@ -31,7 +28,7 @@ namespace CheckupExec.Controllers
                 Console.WriteLine("Error: {0}, Message: {1}", e.Message, baseException.Message);
             }
 
-            BEMCLIHelper.powershell.Commands.Clear();
+            BEMCLIHelper.Powershell.Commands.Clear();
 
             return alertHistories;
         }
@@ -51,7 +48,7 @@ namespace CheckupExec.Controllers
             {
                 scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
             }
-            
+
             return invokeGetAlertHistories(scriptToInvoke);
         }
 
@@ -110,7 +107,7 @@ namespace CheckupExec.Controllers
             {
                 scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
             }
-            
+
             return invokeGetAlertHistories(scriptToInvoke);
         }
     }

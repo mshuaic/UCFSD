@@ -1,11 +1,8 @@
-﻿using CheckupExec.Models;
-using CheckupExec.Models.AnalysisModels;
+﻿using CheckupExec.Models.AnalysisModels;
 using CheckupExec.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -25,7 +22,6 @@ namespace CheckupExec.Analysis
                                                    select root;
 
             int count = 0;
-            string serverName = "";
             bool continueFlag = true;
 
             using (XmlReader reader = diskCapacities.First().CreateReader())
@@ -38,7 +34,6 @@ namespace CheckupExec.Analysis
                     count = Int32.Parse(reader.Value);
 
                     reader.MoveToAttribute("ServerName");
-                    serverName = reader.Value;
                 }
                 catch
                 {
@@ -47,15 +42,14 @@ namespace CheckupExec.Analysis
             }
 
             if (continueFlag)
-            { 
+            {
                 diskCapacities.First().Remove();
 
-                foreach (var dc in diskCapacities)
+                foreach (XElement dc in diskCapacities)
                 {
                     using (XmlReader reader = dc.CreateReader())
                     {
                         DateTime date = DateTime.Now.Date;
-                        long usedBytes = 0;
                         long totalBytes = 0;
                         string storageName = "";
 
@@ -84,7 +78,7 @@ namespace CheckupExec.Analysis
                                     totalBytes = long.Parse(reader.Value);
                                     break;
                                 case "UsedCapacityBytes":
-                                    usedBytes = long.Parse(reader.Value);
+                                    var usedBytes = long.Parse(reader.Value);
                                     var ucm = UsedCapacityForecastModels.Find(x => x.StorageName.Equals(storageName));
                                     ucm.UsedCapacityInstances.Add(new UsedCapacity
                                     {
@@ -92,8 +86,6 @@ namespace CheckupExec.Analysis
                                         Date = date
                                     });
                                     ucm.TotalCapacity = totalBytes;
-                                    break;
-                                default:
                                     break;
                             }
 

@@ -47,7 +47,8 @@ namespace CheckupExec
                 }
 
                 //whatever report is ran by the user
-                de.JobErrorsAnalysis(null, jobNames, null);
+                //de.JobErrorsAnalysis(null, jobNames, null);
+                de.DemoTest();
                 //dispose our runspace and powershell instances
                 de.CleanUp();
 

@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using CheckupExec.Models;
+﻿using CheckupExec.Models;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace ReportGen.AlertsReport
@@ -35,7 +35,7 @@ namespace ReportGen.AlertsReport
                 //Console.WriteLine(html);
                 File.WriteAllText(output, html);
             }
-            catch(IOException e)
+            catch (IOException e)
             {
                 if (e.Source != null)
                     Console.WriteLine("IOException source: {0}", e.Source);

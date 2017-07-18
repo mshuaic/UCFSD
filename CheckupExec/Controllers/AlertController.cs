@@ -2,27 +2,24 @@
 using CheckupExec.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CheckupExec.Controllers
 {
     public class AlertController
     {
-        private const string _getAlertsScript     = Constants.GetAlerts + " ";
+        private const string _getAlertsScript = Constants.GetAlerts + " ";
         private const string _converttoJsonString = "| " + Constants.JsonPipeline;
 
         private List<Alert> invokeGetAlerts(string scriptToInvoke)
         {
             List<Alert> alerts = new List<Alert>();
 
-            BEMCLIHelper.powershell.AddScript(scriptToInvoke + _converttoJsonString);
+            BEMCLIHelper.Powershell.AddScript(scriptToInvoke + _converttoJsonString);
 
             try
             {
-                var output = BEMCLIHelper.powershell.Invoke<string>();
-                alerts     = (output.Count > 0) ? JsonHelper.ConvertFromJson<Alert>(output[0]) : alerts;
+                var output = BEMCLIHelper.Powershell.Invoke<string>();
+                alerts = (output.Count > 0) ? JsonHelper.ConvertFromJson<Alert>(output[0]) : alerts;
             }
             catch (Exception e)
             {
@@ -31,7 +28,7 @@ namespace CheckupExec.Controllers
                 Console.WriteLine("Error: {0}, Message: {1}", e.Message, baseException.Message);
             }
 
-            BEMCLIHelper.powershell.Commands.Clear();
+            BEMCLIHelper.Powershell.Commands.Clear();
 
             return alerts;
         }
@@ -46,7 +43,7 @@ namespace CheckupExec.Controllers
             string scriptToInvoke = _getAlertsScript;
 
             parameters = parameters ?? new Dictionary<string, string>();
-            
+
             foreach (KeyValuePair<string, string> parameter in parameters)
             {
                 scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
@@ -84,12 +81,12 @@ namespace CheckupExec.Controllers
         //get-bealert {-x y}+ {| get-be<> {-k j}*}+ | convertto-json
         public List<Alert> GetAlerts(Dictionary<string, Dictionary<string, string>> pipelineCommands, Dictionary<string, string> alertParameters)
         {
-            string scriptToInvoke = ""; 
+            string scriptToInvoke = "";
 
             int numCommands = pipelineCommands.Count;
 
             pipelineCommands = pipelineCommands ?? new Dictionary<string, Dictionary<string, string>>();
-            
+
             foreach (KeyValuePair<string, Dictionary<string, string>> pipeline in pipelineCommands)
             {
                 scriptToInvoke += pipeline.Key + " ";
@@ -110,7 +107,7 @@ namespace CheckupExec.Controllers
             {
                 scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
             }
-            
+
             return invokeGetAlerts(scriptToInvoke);
         }
     }

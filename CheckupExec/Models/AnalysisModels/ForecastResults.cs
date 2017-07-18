@@ -1,19 +1,14 @@
-﻿using CheckupExec.Models.AnalysisModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace CheckupExec.Models
+namespace CheckupExec.Models.AnalysisModels
 {
     public class ForecastResults
     {
-        public bool isDiskForecast { get; set; }
+        public bool IsDiskForecast { get; set; }
 
         public bool ForecastSuccessful { get; set; }
 
-        public List<PlotPoint> plot;
+        public List<PlotPoint> Plot;
 
         public double FinalSlope { get; set; }
 

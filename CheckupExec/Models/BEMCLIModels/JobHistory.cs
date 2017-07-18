@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CheckupExec.Models
 {
@@ -50,7 +46,7 @@ namespace CheckupExec.Models
         public double JobRateMBPerMinute { get; set; }
 
         public double DeduplicationRatio { get; set; }
-        
+
         //switch?
         public int JobType { get; set; }
 
@@ -59,7 +55,7 @@ namespace CheckupExec.Models
         public string StorageName { get; set; }
 
         public string BackupExecServerName { get; set; }
-        
+
         public string JobId { get; set; }
 
         public string JobLogFilePath { get; set; }

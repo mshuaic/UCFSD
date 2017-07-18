@@ -1,13 +1,9 @@
-﻿using CheckupExec.Controllers;
-using CheckupExec.Models;
+﻿using CheckupExec.Models;
 using CheckupExec.Models.BEMCLIModels;
 using CheckupExec.Models.ReportModels;
 using CheckupExec.Utilities;
-using System;
 using System.Collections.Generic;
-using System.Linq; 
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq;
 
 namespace CheckupExec.Analysis
 {
@@ -16,7 +12,7 @@ namespace CheckupExec.Analysis
     public class LicenseAnalysis
     {
         public int TotalDataCoverageTB { get; }
-        
+
         public int TotalDataCoverageUsedTB { get; }
 
         //likely will be called straight from frontend forecast to tie the forecast with the user's licensing setup
@@ -41,16 +37,15 @@ namespace CheckupExec.Analysis
 
                 foreach (LicenseInformation license in licenses)
                 {
-                    if (Constants.CapacityEditionCoverage[license.Name])
-                    {
-                        if (report.NormalToLite && !Constants.CapacityEditionLiteCoverage[license.Name])
-                        {
-                            report.NormalToLite = false;
-                        }
+                    if (!Constants.CapacityEditionCoverage[license.Name]) continue;
 
-                        TotalDataCoverageTB = (maxCoverage > license.LicenseCount) ? maxCoverage : license.LicenseCount;
-                        TotalDataCoverageUsedTB = (maxCoverageUsed > license.LicenseUsedCount) ? maxCoverageUsed : license.LicenseUsedCount;
+                    if (report.NormalToLite && !Constants.CapacityEditionLiteCoverage[license.Name])
+                    {
+                        report.NormalToLite = false;
                     }
+
+                    TotalDataCoverageTB = (maxCoverage > license.LicenseCount) ? maxCoverage : license.LicenseCount;
+                    TotalDataCoverageUsedTB = (maxCoverageUsed > license.LicenseUsedCount) ? maxCoverageUsed : license.LicenseUsedCount;
                 }
             }
             else if (serverEdition.Equals("Capacity Edition Lite"))
@@ -87,9 +82,9 @@ namespace CheckupExec.Analysis
 
                 report.RecommendedEditionCountToPurchase = (int)(report.MaxCapacity / (1024 * 1024)) - TotalDataCoverageTB;
                 report.RecommendedTier = Constants.TierDiscounts.ToList()
-                                        .Find(x => x.Key.Contains(report.RecommendedEditionCountToPurchase) 
+                                        .Find(x => x.Key.Contains(report.RecommendedEditionCountToPurchase)
                                               || (x.Key[0] == 26 && report.RecommendedEditionCountToPurchase >= x.Key[0])).Value;
-             }
+            }
             else
             {
                 //they are over-licensed for their current maximum capacity (won't run out with current storage)

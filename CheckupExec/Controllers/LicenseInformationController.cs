@@ -2,27 +2,24 @@
 using CheckupExec.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CheckupExec.Controllers
 {
     public class LicenseInformationController
     {
         private const string _getLicenseInformationScript = Constants.GetLicenses + " ";
-        private const string _converttoJsonString         = "| " + Constants.JsonPipeline;
+        private const string _converttoJsonString = "| " + Constants.JsonPipeline;
 
         private List<LicenseInformation> invokeGetLicenseInformation(string scriptToInvoke)
         {
             List<LicenseInformation> licenses = new List<LicenseInformation>();
 
-            BEMCLIHelper.powershell.AddScript(scriptToInvoke + _converttoJsonString);
+            BEMCLIHelper.Powershell.AddScript(scriptToInvoke + _converttoJsonString);
 
             try
             {
-                var output = BEMCLIHelper.powershell.Invoke<string>();
-                licenses   = (output.Count > 0) ? JsonHelper.ConvertFromJson<LicenseInformation>(output[0]) : licenses;
+                var output = BEMCLIHelper.Powershell.Invoke<string>();
+                licenses = (output.Count > 0) ? JsonHelper.ConvertFromJson<LicenseInformation>(output[0]) : licenses;
             }
             catch (Exception e)
             {
@@ -31,7 +28,7 @@ namespace CheckupExec.Controllers
                 Console.WriteLine("Error: {0}, Message: {1}", e.Message, baseException.Message);
             }
 
-            BEMCLIHelper.powershell.Commands.Clear();
+            BEMCLIHelper.Powershell.Commands.Clear();
 
             return licenses;
         }
@@ -51,7 +48,7 @@ namespace CheckupExec.Controllers
         //    {
         //        scriptToInvoke += "-" + parameter.Key + " " + parameter.Value + " ";
         //    }
-            
+
         //    return invokeGetLicenseInformation(scriptToInvoke);
         //}
 
@@ -110,7 +107,7 @@ namespace CheckupExec.Controllers
         //    {
         //        scriptToInvoke += " -" + parameter.Key + " " + parameter.Value + " ";
         //    }
-            
+
         //    return invokeGetLicenseInformation(scriptToInvoke);
         //}
     }

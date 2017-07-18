@@ -1,11 +1,8 @@
-﻿using CheckupExec.Controllers;
-using CheckupExec.Models;
+﻿using CheckupExec.Models;
 using CheckupExec.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CheckupExec.Analysis
 {
@@ -20,24 +17,22 @@ namespace CheckupExec.Analysis
         {
             Successful = true;
 
-            start      = start ?? DateTime.MinValue;
-            end        = end ?? DateTime.Now;
-            jobNames   = jobNames ?? new List<string>();
+            start = start ?? DateTime.MinValue;
+            end = end ?? DateTime.Now;
+            jobNames = jobNames ?? new List<string>();
             alertTypes = alertTypes ?? new List<string>();
 
-            var jobsPipeline   = new Dictionary<string, string>();
+            var jobsPipeline = new Dictionary<string, string>();
             var alertsPipeline = new Dictionary<string, string>();
 
             _allAlerts = new List<Alert>();
 
             if (jobNames.Count > 0 && alertTypes.Count > 0)
             {
-                string fullJobString = "";
-
-                foreach (string job in jobNames)
-                {
-                    fullJobString += "'" + job + "'" + ((jobNames.ElementAt(jobNames.Count - 1).Equals(job)) ? "" : ", ");
-                }
+                string fullJobString = jobNames
+                                        .Aggregate("", (current, job) => current + ("'" + job + "'" + ((jobNames
+                                                                                                       .ElementAt(jobNames.Count - 1)
+                                                                                                       .Equals(job)) ? "" : ", ")));
 
                 jobsPipeline["name"] = fullJobString;
 
@@ -53,15 +48,7 @@ namespace CheckupExec.Analysis
                     //log
                 }
 
-                var temp = new List<Alert>();
-
-                foreach (Alert alert in _allAlerts)
-                {
-                    if (!alertTypes.Contains(alert.Category))
-                    {
-                        temp.Add(alert);
-                    }
-                }
+                var temp = _allAlerts.Where(alert => !alertTypes.Contains(alert.Category)).ToList();
 
                 foreach (Alert alert in temp)
                 {
@@ -70,14 +57,7 @@ namespace CheckupExec.Analysis
 
                 if (_allAlerts.Count > 0)
                 {
-                    temp = new List<Alert>();
-                    foreach (Alert alert in _allAlerts)
-                    {
-                        if (!jobs.Exists(x => x.Id.Equals(alert.JobId)))
-                        {
-                            temp.Add(alert);
-                        }
-                    }
+                    temp = _allAlerts.Where(alert => !jobs.Exists(x => x.Id.Equals(alert.JobId))).ToList();
 
                     foreach (Alert alert in temp)
                     {
@@ -90,12 +70,10 @@ namespace CheckupExec.Analysis
                 var jobPipeline = new Dictionary<string, Dictionary<string, string>>();
                 var jobInnerPipeline = new Dictionary<string, string>();
 
-                string fullString = "";
-
-                foreach (string name in jobNames)
-                {
-                    fullString += "'" + name + "'" + ((jobNames.ElementAt(jobNames.Count - 1).Equals(name)) ? "" : ", ");
-                }
+                string fullString = jobNames
+                                    .Aggregate("", (current, name) => current + ("'" + name + "'" + ((jobNames
+                                                                                                     .ElementAt(jobNames.Count - 1)
+                                                                                                     .Equals(name)) ? "" : ", ")));
 
                 jobInnerPipeline["name"] = fullString;
                 jobPipeline[Constants.GetJobs] = jobInnerPipeline;
@@ -122,15 +100,7 @@ namespace CheckupExec.Analysis
                     //log
                 }
 
-                var temp = new List<Alert>();
-
-                foreach (Alert alert in _allAlerts)
-                {
-                    if (!alertTypes.Contains(alert.Category))
-                    {
-                        temp.Add(alert);
-                    }
-                }
+                var temp = _allAlerts.Where(alert => !alertTypes.Contains(alert.Category)).ToList();
 
                 foreach (Alert alert in temp)
                 {
@@ -152,17 +122,9 @@ namespace CheckupExec.Analysis
 
             if (_allAlerts.Count > 0)
             {
-                SortingUtility<Alert>.sort(_allAlerts, 0, _allAlerts.Count - 1);   
+                SortingUtility<Alert>.Sort(_allAlerts, 0, _allAlerts.Count - 1);
 
-                var filteredAlerts = new List<Alert>();
-
-                foreach (Alert alert in _allAlerts)
-                {
-                    if (alert.Date < start || alert.Date > end)
-                    {
-                        filteredAlerts.Add(alert);
-                    }
-                }
+                var filteredAlerts = _allAlerts.Where(alert => alert.Date < start || alert.Date > end).ToList();
 
                 foreach (Alert alert in filteredAlerts)
                 {

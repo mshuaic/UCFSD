@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace CheckupExec.Models.AnalysisModels
 {
-    public class FE_Forecast
+    public class FeForecast
     {
         public Storage Storage { get; set; }
+
+        public string JobName { get; set; }
 
         public List<JobHistory> JobHistories { get; set; }
 

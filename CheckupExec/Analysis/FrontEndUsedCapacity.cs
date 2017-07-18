@@ -1,12 +1,8 @@
-﻿using CheckupExec.Controllers;
-using CheckupExec.Models;
+﻿using CheckupExec.Models;
 using CheckupExec.Models.AnalysisModels;
 using CheckupExec.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CheckupExec.Analysis
 {
@@ -14,11 +10,11 @@ namespace CheckupExec.Analysis
     {
         public FrontEndForecast FrontEndForecast { get; }
 
-        public List<FE_Forecast> Fe_Forecasts { get; set; }
+        public List<FeForecast> FeForecasts { get; set; }
 
         public FrontEndUsedCapacity(List<Storage> storageDevices)
         {
-            Fe_Forecasts = new List<FE_Forecast>();
+            FeForecasts = new List<FeForecast>();
 
             var jobHistoryPipelineLast30Days = new Dictionary<string, Dictionary<string, string>>
             {
@@ -41,7 +37,7 @@ namespace CheckupExec.Analysis
                 }
             };
 
-            var storagesAccountedFor      = new List<string>();
+            var storagesAccountedFor = new List<string>();
             var lastFullBackupJobInstance = new JobHistory();
 
             //if we have storages, and they are not a pool of devices, set up the list _fullBackupJobInstances with { storage: List<JobHistory> }'s
@@ -74,11 +70,15 @@ namespace CheckupExec.Analysis
 
                     if (temp.Count > 0)
                     {
-                        var fe_forecast = new FE_Forecast { Storage = storageDevice };
+                        var feForecast = new FeForecast
+                        {
+                            Storage = storageDevice,
+                            JobHistories = new List<JobHistory>(),
+                            JobName = largestFullBackupLast30Days.JobName
+                        };
 
-                        fe_forecast.JobHistories = new List<JobHistory>();
 
-                        SortingUtility<JobHistory>.sort(temp, 0, temp.Count - 1);
+                        SortingUtility<JobHistory>.Sort(temp, 0, temp.Count - 1);
 
                         foreach (JobHistory jobHistory in temp)
                         {
@@ -86,31 +86,35 @@ namespace CheckupExec.Analysis
                                 && jobHistory.PercentComplete == 100
                                 && jobHistory.StorageName.Equals(storageDevice.Name))
                             {
-                                fe_forecast.JobHistories.Add(jobHistory);
+                                feForecast.JobHistories.Add(jobHistory);
                                 lastFullBackupJobInstance = jobHistory;
                             }
                         }
 
-                        Fe_Forecasts.Add(fe_forecast);
+                        FeForecasts.Add(feForecast);
 
                         //presumably each storage device will have 1 largest job instance found. This was used before when we were looking at all jobs
                         //indiscriminately, however, to ensure that we were not exaggerating the current capacity usage. Current capacity usage is being
                         //calculated with the last full, successfully completed backup jobs of each storage device
                         if (!storagesAccountedFor.Contains(storageDevice.Name))
                         {
-                            Fe_Forecasts.Find(x => x.Storage.Name.Equals(storageDevice.Name)).UsedCapacity = 
-                                (double)((lastFullBackupJobInstance?.TotalDataSizeBytes) >> 20) / 1024;
+                            long? placeHolder = (lastFullBackupJobInstance?.TotalDataSizeBytes) >> 20;
+                            if (placeHolder != null)
+                            {
+                                FeForecasts.Find(x => x.Storage.Name.Equals(storageDevice.Name)).UsedCapacity =
+                                    (double)placeHolder / 1024;
+                            }
 
                             storagesAccountedFor.Add(storageDevice.Name);
                         }
                     }
 
                     lastFullBackupJobInstance = null;
-                    
+
                 }
             }
 
-            FrontEndForecast = new FrontEndForecast(Fe_Forecasts);
+            FrontEndForecast = new FrontEndForecast(FeForecasts);
         }
     }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CheckupExec.Models
+﻿namespace CheckupExec.Models
 {
     public class LicenseInformation
     {
@@ -19,7 +13,7 @@ namespace CheckupExec.Models
         //The assumption is that license count is >= licenseusedcount. A user could be licensed for more than what they are using (or need?).
         //Also, if cap/cap lite, each eligible option is per front end TB, therefore, our forecast should determine: 1) when their cumm. licenseusedcount will
         //exceed their cumm. licensecount and 2) suggest a licensing model purchase count based on growth and tier
-        
+
         public int LicenseCount { get; set; }
 
         public int LicenseUsedCount { get; set; }
