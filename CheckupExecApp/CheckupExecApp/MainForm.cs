@@ -18,45 +18,100 @@ namespace CheckupExecApp
     public partial class MainForm : Form
     {
         private static Logger log = LogManager.GetCurrentClassLogger();
+
         public CheckupExec.DataExtraction dataExtractionInstance;
+
+        public bool frontEndAnalysisTabVisited = false;
+        public bool diskAnalysisTabVisited = false;
+        public bool backupJobsAnalysisTabVisited = false;
+        public bool alertsAnalysisTabVisited = false;
+        public bool jobErrorAnalysisTabVisited = false;
 
         public MainForm(bool isRemoteUser, string password, string serverName, string userName)
         {
             // Create new DataExtraction instance to handle creation of reports/forecasts
             dataExtractionInstance = new CheckupExec.DataExtraction(isRemoteUser, password, serverName, userName);
             InitializeComponent();
+
+            // Load Global Settings TextBox
             GlobalSettingsTextBox_Load();
-
-            // Set intial StartDateTimePickers dates
-            StartDateTimePicker.Value = DateTimePicker.MinimumDateTime;
-            StartDateTimePicker4.Value = DateTimePicker.MinimumDateTime;
-            
-            // Load Disk Analysis checked list boxes
-            Helpers.LoadStorageDevicesCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox5);
-            
-            // Load Backup Jobs Analysis checked list boxes
-            Helpers.LoadStorageDevicesCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox6);
-            Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, dataExtractionInstance.GetStorageDeviceNames(), BackupJobsCheckedListBox6, SelectAllBackupJobsCheckBox6);
-
-            // Load Alerts Analysis checked list boxes
-            Helpers.LoadStorageDevicesCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox);
-            Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, dataExtractionInstance.GetStorageDeviceNames(), BackupJobsCheckedListBox, SelectAllBackupJobsCheckBox);
-            Helpers.LoadAlertTypesCheckedListBox(dataExtractionInstance, AlertTypesCheckedListBox);
-
-            // Load Job Errors Analysis checked list boxes
-            Helpers.LoadStorageDevicesCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox4);
-            Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, dataExtractionInstance.GetStorageDeviceNames(), BackupJobsCheckedListBox4, SelectAllBackupJobsCheckBox4);
-            Helpers.LoadJobErrorTypesCheckedListBox(dataExtractionInstance, AlertTypesCheckedListBox4);
+            frontEndAnalysisTabVisited = true;
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
             this.FormClosing += new FormClosingEventHandler(MainForm_FormClosing);
+            this.tabControl1.SelectedIndexChanged += new EventHandler(tabControl1_SelectedIndexChanged);
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Application.Exit();
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch ((sender as TabControl).SelectedIndex)
+            {
+                // Configuration Settings/Front End Analysis Tab
+                case 0:
+                    if(!frontEndAnalysisTabVisited)
+                    {
+                        // Load Global Settings TextBox
+                        GlobalSettingsTextBox_Load();
+                        frontEndAnalysisTabVisited = true;
+                    }
+                    break;
+
+                // Disk Analysis Tab
+                case 1:
+                    if(!diskAnalysisTabVisited)
+                    {
+                        // Load Disk Analysis checked list boxes
+                        Helpers.LoadStorageDevicesCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox5);
+                        diskAnalysisTabVisited = true;
+                    }
+                    break;
+
+                // Backup Jobs Analysis Tab
+                case 2:
+                    if(!backupJobsAnalysisTabVisited)
+                    {
+                        // Load Backup Jobs Analysis checked list boxes
+                        Helpers.LoadStorageDevicesCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox6);
+                        Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, dataExtractionInstance.GetStorageDeviceNames(), BackupJobsCheckedListBox6, SelectAllBackupJobsCheckBox6);
+                        backupJobsAnalysisTabVisited = true;
+                    }
+                    break;
+
+                // Alerts Analysis Tab
+                case 3:
+                    if(!alertsAnalysisTabVisited)
+                    {
+                        // Load Alerts Analysis checked list boxes
+                        Helpers.LoadStorageDevicesCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox);
+                        Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, dataExtractionInstance.GetStorageDeviceNames(), BackupJobsCheckedListBox, SelectAllBackupJobsCheckBox);
+                        Helpers.LoadAlertTypesCheckedListBox(dataExtractionInstance, AlertTypesCheckedListBox);
+                        // Set intial StartDateTimePickers date
+                        StartDateTimePicker.Value = DateTimePicker.MinimumDateTime;
+                        alertsAnalysisTabVisited = true;
+                    }
+                    break;
+
+                // Job Error Analysis Tab
+                case 4:
+                    if(!jobErrorAnalysisTabVisited)
+                    {
+                        // Load Job Errors Analysis checked list boxes
+                        Helpers.LoadStorageDevicesCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox4);
+                        Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, dataExtractionInstance.GetStorageDeviceNames(), BackupJobsCheckedListBox4, SelectAllBackupJobsCheckBox4);
+                        Helpers.LoadJobErrorTypesCheckedListBox(dataExtractionInstance, AlertTypesCheckedListBox4);
+                        // Set intial StartDateTimePickers date
+                        StartDateTimePicker4.Value = DateTimePicker.MinimumDateTime;
+                        jobErrorAnalysisTabVisited = true;
+                    }
+                    break;
+            }
         }
 
         #region Configuration Settings Overview/Front End Analysis
