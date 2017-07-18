@@ -51,7 +51,7 @@ namespace CheckupExecApp
                 {
                     // Pass in user-entered credentials
                     Form mainForm = new MainForm(true, PasswordTextBox1.Text, ServerNameTextBox1.Text, UserNameTextBox1.Text);
-                    this. Hide();
+                    this.Hide();
                     mainForm.Show();
                 }
                 // If user is logging in to server locally

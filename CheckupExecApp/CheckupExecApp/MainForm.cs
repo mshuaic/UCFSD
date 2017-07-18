@@ -48,7 +48,17 @@ namespace CheckupExecApp
             Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, dataExtractionInstance.GetStorageDeviceNames(), BackupJobsCheckedListBox4, SelectAllBackupJobsCheckBox4);
             Helpers.LoadJobErrorTypesCheckedListBox(dataExtractionInstance, AlertTypesCheckedListBox4);
         }
-        
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            this.FormClosing += new FormClosingEventHandler(MainForm_FormClosing);
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Application.Exit();
+        }
+
         #region Configuration Settings Overview/Front End Analysis
         // Load global Backup Exec Settings
         private void GlobalSettingsTextBox_Load()
