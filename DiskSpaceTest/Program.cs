@@ -14,29 +14,32 @@ namespace DiskSpaceTest
         static string Output = Path.Combine(Directory.GetCurrentDirectory(), "DiskSpaceTest.xml");
 
         static int Max = 30;
-        
-        static int GrowthRange = 1024 * MB2B;
+
+        static int MinRange = 0;
+
+        static int MaxRange = 1024 * MB2B;
 
         const int MB2B = 1024;
         static void Main(string[] args)
         {
             if(args.Length == 1)
             {
-                GrowthRange = int.Parse(args[0]) * MB2B;
+                MaxRange = int.Parse(args[0]) * MB2B;
             }
 
             if(args.Length == 3)
             {
                 Output = args[0];
                 Max = int.Parse(args[1]);
-                GrowthRange = int.Parse(args[2]) * MB2B;
+                MinRange = int.Parse(args[2]) * MB2B;
+                MaxRange = int.Parse(args[3]) * MB2B;
             }
             
             // remote
             //var de = new BEStorage(true, "mshuaic", "VM", "mshuaic");
 
             // local
-             var de = new BEStorage(false);
+            var de = new BEStorage(false);
             List<Storage> storages =  de.GetStorages();
 
             using (XmlWriter writer = XmlWriter.Create(Output))
@@ -63,7 +66,7 @@ namespace DiskSpaceTest
                         writer.WriteEndElement();
                         if (storages[j].Name == "Any disk storage")
                             continue;
-                        usedSpace[j] += rnd.Next(0, GrowthRange);
+                        usedSpace[j] += rnd.Next(MinRange, MaxRange);
                     }
                     writer.WriteEndElement();
                     date = date.AddDays(1);
