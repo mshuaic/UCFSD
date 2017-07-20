@@ -24,5 +24,4 @@ E:\SkyDrive\UCF\SD\UCFSD-master\CheckupExec\bin\Debug\Accord.xml
 E:\SkyDrive\UCF\SD\UCFSD-master\CheckupExec\bin\Debug\Newtonsoft.Json.xml
 E:\SkyDrive\UCF\SD\UCFSD-master\CheckupExec\obj\Debug\CheckupExec.Properties.Resources.resources
 E:\SkyDrive\UCF\SD\UCFSD-master\CheckupExec\obj\Debug\CheckupExec.csproj.GenerateResource.Cache
-C:\Users\Galic\documents\visual studio 2017\Projects\CheckupExec\CheckupExec\bin\Debug\CheckupExec.exe.CodeAnalysisLog.xml
-C:\Users\Galic\documents\visual studio 2017\Projects\CheckupExec\CheckupExec\bin\Debug\CheckupExec.exe.lastcodeanalysissucceeded
+C:\Users\Galic\documents\visual studio 2017\Projects\CheckupExec\CheckupExec\obj\Debug\CheckupExec.csprojResolveAssemblyReference.cache

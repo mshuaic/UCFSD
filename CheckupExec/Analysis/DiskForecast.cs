@@ -17,9 +17,17 @@ namespace CheckupExec.Analysis
             UsedCapacityForecastModels = new List<UsedCapacityForecastModel>();
 
             diskNames = diskNames ?? new List<string>();
+            IEnumerable<XElement> diskCapacities = new List<XElement>();
 
-            IEnumerable<XElement> diskCapacities = from root in XDocument.Load(path).Elements()
-                                                   select root;
+            try
+            {
+                diskCapacities = from root in XDocument.Load(path).Elements()
+                                 select root;
+            }
+            catch (Exception e)
+            {
+                //ignore for now
+            }
 
             int count = 0;
             bool continueFlag = true;
@@ -43,7 +51,7 @@ namespace CheckupExec.Analysis
 
             if (continueFlag)
             {
-                diskCapacities.First().Remove();
+                //diskCapacities.First().Remove();
 
                 foreach (XElement dc in diskCapacities)
                 {
@@ -51,6 +59,7 @@ namespace CheckupExec.Analysis
                     {
                         DateTime date = DateTime.Now.Date;
                         long totalBytes = 0;
+                        long usedBytes = 0;
                         string storageName = "";
 
                         while (reader.Read())
@@ -59,13 +68,20 @@ namespace CheckupExec.Analysis
                             {
                                 case "DiskCapacityInstance":
                                     reader.MoveToAttribute("Date");
-                                    date = DateTime.Parse(reader.Value);
+                                    try
+                                    {
+                                        date = DateTime.Parse(reader.Value);
+                                    }
+                                    catch (Exception e)
+                                    {
+
+                                    }
                                     break;
                                 //Called disk but really refers to storagedevices in backupexec
                                 case "Disk":
                                     reader.MoveToAttribute("Name");
                                     storageName = reader.Value;
-                                    if (!UsedCapacityForecastModels.Exists(x => x.StorageName.Equals(storageName)))
+                                    if (!string.IsNullOrWhiteSpace(storageName) && !UsedCapacityForecastModels.Exists(x => x.StorageName.Equals(storageName)))
                                     {
                                         UsedCapacityForecastModels.Add(new UsedCapacityForecastModel
                                         {
@@ -75,17 +91,38 @@ namespace CheckupExec.Analysis
                                     }
                                     break;
                                 case "TotalCapacityBytes":
-                                    totalBytes = long.Parse(reader.Value);
+                                    try
+                                    {
+                                        reader.MoveToContent();
+                                        totalBytes = long.Parse(reader.ReadString());
+                                    }
+                                    catch (Exception e)
+                                    {
+
+                                    }
+                                    //totalBytes = reader.ReadElementContentAsLong();
                                     break;
                                 case "UsedCapacityBytes":
-                                    var usedBytes = long.Parse(reader.Value);
-                                    var ucm = UsedCapacityForecastModels.Find(x => x.StorageName.Equals(storageName));
-                                    ucm.UsedCapacityInstances.Add(new UsedCapacity
+                                    try
                                     {
-                                        Bytes = usedBytes,
-                                        Date = date
-                                    });
-                                    ucm.TotalCapacity = totalBytes;
+                                        reader.MoveToContent();
+                                        usedBytes = long.Parse(reader.ReadString());
+                                    }
+                                    catch (Exception e)
+                                    {
+
+                                    }
+                                    //var usedBytes = reader.ReadElementContentAsLong();
+                                    var ucm = UsedCapacityForecastModels.Find(x => x.StorageName.Equals(storageName));
+                                    if (usedBytes > 0)
+                                    {
+                                        ucm.UsedCapacityInstances.Add(new UsedCapacity
+                                        {
+                                            Bytes = usedBytes,
+                                            Date = date
+                                        });
+                                        ucm.TotalCapacity = totalBytes;
+                                    }
                                     break;
                             }
 

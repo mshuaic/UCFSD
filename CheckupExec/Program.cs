@@ -48,7 +48,7 @@ namespace CheckupExec
 
                 //whatever report is ran by the user
                 //de.JobErrorsAnalysis(null, jobNames, null);
-                de.DemoTest();
+                de.DiskAnalysis(storageNames, "DiskSpaceTest.xml", @"C:\Users\Galic\Desktop");
                 //dispose our runspace and powershell instances
                 de.CleanUp();
 

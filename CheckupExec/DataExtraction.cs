@@ -246,17 +246,9 @@ namespace CheckupExec
                         ForecastPoints = new List<PlotPoint>()
                     };
 
-                    fullPlot.AddRange(forecast.ForecastResults.Plot.Select(point => new PlotPoint
-                    {
-                        Days = point.Days,
-                        GB = point.GB
-                    }));
+                    fullPlot.AddRange(forecast.ForecastResults.Plot);
 
-                    temp.HistoricalPoints.AddRange(forecast.ForecastResults.Plot.Select(point => new PlotPoint
-                    {
-                        Days = point.Days,
-                        GB = point.GB
-                    }));
+                    temp.HistoricalPoints.AddRange(forecast.ForecastResults.Plot);
 
                     temp.StorageName = forecast.Storage.Name;
 
@@ -533,6 +525,18 @@ namespace CheckupExec
 
                 //pass list to report generator
             }
+
+            var reportGen = new HtmlGen();
+
+            try
+            {
+                reportGen.makeReportDisk(reports, @"C:\Users\Galic\Desktop");
+            }
+            catch
+            {
+                return false;
+            }
+
 
             return (reports.Count > 0);
         }
