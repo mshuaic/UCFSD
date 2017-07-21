@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.FrontEndAnalysisTab = new System.Windows.Forms.TabPage();
             this.LoadingBarPictureBox1 = new System.Windows.Forms.PictureBox();
@@ -189,7 +189,7 @@
             // 
             // GlobalSettingsTextBox
             // 
-            this.GlobalSettingsTextBox.Font = new System.Drawing.Font("Lucida Console", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GlobalSettingsTextBox.Font = new System.Drawing.Font("Lucida Console", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.GlobalSettingsTextBox.Location = new System.Drawing.Point(45, 58);
             this.GlobalSettingsTextBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.GlobalSettingsTextBox.MaxLength = 0;
@@ -530,8 +530,8 @@
             // 
             // DriveUsageChart
             // 
-            chartArea1.Name = "ChartArea1";
-            this.DriveUsageChart.ChartAreas.Add(chartArea1);
+            chartArea2.Name = "ChartArea1";
+            this.DriveUsageChart.ChartAreas.Add(chartArea2);
             this.DriveUsageChart.Location = new System.Drawing.Point(479, 39);
             this.DriveUsageChart.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.DriveUsageChart.Name = "DriveUsageChart";
@@ -539,11 +539,11 @@
             this.DriveUsageChart.PaletteCustomColors = new System.Drawing.Color[] {
         System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(160)))), ((int)(((byte)(218))))),
         System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))))};
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
-            series1.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            series1.Name = "DriveUsage";
-            this.DriveUsageChart.Series.Add(series1);
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
+            series2.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            series2.Name = "DriveUsage";
+            this.DriveUsageChart.Series.Add(series2);
             this.DriveUsageChart.Size = new System.Drawing.Size(446, 452);
             this.DriveUsageChart.TabIndex = 14;
             this.DriveUsageChart.Text = "Drive Usage";
