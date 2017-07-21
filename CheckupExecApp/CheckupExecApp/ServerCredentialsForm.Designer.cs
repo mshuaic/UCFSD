@@ -70,40 +70,40 @@
             // ServerNameLabel1
             // 
             this.ServerNameLabel1.AutoSize = true;
-            this.ServerNameLabel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ServerNameLabel1.Font = new System.Drawing.Font("Segoe UI", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ServerNameLabel1.Location = new System.Drawing.Point(72, 80);
             this.ServerNameLabel1.Name = "ServerNameLabel1";
-            this.ServerNameLabel1.Size = new System.Drawing.Size(255, 44);
+            this.ServerNameLabel1.Size = new System.Drawing.Size(240, 50);
             this.ServerNameLabel1.TabIndex = 1;
             this.ServerNameLabel1.Text = "Server Name:";
             // 
             // UserNameLabel1
             // 
             this.UserNameLabel1.AutoSize = true;
-            this.UserNameLabel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.UserNameLabel1.Font = new System.Drawing.Font("Segoe UI", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.UserNameLabel1.Location = new System.Drawing.Point(72, 186);
             this.UserNameLabel1.Name = "UserNameLabel1";
-            this.UserNameLabel1.Size = new System.Drawing.Size(223, 44);
+            this.UserNameLabel1.Size = new System.Drawing.Size(211, 50);
             this.UserNameLabel1.TabIndex = 1;
             this.UserNameLabel1.Text = "User Name:";
             // 
             // PasswordLabel1
             // 
             this.PasswordLabel1.AutoSize = true;
-            this.PasswordLabel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PasswordLabel1.Font = new System.Drawing.Font("Segoe UI", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PasswordLabel1.Location = new System.Drawing.Point(72, 303);
             this.PasswordLabel1.Name = "PasswordLabel1";
-            this.PasswordLabel1.Size = new System.Drawing.Size(197, 44);
+            this.PasswordLabel1.Size = new System.Drawing.Size(185, 50);
             this.PasswordLabel1.TabIndex = 1;
             this.PasswordLabel1.Text = "Password:";
             // 
             // RemoteLoginCheckBox1
             // 
             this.RemoteLoginCheckBox1.AutoSize = true;
-            this.RemoteLoginCheckBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RemoteLoginCheckBox1.Font = new System.Drawing.Font("Segoe UI", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RemoteLoginCheckBox1.Location = new System.Drawing.Point(413, 393);
             this.RemoteLoginCheckBox1.Name = "RemoteLoginCheckBox1";
-            this.RemoteLoginCheckBox1.Size = new System.Drawing.Size(289, 48);
+            this.RemoteLoginCheckBox1.Size = new System.Drawing.Size(281, 54);
             this.RemoteLoginCheckBox1.TabIndex = 2;
             this.RemoteLoginCheckBox1.Text = "Remote Login";
             this.RemoteLoginCheckBox1.UseVisualStyleBackColor = true;
@@ -111,7 +111,7 @@
             // 
             // LoginButton1
             // 
-            this.LoginButton1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LoginButton1.Font = new System.Drawing.Font("Segoe UI", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LoginButton1.Location = new System.Drawing.Point(413, 515);
             this.LoginButton1.Name = "LoginButton1";
             this.LoginButton1.Size = new System.Drawing.Size(257, 71);
@@ -122,7 +122,7 @@
             // 
             // CancelButton1
             // 
-            this.CancelButton1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CancelButton1.Font = new System.Drawing.Font("Segoe UI", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CancelButton1.Location = new System.Drawing.Point(887, 515);
             this.CancelButton1.Name = "CancelButton1";
             this.CancelButton1.Size = new System.Drawing.Size(257, 71);
