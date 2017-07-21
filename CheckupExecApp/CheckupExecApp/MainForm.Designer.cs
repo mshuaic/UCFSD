@@ -35,7 +35,6 @@
             this.FrontEndAnalysisTab = new System.Windows.Forms.TabPage();
             this.LoadingBarPictureBox1 = new System.Windows.Forms.PictureBox();
             this.GlobalSettingsTextBox = new System.Windows.Forms.TextBox();
-            this.HelpButton = new System.Windows.Forms.Button();
             this.GenerateButton = new System.Windows.Forms.Button();
             this.FolderPathBrowseButton = new System.Windows.Forms.Button();
             this.ReportProgressLabel = new System.Windows.Forms.Label();
@@ -48,7 +47,6 @@
             this.StorageDevicesCheckedListBoxLabel5 = new System.Windows.Forms.Label();
             this.StorageDevicesCheckedListBox5 = new System.Windows.Forms.CheckedListBox();
             this.DiskInfoLabel = new System.Windows.Forms.Label();
-            this.HelpButton2 = new System.Windows.Forms.Button();
             this.GenerateButton2 = new System.Windows.Forms.Button();
             this.FolderPathBrowseButton2 = new System.Windows.Forms.Button();
             this.ReportProgressLabel2 = new System.Windows.Forms.Label();
@@ -70,7 +68,6 @@
             this.BackupJobsAnalysisTab = new System.Windows.Forms.TabPage();
             this.LoadingBarPictureBox6 = new System.Windows.Forms.PictureBox();
             this.RefreshJobsButton6 = new System.Windows.Forms.Button();
-            this.HelpButton6 = new System.Windows.Forms.Button();
             this.GenerateButton6 = new System.Windows.Forms.Button();
             this.FolderPathBrowseButton6 = new System.Windows.Forms.Button();
             this.ReportProgressLabel6 = new System.Windows.Forms.Label();
@@ -92,7 +89,6 @@
             this.SelectAllAlertTypesCheckBox = new System.Windows.Forms.CheckBox();
             this.AlertTypeCheckedListBoxLabel = new System.Windows.Forms.Label();
             this.AlertTypesCheckedListBox = new System.Windows.Forms.CheckedListBox();
-            this.HelpButton3 = new System.Windows.Forms.Button();
             this.GenerateButton3 = new System.Windows.Forms.Button();
             this.FolderPathBrowseButton3 = new System.Windows.Forms.Button();
             this.ReportProgressLabel3 = new System.Windows.Forms.Label();
@@ -114,7 +110,6 @@
             this.SelectAllAlertTypesCheckBox4 = new System.Windows.Forms.CheckBox();
             this.AlertTypeCheckedListBoxLabel4 = new System.Windows.Forms.Label();
             this.AlertTypesCheckedListBox4 = new System.Windows.Forms.CheckedListBox();
-            this.HelpButton4 = new System.Windows.Forms.Button();
             this.GenerateButton4 = new System.Windows.Forms.Button();
             this.FolderPathBrowseButton4 = new System.Windows.Forms.Button();
             this.ReportProgressLabel4 = new System.Windows.Forms.Label();
@@ -160,7 +155,6 @@
             // 
             this.FrontEndAnalysisTab.Controls.Add(this.LoadingBarPictureBox1);
             this.FrontEndAnalysisTab.Controls.Add(this.GlobalSettingsTextBox);
-            this.FrontEndAnalysisTab.Controls.Add(this.HelpButton);
             this.FrontEndAnalysisTab.Controls.Add(this.GenerateButton);
             this.FrontEndAnalysisTab.Controls.Add(this.FolderPathBrowseButton);
             this.FrontEndAnalysisTab.Controls.Add(this.ReportProgressLabel);
@@ -182,7 +176,7 @@
             this.LoadingBarPictureBox1.Location = new System.Drawing.Point(135, 614);
             this.LoadingBarPictureBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.LoadingBarPictureBox1.Name = "LoadingBarPictureBox1";
-            this.LoadingBarPictureBox1.Size = new System.Drawing.Size(894, 37);
+            this.LoadingBarPictureBox1.Size = new System.Drawing.Size(1028, 37);
             this.LoadingBarPictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.LoadingBarPictureBox1.TabIndex = 12;
             this.LoadingBarPictureBox1.TabStop = false;
@@ -200,21 +194,10 @@
             this.GlobalSettingsTextBox.TabIndex = 11;
             this.GlobalSettingsTextBox.WordWrap = false;
             // 
-            // HelpButton
-            // 
-            this.HelpButton.Font = new System.Drawing.Font("Segoe UI", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.HelpButton.Location = new System.Drawing.Point(1169, 614);
-            this.HelpButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.HelpButton.Name = "HelpButton";
-            this.HelpButton.Size = new System.Drawing.Size(128, 37);
-            this.HelpButton.TabIndex = 10;
-            this.HelpButton.Text = "Help";
-            this.HelpButton.UseVisualStyleBackColor = true;
-            // 
             // GenerateButton
             // 
             this.GenerateButton.Font = new System.Drawing.Font("Segoe UI", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GenerateButton.Location = new System.Drawing.Point(1035, 614);
+            this.GenerateButton.Location = new System.Drawing.Point(1169, 614);
             this.GenerateButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.GenerateButton.Name = "GenerateButton";
             this.GenerateButton.Size = new System.Drawing.Size(128, 37);
@@ -282,7 +265,6 @@
             this.DiskAnalysisTab.Controls.Add(this.StorageDevicesCheckedListBoxLabel5);
             this.DiskAnalysisTab.Controls.Add(this.StorageDevicesCheckedListBox5);
             this.DiskAnalysisTab.Controls.Add(this.DiskInfoLabel);
-            this.DiskAnalysisTab.Controls.Add(this.HelpButton2);
             this.DiskAnalysisTab.Controls.Add(this.GenerateButton2);
             this.DiskAnalysisTab.Controls.Add(this.FolderPathBrowseButton2);
             this.DiskAnalysisTab.Controls.Add(this.ReportProgressLabel2);
@@ -316,7 +298,7 @@
             this.LoadingBarPictureBox2.Location = new System.Drawing.Point(135, 614);
             this.LoadingBarPictureBox2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.LoadingBarPictureBox2.Name = "LoadingBarPictureBox2";
-            this.LoadingBarPictureBox2.Size = new System.Drawing.Size(894, 37);
+            this.LoadingBarPictureBox2.Size = new System.Drawing.Size(1028, 37);
             this.LoadingBarPictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.LoadingBarPictureBox2.TabIndex = 46;
             this.LoadingBarPictureBox2.TabStop = false;
@@ -359,19 +341,9 @@
             this.DiskInfoLabel.Size = new System.Drawing.Size(0, 25);
             this.DiskInfoLabel.TabIndex = 22;
             // 
-            // HelpButton2
-            // 
-            this.HelpButton2.Location = new System.Drawing.Point(1169, 614);
-            this.HelpButton2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.HelpButton2.Name = "HelpButton2";
-            this.HelpButton2.Size = new System.Drawing.Size(128, 37);
-            this.HelpButton2.TabIndex = 19;
-            this.HelpButton2.Text = "Help";
-            this.HelpButton2.UseVisualStyleBackColor = true;
-            // 
             // GenerateButton2
             // 
-            this.GenerateButton2.Location = new System.Drawing.Point(1035, 614);
+            this.GenerateButton2.Location = new System.Drawing.Point(1169, 614);
             this.GenerateButton2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.GenerateButton2.Name = "GenerateButton2";
             this.GenerateButton2.Size = new System.Drawing.Size(128, 37);
@@ -552,7 +524,6 @@
             // 
             this.BackupJobsAnalysisTab.Controls.Add(this.LoadingBarPictureBox6);
             this.BackupJobsAnalysisTab.Controls.Add(this.RefreshJobsButton6);
-            this.BackupJobsAnalysisTab.Controls.Add(this.HelpButton6);
             this.BackupJobsAnalysisTab.Controls.Add(this.GenerateButton6);
             this.BackupJobsAnalysisTab.Controls.Add(this.FolderPathBrowseButton6);
             this.BackupJobsAnalysisTab.Controls.Add(this.ReportProgressLabel6);
@@ -578,7 +549,7 @@
             this.LoadingBarPictureBox6.Location = new System.Drawing.Point(135, 614);
             this.LoadingBarPictureBox6.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.LoadingBarPictureBox6.Name = "LoadingBarPictureBox6";
-            this.LoadingBarPictureBox6.Size = new System.Drawing.Size(894, 37);
+            this.LoadingBarPictureBox6.Size = new System.Drawing.Size(1028, 37);
             this.LoadingBarPictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.LoadingBarPictureBox6.TabIndex = 73;
             this.LoadingBarPictureBox6.TabStop = false;
@@ -594,19 +565,9 @@
             this.RefreshJobsButton6.UseVisualStyleBackColor = true;
             this.RefreshJobsButton6.Click += new System.EventHandler(this.RefreshJobsButton6_Click);
             // 
-            // HelpButton6
-            // 
-            this.HelpButton6.Location = new System.Drawing.Point(1169, 614);
-            this.HelpButton6.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.HelpButton6.Name = "HelpButton6";
-            this.HelpButton6.Size = new System.Drawing.Size(128, 37);
-            this.HelpButton6.TabIndex = 69;
-            this.HelpButton6.Text = "Help";
-            this.HelpButton6.UseVisualStyleBackColor = true;
-            // 
             // GenerateButton6
             // 
-            this.GenerateButton6.Location = new System.Drawing.Point(1035, 614);
+            this.GenerateButton6.Location = new System.Drawing.Point(1169, 614);
             this.GenerateButton6.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.GenerateButton6.Name = "GenerateButton6";
             this.GenerateButton6.Size = new System.Drawing.Size(128, 37);
@@ -725,7 +686,6 @@
             this.AlertsAnalysisTab.Controls.Add(this.SelectAllAlertTypesCheckBox);
             this.AlertsAnalysisTab.Controls.Add(this.AlertTypeCheckedListBoxLabel);
             this.AlertsAnalysisTab.Controls.Add(this.AlertTypesCheckedListBox);
-            this.AlertsAnalysisTab.Controls.Add(this.HelpButton3);
             this.AlertsAnalysisTab.Controls.Add(this.GenerateButton3);
             this.AlertsAnalysisTab.Controls.Add(this.FolderPathBrowseButton3);
             this.AlertsAnalysisTab.Controls.Add(this.ReportProgressLabel3);
@@ -751,7 +711,7 @@
             this.LoadingBarPictureBox3.Location = new System.Drawing.Point(135, 614);
             this.LoadingBarPictureBox3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.LoadingBarPictureBox3.Name = "LoadingBarPictureBox3";
-            this.LoadingBarPictureBox3.Size = new System.Drawing.Size(894, 37);
+            this.LoadingBarPictureBox3.Size = new System.Drawing.Size(1028, 37);
             this.LoadingBarPictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.LoadingBarPictureBox3.TabIndex = 38;
             this.LoadingBarPictureBox3.TabStop = false;
@@ -836,19 +796,9 @@
             this.AlertTypesCheckedListBox.Size = new System.Drawing.Size(390, 355);
             this.AlertTypesCheckedListBox.TabIndex = 30;
             // 
-            // HelpButton3
-            // 
-            this.HelpButton3.Location = new System.Drawing.Point(1169, 614);
-            this.HelpButton3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.HelpButton3.Name = "HelpButton3";
-            this.HelpButton3.Size = new System.Drawing.Size(128, 37);
-            this.HelpButton3.TabIndex = 26;
-            this.HelpButton3.Text = "Help";
-            this.HelpButton3.UseVisualStyleBackColor = true;
-            // 
             // GenerateButton3
             // 
-            this.GenerateButton3.Location = new System.Drawing.Point(1035, 614);
+            this.GenerateButton3.Location = new System.Drawing.Point(1169, 614);
             this.GenerateButton3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.GenerateButton3.Name = "GenerateButton3";
             this.GenerateButton3.Size = new System.Drawing.Size(128, 37);
@@ -967,7 +917,6 @@
             this.JobErrorsAnalysisTab.Controls.Add(this.SelectAllAlertTypesCheckBox4);
             this.JobErrorsAnalysisTab.Controls.Add(this.AlertTypeCheckedListBoxLabel4);
             this.JobErrorsAnalysisTab.Controls.Add(this.AlertTypesCheckedListBox4);
-            this.JobErrorsAnalysisTab.Controls.Add(this.HelpButton4);
             this.JobErrorsAnalysisTab.Controls.Add(this.GenerateButton4);
             this.JobErrorsAnalysisTab.Controls.Add(this.FolderPathBrowseButton4);
             this.JobErrorsAnalysisTab.Controls.Add(this.ReportProgressLabel4);
@@ -993,7 +942,7 @@
             this.LoadingBarPictureBox4.Location = new System.Drawing.Point(135, 614);
             this.LoadingBarPictureBox4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.LoadingBarPictureBox4.Name = "LoadingBarPictureBox4";
-            this.LoadingBarPictureBox4.Size = new System.Drawing.Size(894, 37);
+            this.LoadingBarPictureBox4.Size = new System.Drawing.Size(1028, 37);
             this.LoadingBarPictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.LoadingBarPictureBox4.TabIndex = 59;
             this.LoadingBarPictureBox4.TabStop = false;
@@ -1078,19 +1027,9 @@
             this.AlertTypesCheckedListBox4.Size = new System.Drawing.Size(390, 355);
             this.AlertTypesCheckedListBox4.TabIndex = 51;
             // 
-            // HelpButton4
-            // 
-            this.HelpButton4.Location = new System.Drawing.Point(1169, 614);
-            this.HelpButton4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.HelpButton4.Name = "HelpButton4";
-            this.HelpButton4.Size = new System.Drawing.Size(128, 37);
-            this.HelpButton4.TabIndex = 48;
-            this.HelpButton4.Text = "Help";
-            this.HelpButton4.UseVisualStyleBackColor = true;
-            // 
             // GenerateButton4
             // 
-            this.GenerateButton4.Location = new System.Drawing.Point(1035, 614);
+            this.GenerateButton4.Location = new System.Drawing.Point(1169, 614);
             this.GenerateButton4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.GenerateButton4.Name = "GenerateButton4";
             this.GenerateButton4.Size = new System.Drawing.Size(128, 37);
@@ -1235,7 +1174,6 @@
 
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage FrontEndAnalysisTab;
-        private System.Windows.Forms.Button HelpButton;
         private System.Windows.Forms.Button GenerateButton;
         private System.Windows.Forms.Button FolderPathBrowseButton;
         private System.Windows.Forms.Label FolderPathLabel;
@@ -1264,14 +1202,12 @@
         private System.Windows.Forms.CheckBox SelectAllBackupJobsCheckBox;
         private System.Windows.Forms.CheckBox SelectAllStorageDevicesCheckBox;
         private System.Windows.Forms.DataVisualization.Charting.Chart DriveUsageChart;
-        private System.Windows.Forms.Button HelpButton2;
         private System.Windows.Forms.Button GenerateButton2;
         private System.Windows.Forms.Button FolderPathBrowseButton2;
         private System.Windows.Forms.Label ReportProgressLabel2;
         private System.Windows.Forms.Label FolderPathLabel2;
         private System.Windows.Forms.TextBox FolderPathTextBox2;
         private System.Windows.Forms.Label DiskInfoLabel;
-        private System.Windows.Forms.Button HelpButton3;
         private System.Windows.Forms.Button GenerateButton3;
         private System.Windows.Forms.Button FolderPathBrowseButton3;
         private System.Windows.Forms.Label ReportProgressLabel3;
@@ -1295,7 +1231,6 @@
         private System.Windows.Forms.CheckBox SelectAllAlertTypesCheckBox4;
         private System.Windows.Forms.Label AlertTypeCheckedListBoxLabel4;
         private System.Windows.Forms.CheckedListBox AlertTypesCheckedListBox4;
-        private System.Windows.Forms.Button HelpButton4;
         private System.Windows.Forms.Button GenerateButton4;
         private System.Windows.Forms.Button FolderPathBrowseButton4;
         private System.Windows.Forms.Label ReportProgressLabel4;
@@ -1311,7 +1246,6 @@
         private System.Windows.Forms.Label StorageDevicesCheckedListBoxLabel5;
         private System.Windows.Forms.CheckedListBox StorageDevicesCheckedListBox5;
         private System.Windows.Forms.Button RefreshJobsButton6;
-        private System.Windows.Forms.Button HelpButton6;
         private System.Windows.Forms.Button GenerateButton6;
         private System.Windows.Forms.Button FolderPathBrowseButton6;
         private System.Windows.Forms.Label ReportProgressLabel6;
