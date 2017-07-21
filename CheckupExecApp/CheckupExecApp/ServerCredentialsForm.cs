@@ -46,6 +46,9 @@ namespace CheckupExecApp
         {
             try
             {
+                // Begin cursor loading animation
+                Cursor.Current = Cursors.WaitCursor;
+
                 // If user is logging in to server remotely
                 if(RemoteLoginCheckBox1.Checked)
                 {
@@ -61,6 +64,9 @@ namespace CheckupExecApp
                     this.Hide();
                     mainForm.Show();
                 }
+
+                // End cursor loading animation
+                Cursor.Current = Cursors.Default;
             }
             catch(Exception ex)
             {

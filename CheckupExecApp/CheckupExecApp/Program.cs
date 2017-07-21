@@ -14,6 +14,7 @@ namespace CheckupExecApp
         [STAThread]
         static void Main()
         {
+            Cursor.Current = Cursors.AppStarting;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new ServerCredentialsForm());

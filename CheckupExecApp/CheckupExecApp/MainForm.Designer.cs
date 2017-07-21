@@ -28,29 +28,30 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.FrontEndAnalysisTab = new System.Windows.Forms.TabPage();
-            this.SettingsProgressBar = new System.Windows.Forms.ProgressBar();
+            this.LoadingBarPictureBox1 = new System.Windows.Forms.PictureBox();
             this.GlobalSettingsTextBox = new System.Windows.Forms.TextBox();
             this.HelpButton = new System.Windows.Forms.Button();
             this.GenerateButton = new System.Windows.Forms.Button();
             this.FolderPathBrowseButton = new System.Windows.Forms.Button();
-            this.ProgressBarLabel = new System.Windows.Forms.Label();
+            this.ReportProgressLabel = new System.Windows.Forms.Label();
             this.FolderPathLabel = new System.Windows.Forms.Label();
             this.FolderPathTextBox = new System.Windows.Forms.TextBox();
             this.GlobalSettingsLabel = new System.Windows.Forms.Label();
             this.DiskAnalysisTab = new System.Windows.Forms.TabPage();
+            this.LoadingBarPictureBox2 = new System.Windows.Forms.PictureBox();
             this.SelectAllStorageDevicesCheckBox5 = new System.Windows.Forms.CheckBox();
             this.StorageDevicesCheckedListBoxLabel5 = new System.Windows.Forms.Label();
             this.StorageDevicesCheckedListBox5 = new System.Windows.Forms.CheckedListBox();
             this.DiskInfoLabel = new System.Windows.Forms.Label();
-            this.SettingsProgressBar2 = new System.Windows.Forms.ProgressBar();
             this.HelpButton2 = new System.Windows.Forms.Button();
             this.GenerateButton2 = new System.Windows.Forms.Button();
             this.FolderPathBrowseButton2 = new System.Windows.Forms.Button();
-            this.ProgressBarLabel2 = new System.Windows.Forms.Label();
+            this.ReportProgressLabel2 = new System.Windows.Forms.Label();
             this.FolderPathLabel2 = new System.Windows.Forms.Label();
             this.FolderPathTextBox2 = new System.Windows.Forms.TextBox();
             this.ElapsedTimeLabel = new System.Windows.Forms.Label();
@@ -67,12 +68,12 @@
             this.FilePathTextBox = new System.Windows.Forms.TextBox();
             this.DriveUsageChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.BackupJobsAnalysisTab = new System.Windows.Forms.TabPage();
+            this.LoadingBarPictureBox6 = new System.Windows.Forms.PictureBox();
             this.RefreshJobsButton6 = new System.Windows.Forms.Button();
-            this.SettingsProgressBar6 = new System.Windows.Forms.ProgressBar();
             this.HelpButton6 = new System.Windows.Forms.Button();
             this.GenerateButton6 = new System.Windows.Forms.Button();
             this.FolderPathBrowseButton6 = new System.Windows.Forms.Button();
-            this.ProgressBarLabel6 = new System.Windows.Forms.Label();
+            this.ReportProgressLabel6 = new System.Windows.Forms.Label();
             this.FolderPathLabel6 = new System.Windows.Forms.Label();
             this.FolderPathTextBox6 = new System.Windows.Forms.TextBox();
             this.SelectAllBackupJobsCheckBox6 = new System.Windows.Forms.CheckBox();
@@ -82,6 +83,7 @@
             this.BackupJobsCheckedListBox6 = new System.Windows.Forms.CheckedListBox();
             this.StorageDevicesCheckedListBox6 = new System.Windows.Forms.CheckedListBox();
             this.AlertsAnalysisTab = new System.Windows.Forms.TabPage();
+            this.LoadingBarPictureBox3 = new System.Windows.Forms.PictureBox();
             this.RefreshJobsButton = new System.Windows.Forms.Button();
             this.EndDateTimePickerLabel = new System.Windows.Forms.Label();
             this.StartDateTimePickerLabel = new System.Windows.Forms.Label();
@@ -90,11 +92,10 @@
             this.SelectAllAlertTypesCheckBox = new System.Windows.Forms.CheckBox();
             this.AlertTypeCheckedListBoxLabel = new System.Windows.Forms.Label();
             this.AlertTypesCheckedListBox = new System.Windows.Forms.CheckedListBox();
-            this.SettingsProgressBar3 = new System.Windows.Forms.ProgressBar();
             this.HelpButton3 = new System.Windows.Forms.Button();
             this.GenerateButton3 = new System.Windows.Forms.Button();
             this.FolderPathBrowseButton3 = new System.Windows.Forms.Button();
-            this.ProgressBarLabel3 = new System.Windows.Forms.Label();
+            this.ReportProgressLabel3 = new System.Windows.Forms.Label();
             this.FolderPathLabel3 = new System.Windows.Forms.Label();
             this.FolderPathTextBox3 = new System.Windows.Forms.TextBox();
             this.SelectAllBackupJobsCheckBox = new System.Windows.Forms.CheckBox();
@@ -104,6 +105,7 @@
             this.BackupJobsCheckedListBox = new System.Windows.Forms.CheckedListBox();
             this.StorageDevicesCheckedListBox = new System.Windows.Forms.CheckedListBox();
             this.JobErrorsAnalysisTab = new System.Windows.Forms.TabPage();
+            this.LoadingBarPictureBox4 = new System.Windows.Forms.PictureBox();
             this.RefreshJobsButton4 = new System.Windows.Forms.Button();
             this.EndDateTimePickerLabel4 = new System.Windows.Forms.Label();
             this.StartDateTimePickerLabel4 = new System.Windows.Forms.Label();
@@ -112,11 +114,10 @@
             this.SelectAllAlertTypesCheckBox4 = new System.Windows.Forms.CheckBox();
             this.AlertTypeCheckedListBoxLabel4 = new System.Windows.Forms.Label();
             this.AlertTypesCheckedListBox4 = new System.Windows.Forms.CheckedListBox();
-            this.SettingsProgressBar4 = new System.Windows.Forms.ProgressBar();
             this.HelpButton4 = new System.Windows.Forms.Button();
             this.GenerateButton4 = new System.Windows.Forms.Button();
             this.FolderPathBrowseButton4 = new System.Windows.Forms.Button();
-            this.ProgressBarLabel4 = new System.Windows.Forms.Label();
+            this.ReportProgressLabel4 = new System.Windows.Forms.Label();
             this.FolderPathLabel4 = new System.Windows.Forms.Label();
             this.FolderPathTextBox4 = new System.Windows.Forms.TextBox();
             this.SelectAllBackupJobsCheckBox4 = new System.Windows.Forms.CheckBox();
@@ -127,11 +128,16 @@
             this.StorageDevicesCheckedListBox4 = new System.Windows.Forms.CheckedListBox();
             this.tabControl1.SuspendLayout();
             this.FrontEndAnalysisTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.LoadingBarPictureBox1)).BeginInit();
             this.DiskAnalysisTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.LoadingBarPictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DriveUsageChart)).BeginInit();
             this.BackupJobsAnalysisTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.LoadingBarPictureBox6)).BeginInit();
             this.AlertsAnalysisTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.LoadingBarPictureBox3)).BeginInit();
             this.JobErrorsAnalysisTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.LoadingBarPictureBox4)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -150,12 +156,12 @@
             // 
             // FrontEndAnalysisTab
             // 
-            this.FrontEndAnalysisTab.Controls.Add(this.SettingsProgressBar);
+            this.FrontEndAnalysisTab.Controls.Add(this.LoadingBarPictureBox1);
             this.FrontEndAnalysisTab.Controls.Add(this.GlobalSettingsTextBox);
             this.FrontEndAnalysisTab.Controls.Add(this.HelpButton);
             this.FrontEndAnalysisTab.Controls.Add(this.GenerateButton);
             this.FrontEndAnalysisTab.Controls.Add(this.FolderPathBrowseButton);
-            this.FrontEndAnalysisTab.Controls.Add(this.ProgressBarLabel);
+            this.FrontEndAnalysisTab.Controls.Add(this.ReportProgressLabel);
             this.FrontEndAnalysisTab.Controls.Add(this.FolderPathLabel);
             this.FrontEndAnalysisTab.Controls.Add(this.FolderPathTextBox);
             this.FrontEndAnalysisTab.Controls.Add(this.GlobalSettingsLabel);
@@ -167,12 +173,15 @@
             this.FrontEndAnalysisTab.Text = "Configuration Settings Overview/Front End Analysis";
             this.FrontEndAnalysisTab.UseVisualStyleBackColor = true;
             // 
-            // SettingsProgressBar
+            // LoadingBarPictureBox1
             // 
-            this.SettingsProgressBar.Location = new System.Drawing.Point(150, 757);
-            this.SettingsProgressBar.Name = "SettingsProgressBar";
-            this.SettingsProgressBar.Size = new System.Drawing.Size(900, 42);
-            this.SettingsProgressBar.TabIndex = 12;
+            this.LoadingBarPictureBox1.InitialImage = ((System.Drawing.Image)(resources.GetObject("LoadingBarPictureBox1.InitialImage")));
+            this.LoadingBarPictureBox1.Location = new System.Drawing.Point(183, 757);
+            this.LoadingBarPictureBox1.Name = "LoadingBarPictureBox1";
+            this.LoadingBarPictureBox1.Size = new System.Drawing.Size(857, 50);
+            this.LoadingBarPictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.LoadingBarPictureBox1.TabIndex = 12;
+            this.LoadingBarPictureBox1.TabStop = false;
             // 
             // GlobalSettingsTextBox
             // 
@@ -215,14 +224,14 @@
             this.FolderPathBrowseButton.UseVisualStyleBackColor = true;
             this.FolderPathBrowseButton.Click += new System.EventHandler(this.FolderPathBrowseButton_Click);
             // 
-            // ProgressBarLabel
+            // ReportProgressLabel
             // 
-            this.ProgressBarLabel.AutoSize = true;
-            this.ProgressBarLabel.Location = new System.Drawing.Point(40, 766);
-            this.ProgressBarLabel.Name = "ProgressBarLabel";
-            this.ProgressBarLabel.Size = new System.Drawing.Size(104, 25);
-            this.ProgressBarLabel.TabIndex = 8;
-            this.ProgressBarLabel.Text = "Progress:";
+            this.ReportProgressLabel.AutoSize = true;
+            this.ReportProgressLabel.Location = new System.Drawing.Point(40, 766);
+            this.ReportProgressLabel.Name = "ReportProgressLabel";
+            this.ReportProgressLabel.Size = new System.Drawing.Size(104, 25);
+            this.ReportProgressLabel.TabIndex = 8;
+            this.ReportProgressLabel.Text = "Progress:";
             // 
             // FolderPathLabel
             // 
@@ -252,15 +261,15 @@
             // 
             // DiskAnalysisTab
             // 
+            this.DiskAnalysisTab.Controls.Add(this.LoadingBarPictureBox2);
             this.DiskAnalysisTab.Controls.Add(this.SelectAllStorageDevicesCheckBox5);
             this.DiskAnalysisTab.Controls.Add(this.StorageDevicesCheckedListBoxLabel5);
             this.DiskAnalysisTab.Controls.Add(this.StorageDevicesCheckedListBox5);
             this.DiskAnalysisTab.Controls.Add(this.DiskInfoLabel);
-            this.DiskAnalysisTab.Controls.Add(this.SettingsProgressBar2);
             this.DiskAnalysisTab.Controls.Add(this.HelpButton2);
             this.DiskAnalysisTab.Controls.Add(this.GenerateButton2);
             this.DiskAnalysisTab.Controls.Add(this.FolderPathBrowseButton2);
-            this.DiskAnalysisTab.Controls.Add(this.ProgressBarLabel2);
+            this.DiskAnalysisTab.Controls.Add(this.ReportProgressLabel2);
             this.DiskAnalysisTab.Controls.Add(this.FolderPathLabel2);
             this.DiskAnalysisTab.Controls.Add(this.FolderPathTextBox2);
             this.DiskAnalysisTab.Controls.Add(this.ElapsedTimeLabel);
@@ -283,6 +292,16 @@
             this.DiskAnalysisTab.TabIndex = 1;
             this.DiskAnalysisTab.Text = "Disk Analysis";
             this.DiskAnalysisTab.UseVisualStyleBackColor = true;
+            // 
+            // LoadingBarPictureBox2
+            // 
+            this.LoadingBarPictureBox2.InitialImage = ((System.Drawing.Image)(resources.GetObject("LoadingBarPictureBox2.InitialImage")));
+            this.LoadingBarPictureBox2.Location = new System.Drawing.Point(177, 757);
+            this.LoadingBarPictureBox2.Name = "LoadingBarPictureBox2";
+            this.LoadingBarPictureBox2.Size = new System.Drawing.Size(857, 50);
+            this.LoadingBarPictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.LoadingBarPictureBox2.TabIndex = 46;
+            this.LoadingBarPictureBox2.TabStop = false;
             // 
             // SelectAllStorageDevicesCheckBox5
             // 
@@ -320,13 +339,6 @@
             this.DiskInfoLabel.Size = new System.Drawing.Size(0, 25);
             this.DiskInfoLabel.TabIndex = 22;
             // 
-            // SettingsProgressBar2
-            // 
-            this.SettingsProgressBar2.Location = new System.Drawing.Point(150, 757);
-            this.SettingsProgressBar2.Name = "SettingsProgressBar2";
-            this.SettingsProgressBar2.Size = new System.Drawing.Size(900, 42);
-            this.SettingsProgressBar2.TabIndex = 21;
-            // 
             // HelpButton2
             // 
             this.HelpButton2.Location = new System.Drawing.Point(1290, 757);
@@ -356,14 +368,14 @@
             this.FolderPathBrowseButton2.UseVisualStyleBackColor = true;
             this.FolderPathBrowseButton2.Click += new System.EventHandler(this.FolderPathBrowseButton2_Click);
             // 
-            // ProgressBarLabel2
+            // ReportProgressLabel2
             // 
-            this.ProgressBarLabel2.AutoSize = true;
-            this.ProgressBarLabel2.Location = new System.Drawing.Point(40, 766);
-            this.ProgressBarLabel2.Name = "ProgressBarLabel2";
-            this.ProgressBarLabel2.Size = new System.Drawing.Size(104, 25);
-            this.ProgressBarLabel2.TabIndex = 16;
-            this.ProgressBarLabel2.Text = "Progress:";
+            this.ReportProgressLabel2.AutoSize = true;
+            this.ReportProgressLabel2.Location = new System.Drawing.Point(40, 766);
+            this.ReportProgressLabel2.Name = "ReportProgressLabel2";
+            this.ReportProgressLabel2.Size = new System.Drawing.Size(104, 25);
+            this.ReportProgressLabel2.TabIndex = 16;
+            this.ReportProgressLabel2.Text = "Progress:";
             // 
             // FolderPathLabel2
             // 
@@ -510,12 +522,12 @@
             // 
             // BackupJobsAnalysisTab
             // 
+            this.BackupJobsAnalysisTab.Controls.Add(this.LoadingBarPictureBox6);
             this.BackupJobsAnalysisTab.Controls.Add(this.RefreshJobsButton6);
-            this.BackupJobsAnalysisTab.Controls.Add(this.SettingsProgressBar6);
             this.BackupJobsAnalysisTab.Controls.Add(this.HelpButton6);
             this.BackupJobsAnalysisTab.Controls.Add(this.GenerateButton6);
             this.BackupJobsAnalysisTab.Controls.Add(this.FolderPathBrowseButton6);
-            this.BackupJobsAnalysisTab.Controls.Add(this.ProgressBarLabel6);
+            this.BackupJobsAnalysisTab.Controls.Add(this.ReportProgressLabel6);
             this.BackupJobsAnalysisTab.Controls.Add(this.FolderPathLabel6);
             this.BackupJobsAnalysisTab.Controls.Add(this.FolderPathTextBox6);
             this.BackupJobsAnalysisTab.Controls.Add(this.SelectAllBackupJobsCheckBox6);
@@ -531,6 +543,16 @@
             this.BackupJobsAnalysisTab.Text = "Backup Jobs Analysis";
             this.BackupJobsAnalysisTab.UseVisualStyleBackColor = true;
             // 
+            // LoadingBarPictureBox6
+            // 
+            this.LoadingBarPictureBox6.InitialImage = ((System.Drawing.Image)(resources.GetObject("LoadingBarPictureBox6.InitialImage")));
+            this.LoadingBarPictureBox6.Location = new System.Drawing.Point(192, 757);
+            this.LoadingBarPictureBox6.Name = "LoadingBarPictureBox6";
+            this.LoadingBarPictureBox6.Size = new System.Drawing.Size(857, 50);
+            this.LoadingBarPictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.LoadingBarPictureBox6.TabIndex = 73;
+            this.LoadingBarPictureBox6.TabStop = false;
+            // 
             // RefreshJobsButton6
             // 
             this.RefreshJobsButton6.Location = new System.Drawing.Point(840, 560);
@@ -540,13 +562,6 @@
             this.RefreshJobsButton6.Text = "Refresh Jobs";
             this.RefreshJobsButton6.UseVisualStyleBackColor = true;
             this.RefreshJobsButton6.Click += new System.EventHandler(this.RefreshJobsButton6_Click);
-            // 
-            // SettingsProgressBar6
-            // 
-            this.SettingsProgressBar6.Location = new System.Drawing.Point(150, 757);
-            this.SettingsProgressBar6.Name = "SettingsProgressBar6";
-            this.SettingsProgressBar6.Size = new System.Drawing.Size(900, 42);
-            this.SettingsProgressBar6.TabIndex = 71;
             // 
             // HelpButton6
             // 
@@ -577,14 +592,14 @@
             this.FolderPathBrowseButton6.UseVisualStyleBackColor = true;
             this.FolderPathBrowseButton6.Click += new System.EventHandler(this.FolderPathBrowseButton6_Click);
             // 
-            // ProgressBarLabel6
+            // ReportProgressLabel6
             // 
-            this.ProgressBarLabel6.AutoSize = true;
-            this.ProgressBarLabel6.Location = new System.Drawing.Point(40, 766);
-            this.ProgressBarLabel6.Name = "ProgressBarLabel6";
-            this.ProgressBarLabel6.Size = new System.Drawing.Size(104, 25);
-            this.ProgressBarLabel6.TabIndex = 66;
-            this.ProgressBarLabel6.Text = "Progress:";
+            this.ReportProgressLabel6.AutoSize = true;
+            this.ReportProgressLabel6.Location = new System.Drawing.Point(40, 766);
+            this.ReportProgressLabel6.Name = "ReportProgressLabel6";
+            this.ReportProgressLabel6.Size = new System.Drawing.Size(104, 25);
+            this.ReportProgressLabel6.TabIndex = 66;
+            this.ReportProgressLabel6.Text = "Progress:";
             // 
             // FolderPathLabel6
             // 
@@ -662,6 +677,7 @@
             // 
             // AlertsAnalysisTab
             // 
+            this.AlertsAnalysisTab.Controls.Add(this.LoadingBarPictureBox3);
             this.AlertsAnalysisTab.Controls.Add(this.RefreshJobsButton);
             this.AlertsAnalysisTab.Controls.Add(this.EndDateTimePickerLabel);
             this.AlertsAnalysisTab.Controls.Add(this.StartDateTimePickerLabel);
@@ -670,11 +686,10 @@
             this.AlertsAnalysisTab.Controls.Add(this.SelectAllAlertTypesCheckBox);
             this.AlertsAnalysisTab.Controls.Add(this.AlertTypeCheckedListBoxLabel);
             this.AlertsAnalysisTab.Controls.Add(this.AlertTypesCheckedListBox);
-            this.AlertsAnalysisTab.Controls.Add(this.SettingsProgressBar3);
             this.AlertsAnalysisTab.Controls.Add(this.HelpButton3);
             this.AlertsAnalysisTab.Controls.Add(this.GenerateButton3);
             this.AlertsAnalysisTab.Controls.Add(this.FolderPathBrowseButton3);
-            this.AlertsAnalysisTab.Controls.Add(this.ProgressBarLabel3);
+            this.AlertsAnalysisTab.Controls.Add(this.ReportProgressLabel3);
             this.AlertsAnalysisTab.Controls.Add(this.FolderPathLabel3);
             this.AlertsAnalysisTab.Controls.Add(this.FolderPathTextBox3);
             this.AlertsAnalysisTab.Controls.Add(this.SelectAllBackupJobsCheckBox);
@@ -689,6 +704,16 @@
             this.AlertsAnalysisTab.TabIndex = 2;
             this.AlertsAnalysisTab.Text = "Alerts Analysis";
             this.AlertsAnalysisTab.UseVisualStyleBackColor = true;
+            // 
+            // LoadingBarPictureBox3
+            // 
+            this.LoadingBarPictureBox3.InitialImage = ((System.Drawing.Image)(resources.GetObject("LoadingBarPictureBox3.InitialImage")));
+            this.LoadingBarPictureBox3.Location = new System.Drawing.Point(192, 757);
+            this.LoadingBarPictureBox3.Name = "LoadingBarPictureBox3";
+            this.LoadingBarPictureBox3.Size = new System.Drawing.Size(857, 50);
+            this.LoadingBarPictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.LoadingBarPictureBox3.TabIndex = 38;
+            this.LoadingBarPictureBox3.TabStop = false;
             // 
             // RefreshJobsButton
             // 
@@ -765,13 +790,6 @@
             this.AlertTypesCheckedListBox.Size = new System.Drawing.Size(450, 394);
             this.AlertTypesCheckedListBox.TabIndex = 30;
             // 
-            // SettingsProgressBar3
-            // 
-            this.SettingsProgressBar3.Location = new System.Drawing.Point(150, 757);
-            this.SettingsProgressBar3.Name = "SettingsProgressBar3";
-            this.SettingsProgressBar3.Size = new System.Drawing.Size(900, 42);
-            this.SettingsProgressBar3.TabIndex = 28;
-            // 
             // HelpButton3
             // 
             this.HelpButton3.Location = new System.Drawing.Point(1290, 757);
@@ -801,14 +819,14 @@
             this.FolderPathBrowseButton3.UseVisualStyleBackColor = true;
             this.FolderPathBrowseButton3.Click += new System.EventHandler(this.FolderPathBrowseButton3_Click);
             // 
-            // ProgressBarLabel3
+            // ReportProgressLabel3
             // 
-            this.ProgressBarLabel3.AutoSize = true;
-            this.ProgressBarLabel3.Location = new System.Drawing.Point(40, 766);
-            this.ProgressBarLabel3.Name = "ProgressBarLabel3";
-            this.ProgressBarLabel3.Size = new System.Drawing.Size(104, 25);
-            this.ProgressBarLabel3.TabIndex = 23;
-            this.ProgressBarLabel3.Text = "Progress:";
+            this.ReportProgressLabel3.AutoSize = true;
+            this.ReportProgressLabel3.Location = new System.Drawing.Point(40, 766);
+            this.ReportProgressLabel3.Name = "ReportProgressLabel3";
+            this.ReportProgressLabel3.Size = new System.Drawing.Size(104, 25);
+            this.ReportProgressLabel3.TabIndex = 23;
+            this.ReportProgressLabel3.Text = "Progress:";
             // 
             // FolderPathLabel3
             // 
@@ -886,6 +904,7 @@
             // 
             // JobErrorsAnalysisTab
             // 
+            this.JobErrorsAnalysisTab.Controls.Add(this.LoadingBarPictureBox4);
             this.JobErrorsAnalysisTab.Controls.Add(this.RefreshJobsButton4);
             this.JobErrorsAnalysisTab.Controls.Add(this.EndDateTimePickerLabel4);
             this.JobErrorsAnalysisTab.Controls.Add(this.StartDateTimePickerLabel4);
@@ -894,11 +913,10 @@
             this.JobErrorsAnalysisTab.Controls.Add(this.SelectAllAlertTypesCheckBox4);
             this.JobErrorsAnalysisTab.Controls.Add(this.AlertTypeCheckedListBoxLabel4);
             this.JobErrorsAnalysisTab.Controls.Add(this.AlertTypesCheckedListBox4);
-            this.JobErrorsAnalysisTab.Controls.Add(this.SettingsProgressBar4);
             this.JobErrorsAnalysisTab.Controls.Add(this.HelpButton4);
             this.JobErrorsAnalysisTab.Controls.Add(this.GenerateButton4);
             this.JobErrorsAnalysisTab.Controls.Add(this.FolderPathBrowseButton4);
-            this.JobErrorsAnalysisTab.Controls.Add(this.ProgressBarLabel4);
+            this.JobErrorsAnalysisTab.Controls.Add(this.ReportProgressLabel4);
             this.JobErrorsAnalysisTab.Controls.Add(this.FolderPathLabel4);
             this.JobErrorsAnalysisTab.Controls.Add(this.FolderPathTextBox4);
             this.JobErrorsAnalysisTab.Controls.Add(this.SelectAllBackupJobsCheckBox4);
@@ -913,6 +931,16 @@
             this.JobErrorsAnalysisTab.TabIndex = 6;
             this.JobErrorsAnalysisTab.Text = "Job Error Analysis";
             this.JobErrorsAnalysisTab.UseVisualStyleBackColor = true;
+            // 
+            // LoadingBarPictureBox4
+            // 
+            this.LoadingBarPictureBox4.InitialImage = ((System.Drawing.Image)(resources.GetObject("LoadingBarPictureBox4.InitialImage")));
+            this.LoadingBarPictureBox4.Location = new System.Drawing.Point(182, 757);
+            this.LoadingBarPictureBox4.Name = "LoadingBarPictureBox4";
+            this.LoadingBarPictureBox4.Size = new System.Drawing.Size(857, 50);
+            this.LoadingBarPictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.LoadingBarPictureBox4.TabIndex = 59;
+            this.LoadingBarPictureBox4.TabStop = false;
             // 
             // RefreshJobsButton4
             // 
@@ -989,13 +1017,6 @@
             this.AlertTypesCheckedListBox4.Size = new System.Drawing.Size(450, 394);
             this.AlertTypesCheckedListBox4.TabIndex = 51;
             // 
-            // SettingsProgressBar4
-            // 
-            this.SettingsProgressBar4.Location = new System.Drawing.Point(150, 757);
-            this.SettingsProgressBar4.Name = "SettingsProgressBar4";
-            this.SettingsProgressBar4.Size = new System.Drawing.Size(900, 42);
-            this.SettingsProgressBar4.TabIndex = 50;
-            // 
             // HelpButton4
             // 
             this.HelpButton4.Location = new System.Drawing.Point(1290, 757);
@@ -1025,14 +1046,14 @@
             this.FolderPathBrowseButton4.UseVisualStyleBackColor = true;
             this.FolderPathBrowseButton4.Click += new System.EventHandler(this.FolderPathBrowseButton4_Click);
             // 
-            // ProgressBarLabel4
+            // ReportProgressLabel4
             // 
-            this.ProgressBarLabel4.AutoSize = true;
-            this.ProgressBarLabel4.Location = new System.Drawing.Point(40, 766);
-            this.ProgressBarLabel4.Name = "ProgressBarLabel4";
-            this.ProgressBarLabel4.Size = new System.Drawing.Size(104, 25);
-            this.ProgressBarLabel4.TabIndex = 45;
-            this.ProgressBarLabel4.Text = "Progress:";
+            this.ReportProgressLabel4.AutoSize = true;
+            this.ReportProgressLabel4.Location = new System.Drawing.Point(40, 766);
+            this.ReportProgressLabel4.Name = "ReportProgressLabel4";
+            this.ReportProgressLabel4.Size = new System.Drawing.Size(104, 25);
+            this.ReportProgressLabel4.TabIndex = 45;
+            this.ReportProgressLabel4.Text = "Progress:";
             // 
             // FolderPathLabel4
             // 
@@ -1121,15 +1142,20 @@
             this.tabControl1.ResumeLayout(false);
             this.FrontEndAnalysisTab.ResumeLayout(false);
             this.FrontEndAnalysisTab.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.LoadingBarPictureBox1)).EndInit();
             this.DiskAnalysisTab.ResumeLayout(false);
             this.DiskAnalysisTab.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.LoadingBarPictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DriveUsageChart)).EndInit();
             this.BackupJobsAnalysisTab.ResumeLayout(false);
             this.BackupJobsAnalysisTab.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.LoadingBarPictureBox6)).EndInit();
             this.AlertsAnalysisTab.ResumeLayout(false);
             this.AlertsAnalysisTab.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.LoadingBarPictureBox3)).EndInit();
             this.JobErrorsAnalysisTab.ResumeLayout(false);
             this.JobErrorsAnalysisTab.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.LoadingBarPictureBox4)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1147,8 +1173,7 @@
         private System.Windows.Forms.TabPage DiskAnalysisTab;
         private System.Windows.Forms.TabPage AlertsAnalysisTab;
         private System.Windows.Forms.TextBox GlobalSettingsTextBox;
-        private System.Windows.Forms.ProgressBar SettingsProgressBar;
-        private System.Windows.Forms.Label ProgressBarLabel;
+        private System.Windows.Forms.Label ReportProgressLabel;
         private System.Windows.Forms.Label ElapsedTimeLabel;
         private System.Windows.Forms.Label EndTimeLabel;
         private System.Windows.Forms.Label StartTimeLabel;
@@ -1168,19 +1193,17 @@
         private System.Windows.Forms.CheckBox SelectAllBackupJobsCheckBox;
         private System.Windows.Forms.CheckBox SelectAllStorageDevicesCheckBox;
         private System.Windows.Forms.DataVisualization.Charting.Chart DriveUsageChart;
-        private System.Windows.Forms.ProgressBar SettingsProgressBar2;
         private System.Windows.Forms.Button HelpButton2;
         private System.Windows.Forms.Button GenerateButton2;
         private System.Windows.Forms.Button FolderPathBrowseButton2;
-        private System.Windows.Forms.Label ProgressBarLabel2;
+        private System.Windows.Forms.Label ReportProgressLabel2;
         private System.Windows.Forms.Label FolderPathLabel2;
         private System.Windows.Forms.TextBox FolderPathTextBox2;
         private System.Windows.Forms.Label DiskInfoLabel;
-        private System.Windows.Forms.ProgressBar SettingsProgressBar3;
         private System.Windows.Forms.Button HelpButton3;
         private System.Windows.Forms.Button GenerateButton3;
         private System.Windows.Forms.Button FolderPathBrowseButton3;
-        private System.Windows.Forms.Label ProgressBarLabel3;
+        private System.Windows.Forms.Label ReportProgressLabel3;
         private System.Windows.Forms.Label FolderPathLabel3;
         private System.Windows.Forms.TextBox FolderPathTextBox3;
         private System.Windows.Forms.CheckBox SelectAllAlertTypesCheckBox;
@@ -1201,11 +1224,10 @@
         private System.Windows.Forms.CheckBox SelectAllAlertTypesCheckBox4;
         private System.Windows.Forms.Label AlertTypeCheckedListBoxLabel4;
         private System.Windows.Forms.CheckedListBox AlertTypesCheckedListBox4;
-        private System.Windows.Forms.ProgressBar SettingsProgressBar4;
         private System.Windows.Forms.Button HelpButton4;
         private System.Windows.Forms.Button GenerateButton4;
         private System.Windows.Forms.Button FolderPathBrowseButton4;
-        private System.Windows.Forms.Label ProgressBarLabel4;
+        private System.Windows.Forms.Label ReportProgressLabel4;
         private System.Windows.Forms.Label FolderPathLabel4;
         private System.Windows.Forms.TextBox FolderPathTextBox4;
         private System.Windows.Forms.CheckBox SelectAllBackupJobsCheckBox4;
@@ -1218,11 +1240,10 @@
         private System.Windows.Forms.Label StorageDevicesCheckedListBoxLabel5;
         private System.Windows.Forms.CheckedListBox StorageDevicesCheckedListBox5;
         private System.Windows.Forms.Button RefreshJobsButton6;
-        private System.Windows.Forms.ProgressBar SettingsProgressBar6;
         private System.Windows.Forms.Button HelpButton6;
         private System.Windows.Forms.Button GenerateButton6;
         private System.Windows.Forms.Button FolderPathBrowseButton6;
-        private System.Windows.Forms.Label ProgressBarLabel6;
+        private System.Windows.Forms.Label ReportProgressLabel6;
         private System.Windows.Forms.Label FolderPathLabel6;
         private System.Windows.Forms.TextBox FolderPathTextBox6;
         private System.Windows.Forms.CheckBox SelectAllBackupJobsCheckBox6;
@@ -1231,6 +1252,11 @@
         private System.Windows.Forms.Label StorageDevicesCheckedListBoxLabel6;
         private System.Windows.Forms.CheckedListBox BackupJobsCheckedListBox6;
         private System.Windows.Forms.CheckedListBox StorageDevicesCheckedListBox6;
+        private System.Windows.Forms.PictureBox LoadingBarPictureBox1;
+        private System.Windows.Forms.PictureBox LoadingBarPictureBox2;
+        private System.Windows.Forms.PictureBox LoadingBarPictureBox6;
+        private System.Windows.Forms.PictureBox LoadingBarPictureBox3;
+        private System.Windows.Forms.PictureBox LoadingBarPictureBox4;
     }
 }
 

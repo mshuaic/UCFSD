@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using NLog;
+using System.Threading;
 
 namespace CheckupExecApp
 {
@@ -27,6 +28,15 @@ namespace CheckupExecApp
         public bool alertsAnalysisTabVisited = false;
         public bool jobErrorAnalysisTabVisited = false;
 
+        Bitmap loadingBar = new Bitmap(System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("CheckupExecApp.loadingBar.gif"));
+        Bitmap loadingBarStatic = new Bitmap(System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("CheckupExecApp.loadingBarStatic.jpg"));
+
+        BackgroundWorker FrontEndAnalysisBW = new BackgroundWorker();
+        BackgroundWorker DiskAnalysisBW = new BackgroundWorker();
+        BackgroundWorker BackupJobsAnalysisBW = new BackgroundWorker();
+        BackgroundWorker AlertsAnalysisBW = new BackgroundWorker();
+        BackgroundWorker JobErrorAnalysisBW = new BackgroundWorker();
+
         public MainForm(bool isRemoteUser, string password, string serverName, string userName)
         {
             // Create new DataExtraction instance to handle creation of reports/forecasts
@@ -35,7 +45,34 @@ namespace CheckupExecApp
 
             // Load Global Settings TextBox
             GlobalSettingsTextBox_Load();
+            LoadingBarPictureBox1.Image = loadingBarStatic;
             frontEndAnalysisTabVisited = true;
+
+            // Background Workers to handle the reports generation
+            FrontEndAnalysisBW.WorkerReportsProgress = true;
+            FrontEndAnalysisBW.WorkerSupportsCancellation = true;
+            FrontEndAnalysisBW.DoWork += new DoWorkEventHandler(FrontEndAnalysisBW_DoWork);
+            FrontEndAnalysisBW.RunWorkerCompleted += new RunWorkerCompletedEventHandler(FrontEndAnalysisBW_RunWorkerCompleted);
+
+            DiskAnalysisBW.WorkerReportsProgress = true;
+            DiskAnalysisBW.WorkerSupportsCancellation = true;
+            DiskAnalysisBW.DoWork += new DoWorkEventHandler(DiskAnalysisBW_DoWork);
+            DiskAnalysisBW.RunWorkerCompleted += new RunWorkerCompletedEventHandler(DiskAnalysisBW_RunWorkerCompleted);
+
+            BackupJobsAnalysisBW.WorkerReportsProgress = true;
+            BackupJobsAnalysisBW.WorkerSupportsCancellation = true;
+            BackupJobsAnalysisBW.DoWork += new DoWorkEventHandler(BackupJobsAnalysisBW_DoWork);
+            BackupJobsAnalysisBW.RunWorkerCompleted += new RunWorkerCompletedEventHandler(BackupJobsAnalysisBW_RunWorkerCompleted);
+
+            AlertsAnalysisBW.WorkerReportsProgress = true;
+            AlertsAnalysisBW.WorkerSupportsCancellation = true;
+            AlertsAnalysisBW.DoWork += new DoWorkEventHandler(AlertsAnalysisBW_DoWork);
+            AlertsAnalysisBW.RunWorkerCompleted += new RunWorkerCompletedEventHandler(AlertsAnalysisBW_RunWorkerCompleted);
+
+            JobErrorAnalysisBW.WorkerReportsProgress = true;
+            JobErrorAnalysisBW.WorkerSupportsCancellation = true;
+            JobErrorAnalysisBW.DoWork += new DoWorkEventHandler(JobErrorAnalysisBW_DoWork);
+            JobErrorAnalysisBW.RunWorkerCompleted += new RunWorkerCompletedEventHandler(JobErrorAnalysisBW_RunWorkerCompleted);
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -59,6 +96,7 @@ namespace CheckupExecApp
                     {
                         // Load Global Settings TextBox
                         GlobalSettingsTextBox_Load();
+                        LoadingBarPictureBox1.Image = loadingBarStatic;
                         frontEndAnalysisTabVisited = true;
                     }
                     break;
@@ -67,6 +105,7 @@ namespace CheckupExecApp
                 case 1:
                     if(!diskAnalysisTabVisited)
                     {
+                        LoadingBarPictureBox2.Image = loadingBarStatic;
                         // Load Disk Analysis checked list boxes
                         Helpers.LoadStorageDevicesCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox5);
                         diskAnalysisTabVisited = true;
@@ -77,6 +116,7 @@ namespace CheckupExecApp
                 case 2:
                     if(!backupJobsAnalysisTabVisited)
                     {
+                        LoadingBarPictureBox6.Image = loadingBarStatic;
                         // Load Backup Jobs Analysis checked list boxes
                         Helpers.LoadStorageDevicesCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox6);
                         Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, dataExtractionInstance.GetStorageDeviceNames(), BackupJobsCheckedListBox6, SelectAllBackupJobsCheckBox6);
@@ -88,6 +128,7 @@ namespace CheckupExecApp
                 case 3:
                     if(!alertsAnalysisTabVisited)
                     {
+                        LoadingBarPictureBox3.Image = loadingBarStatic;
                         // Load Alerts Analysis checked list boxes
                         Helpers.LoadStorageDevicesCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox);
                         Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, dataExtractionInstance.GetStorageDeviceNames(), BackupJobsCheckedListBox, SelectAllBackupJobsCheckBox);
@@ -102,6 +143,7 @@ namespace CheckupExecApp
                 case 4:
                     if(!jobErrorAnalysisTabVisited)
                     {
+                        LoadingBarPictureBox4.Image = loadingBarStatic;
                         // Load Job Errors Analysis checked list boxes
                         Helpers.LoadStorageDevicesCheckedListBox(dataExtractionInstance, StorageDevicesCheckedListBox4);
                         Helpers.LoadBackupJobsCheckedListBox(dataExtractionInstance, dataExtractionInstance.GetStorageDeviceNames(), BackupJobsCheckedListBox4, SelectAllBackupJobsCheckBox4);
@@ -122,11 +164,15 @@ namespace CheckupExecApp
             string test = "Get-Process";
             try
             {
+                Cursor.Current = Cursors.WaitCursor;
+
                 // Clear the textbox
                 GlobalSettingsTextBox.Clear();
 
                 // Display the sript results in the textbox
                 GlobalSettingsTextBox.Text = RunScript(powershellScript);
+
+                Cursor.Current = Cursors.Default;
             }
             catch (Exception ex)
             {
@@ -176,21 +222,59 @@ namespace CheckupExecApp
         // Run Frontend analysis
         private void GenerateButton_Click(object sender, EventArgs e)
         {
+            if(!FrontEndAnalysisBW.IsBusy)
+            {
+                FrontEndAnalysisBW.RunWorkerAsync();
+                //for(int i = 0; i < 5; i++)
+                //{
+                //    if(i != tabControl1.SelectedIndex)
+                //    {
+                //        tabControl1.TabPages[i].Enabled = false;
+                //    } 
+                //}
+                
+                // Display loading bar
+                this.LoadingBarPictureBox1.Image = loadingBar;
+            }
+        }
+
+        private void FrontEndAnalysisBW_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker worker = sender as BackgroundWorker;
+
+            RunFrontEndAnalysis();
+        }
+
+        // Once Front End Analysis has completed
+        private void FrontEndAnalysisBW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            this.LoadingBarPictureBox1.Image = loadingBarStatic;
+            tabControl1.Enabled = true;
+        }
+
+        private void RunFrontEndAnalysis()
+        {
             try
             {
+                Cursor.Current = Cursors.WaitCursor;
+
                 // Make sure a folder path was specified
                 if (FolderPathTextBox.Text != "")
                 {
                     // Get storage devices
                     dataExtractionInstance.GetStorageDeviceNames();
+
                     // Run Frontend analysis
                     if (dataExtractionInstance.FrontEndAnalysis(FolderPathTextBox.Text))
                     {
+                        this.LoadingBarPictureBox1.Image = loadingBarStatic;
+                        MessageBox.Show("Report successfully generated.", "Successful Report Generation", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         log.Info("Success: Front End Analysis");
-
                     }
                     else
                     {
+                        this.LoadingBarPictureBox1.Image = loadingBarStatic;
+                        MessageBox.Show("Report failed to generate. Check log for details.", "Failed Report Generation", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         log.Error("Failure: Front End Analysis");
                     }
                 }
@@ -198,9 +282,13 @@ namespace CheckupExecApp
                 {
                     MessageBox.Show("Please select a valid destination folder.", "Invalid destination folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+
+                Cursor.Current = Cursors.Default;
             }
             catch (Exception ex)
             {
+                this.LoadingBarPictureBox1.Image = loadingBarStatic;
+                MessageBox.Show("Report failed to generate. Check log for details.", "Failed Report Generation", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 log.Error(ex);
             }
         }
@@ -291,31 +379,73 @@ namespace CheckupExecApp
         // Run Disk analysis
         private void GenerateButton2_Click(object sender, EventArgs e)
         {
+            if (!DiskAnalysisBW.IsBusy)
+            {
+                DiskAnalysisBW.RunWorkerAsync();
+                //for (int i = 0; i < 5; i++)
+                //{
+                //    if (i != tabControl1.SelectedIndex)
+                //    {
+                //        tabControl1.TabPages[i].Enabled = false;
+                //    }
+                //}
+
+                // Display loading bar
+                this.LoadingBarPictureBox2.Image = loadingBar;
+            }
+        }
+
+        private void DiskAnalysisBW_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker worker = sender as BackgroundWorker;
+
+            RunDiskAnalysis();
+        }
+
+        // Once Disk Analysis has completed
+        private void DiskAnalysisBW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            this.LoadingBarPictureBox2.Image = loadingBarStatic;
+            tabControl1.Enabled = true;
+        }
+
+        private void RunDiskAnalysis()
+        {
             try
             {
+                Cursor.Current = Cursors.WaitCursor;
+
                 // Make sure a file path and report destination folder path was specified
-                if(FolderPathTextBox2.Text != "" && FilePathTextBox.Text != "")
+                if (FolderPathTextBox2.Text != "" && FilePathTextBox.Text != "")
                 {
                     // Get storage devices
                     dataExtractionInstance.GetStorageDeviceNames();
+
                     // Run Frontend analysis
                     if (dataExtractionInstance.DiskAnalysis(StorageDevicesCheckedListBox5.CheckedItems.Cast<string>().ToList(), FilePathTextBox.Text, FolderPathTextBox2.Text))
                     {
+                        this.LoadingBarPictureBox2.Image = loadingBarStatic;
+                        MessageBox.Show("Report successfully generated.", "Successful Report Generation", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         log.Info("Success: Disk Analysis");
-
                     }
                     else
                     {
+                        this.LoadingBarPictureBox2.Image = loadingBarStatic;
+                        MessageBox.Show("Report failed to generate. Check log for details.", "Failed Report Generation", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         log.Error("Failure: Disk Analysis");
-                    }      
+                    }
                 }
                 else
                 {
                     MessageBox.Show("Please select a valid file and destination folder.", "Invalid file/destination folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+
+                Cursor.Current = Cursors.Default;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
+                this.LoadingBarPictureBox2.Image = loadingBarStatic;
+                MessageBox.Show("Report failed to generate. Check log for details.", "Failed Report Generation", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 log.Error(ex);
             }
         }
@@ -339,20 +469,65 @@ namespace CheckupExecApp
 
         private void GenerateButton6_Click(object sender, EventArgs e)
         {
+            if (!BackupJobsAnalysisBW.IsBusy)
+            {
+                BackupJobsAnalysisBW.RunWorkerAsync();
+                //for (int i = 0; i < 5; i++)
+                //{
+                //    if (i != tabControl1.SelectedIndex)
+                //    {
+                //        tabControl1.TabPages[i].Enabled = false;
+                //    }
+                //}
+
+                // Display loading bar
+                System.Reflection.Assembly myAssembly = System.Reflection.Assembly.GetExecutingAssembly();
+                Stream myStream = myAssembly.GetManifestResourceStream("CheckupExecApp.loadingBar.gif");
+                Bitmap image = new Bitmap(myStream);
+                this.LoadingBarPictureBox6.Image = image;
+            }
+        }
+
+        private void BackupJobsAnalysisBW_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker worker = sender as BackgroundWorker;
+
+            RunBackupJobsAnalysis();
+        }
+
+        // Once Backup Jobs Analysis has completed
+        private void BackupJobsAnalysisBW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            this.LoadingBarPictureBox6.Image = loadingBarStatic;
+            tabControl1.Enabled = true;
+        }
+
+        private void RunBackupJobsAnalysis()
+        {
             try
             {
+                Cursor.Current = Cursors.WaitCursor;
+
                 // Make sure a folder path was specified
                 if (FolderPathTextBox6.Text != "")
                 {
+                    // Display loading bar
+                    this.LoadingBarPictureBox6.Image = loadingBar;
+
                     // Get storage devices
                     dataExtractionInstance.GetStorageDeviceNames();
+
                     // Run Backup Jobs analysis
                     if (dataExtractionInstance.BackupJobsAnalysis(BackupJobsCheckedListBox6.CheckedItems.Cast<string>().ToList(), FolderPathTextBox6.Text))
                     {
+                        this.LoadingBarPictureBox6.Image = loadingBarStatic;
+                        MessageBox.Show("Report successfully generated.", "Successful Report Generation", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         log.Info("Success: Backup Jobs Analysis");
                     }
                     else
                     {
+                        this.LoadingBarPictureBox6.Image = loadingBarStatic;
+                        MessageBox.Show("Report failed to generate. Check log for details.", "Failed Report Generation", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         log.Error("Failure: Backup Jobs Analysis");
                     }
                 }
@@ -360,9 +535,13 @@ namespace CheckupExecApp
                 {
                     MessageBox.Show("Please select a valid destination folder.", "Invalid destination folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+
+                Cursor.Current = Cursors.Default;
             }
             catch (Exception ex)
             {
+                this.LoadingBarPictureBox6.Image = loadingBarStatic;
+                MessageBox.Show("Report failed to generate. Check log for details.", "Failed Report Generation", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 log.Error(ex);
             }
         }
@@ -397,20 +576,58 @@ namespace CheckupExecApp
 
         private void GenerateButton3_Click(object sender, EventArgs e)
         {
+            if (!AlertsAnalysisBW.IsBusy)
+            {
+                AlertsAnalysisBW.RunWorkerAsync();
+                //for (int i = 0; i < 5; i++)
+                //{
+                //    if (i != tabControl1.SelectedIndex)
+                //    {
+                //        tabControl1.TabPages[i].Enabled = false;
+                //    }
+                //}
+
+                // Display loading bar
+                this.LoadingBarPictureBox3.Image = loadingBar;
+            }
+        }
+
+        private void AlertsAnalysisBW_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker worker = sender as BackgroundWorker;
+
+            RunAlertsAnalysis();
+        }
+
+        // Once Alerts Analysis has completed
+        private void AlertsAnalysisBW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            this.LoadingBarPictureBox3.Image = loadingBarStatic;
+            tabControl1.Enabled = true;
+        }
+
+        private void RunAlertsAnalysis()
+        {
             try
             {
+                Cursor.Current = Cursors.WaitCursor;
+
                 // Make sure a folder path was specified
                 if (FolderPathTextBox3.Text != "")
                 {
                     // Get storage devices
                     dataExtractionInstance.GetStorageDeviceNames();
                     // Run Alerts analysis
-                    if(dataExtractionInstance.AlertsAnalysis(FolderPathTextBox3.Text, BackupJobsCheckedListBox.CheckedItems.Cast<string>().ToList(), AlertTypesCheckedListBox.CheckedItems.Cast<string>().ToList(), StartDateTimePicker.Value, EndDateTimePicker.Value))
+                    if (dataExtractionInstance.AlertsAnalysis(FolderPathTextBox3.Text, BackupJobsCheckedListBox.CheckedItems.Cast<string>().ToList(), AlertTypesCheckedListBox.CheckedItems.Cast<string>().ToList(), StartDateTimePicker.Value, EndDateTimePicker.Value))
                     {
+                        this.LoadingBarPictureBox3.Image = loadingBarStatic;
+                        MessageBox.Show("Report successfully generated.", "Successful Report Generation", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         log.Info("Success: Alerts Analysis");
                     }
                     else
                     {
+                        this.LoadingBarPictureBox3.Image = loadingBarStatic;
+                        MessageBox.Show("Report failed to generate. Check log for details.", "Failed Report Generation", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         log.Error("Failure: Alerts Analysis");
                     }
                 }
@@ -418,9 +635,13 @@ namespace CheckupExecApp
                 {
                     MessageBox.Show("Please select a valid destination folder.", "Invalid destination folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+
+                Cursor.Current = Cursors.Default;
             }
             catch (Exception ex)
             {
+                this.LoadingBarPictureBox3.Image = loadingBarStatic;
+                MessageBox.Show("Report failed to generate. Check log for details.", "Failed Report Generation", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 log.Error(ex);
             }
         }
@@ -456,8 +677,42 @@ namespace CheckupExecApp
 
         private void GenerateButton4_Click(object sender, EventArgs e)
         {
+            if (!JobErrorAnalysisBW.IsBusy)
+            {
+                JobErrorAnalysisBW.RunWorkerAsync();
+                //for (int i = 0; i < 5; i++)
+                //{
+                //    if (i != tabControl1.SelectedIndex)
+                //    {
+                //        tabControl1.TabPages[i].Enabled = false;
+                //    }
+                //}
+
+                // Display loading bar
+                this.LoadingBarPictureBox4.Image = loadingBar;
+            }
+        }
+
+        private void JobErrorAnalysisBW_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker worker = sender as BackgroundWorker;
+
+            RunJobErrorAnalysis();
+        }
+
+        // Once Job Error Analysis has completed
+        private void JobErrorAnalysisBW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            this.LoadingBarPictureBox4.Image = loadingBarStatic;
+            tabControl1.Enabled = true;
+        }
+
+        private void RunJobErrorAnalysis()
+        {
             try
             {
+                Cursor.Current = Cursors.WaitCursor;
+
                 // Make sure a folder path was specified
                 if (FolderPathTextBox4.Text != "")
                 {
@@ -466,10 +721,14 @@ namespace CheckupExecApp
                     // Run Frontend analysis
                     if (dataExtractionInstance.JobErrorsAnalysis(FolderPathTextBox4.Text, BackupJobsCheckedListBox4.CheckedItems.Cast<string>().ToList(), AlertTypesCheckedListBox4.CheckedItems.Cast<string>().ToList(), StartDateTimePicker4.Value, EndDateTimePicker4.Value))
                     {
+                        this.LoadingBarPictureBox4.Image = loadingBarStatic;
+                        MessageBox.Show("Report successfully generated.", "Successful Report Generation", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         log.Info("Success: Job Errors Analysis");
                     }
                     else
                     {
+                        this.LoadingBarPictureBox4.Image = loadingBarStatic;
+                        MessageBox.Show("Report failed to generate. Check log for details.", "Failed Report Generation", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         log.Error("Failure: Job Errors Analysis");
                     }
                 }
@@ -477,9 +736,13 @@ namespace CheckupExecApp
                 {
                     MessageBox.Show("Please select a valid destination folder.", "Invalid destination folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+
+                Cursor.Current = Cursors.Default;
             }
             catch (Exception ex)
             {
+                this.LoadingBarPictureBox4.Image = loadingBarStatic;
+                MessageBox.Show("Report failed to generate. Check log for details.", "Failed Report Generation", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 log.Error(ex);
             }
         }

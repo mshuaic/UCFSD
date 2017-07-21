@@ -22,6 +22,8 @@ namespace CheckupExecApp
         {
             try
             {
+                Cursor.Current = Cursors.WaitCursor;
+
                 // Allow user to select a desired folder to place the generated report
                 FolderBrowserDialog fbd = new FolderBrowserDialog();
                 fbd.Description = "Select a folder for the generated report";
@@ -30,6 +32,8 @@ namespace CheckupExecApp
                 {
                     PathTextBox.Text = fbd.SelectedPath;
                 }
+
+                Cursor.Current = Cursors.Default;
             }
             catch (Exception ex)
             {
@@ -66,6 +70,8 @@ namespace CheckupExecApp
         // Populates the StorageDevicesCheckedListBox with the list of storage devices
         public static void LoadStorageDevicesCheckedListBox(DataExtraction dataExtractionInstance, CheckedListBox StorageDevicesCheckedListBox)
         {
+            Cursor.Current = Cursors.WaitCursor;
+
             // Clear the checked list box
             StorageDevicesCheckedListBox.Items.Clear();
 
@@ -75,11 +81,15 @@ namespace CheckupExecApp
             {
                 StorageDevicesCheckedListBox.Items.Add(storageDevice);
             }
+
+            Cursor.Current = Cursors.Default;
         }
 
         // Populates the BackupJobsCheckedListBox with the list of Backup Jobs for the selected storage device
         public static void LoadBackupJobsCheckedListBox(DataExtraction dataExtractionInstance, List<string> storageDevices, CheckedListBox BackupJobsCheckedListBox, CheckBox SelectAllCheckBox)
         {
+            Cursor.Current = Cursors.WaitCursor;
+
             // Uncheck the "Select All" check box
             SelectAllCheckBox.Checked = false;
 
@@ -92,11 +102,15 @@ namespace CheckupExecApp
             {
                 BackupJobsCheckedListBox.Items.Add(backupJob);
             }
+
+            Cursor.Current = Cursors.Default;
         }
 
         // Populates the AlertTypesCheckedListBox with the list of Alert types
         public static void LoadAlertTypesCheckedListBox(DataExtraction dataExtractionInstance, CheckedListBox AlertTypesCheckedListBox)
         {
+            Cursor.Current = Cursors.WaitCursor;
+
             // Clear the checked list box
             AlertTypesCheckedListBox.Items.Clear();
 
@@ -106,11 +120,15 @@ namespace CheckupExecApp
             {
                 AlertTypesCheckedListBox.Items.Add(alertType);
             }
+
+            Cursor.Current = Cursors.Default;
         }
 
         // Populates the AlertTypesCheckedListBox with the list of Job Error statuses
         public static void LoadJobErrorTypesCheckedListBox(DataExtraction dataExtractionInstane, CheckedListBox AlertTypesCheckedListBox)
         {
+            Cursor.Current = Cursors.WaitCursor;
+
             // Clear the checked list box
             AlertTypesCheckedListBox.Items.Clear();
 
@@ -120,6 +138,8 @@ namespace CheckupExecApp
             {
                 AlertTypesCheckedListBox.Items.Add(jobErrorStatus);
             }
+
+            Cursor.Current = Cursors.Default;
         }
 
         // Checks all the available items in the given checkedListBox
