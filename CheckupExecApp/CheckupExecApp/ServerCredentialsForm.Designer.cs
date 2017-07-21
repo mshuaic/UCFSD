@@ -43,27 +43,30 @@
             // 
             this.ServerNameTextBox1.Enabled = false;
             this.ServerNameTextBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ServerNameTextBox1.Location = new System.Drawing.Point(413, 77);
+            this.ServerNameTextBox1.Location = new System.Drawing.Point(163, 48);
+            this.ServerNameTextBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.ServerNameTextBox1.Name = "ServerNameTextBox1";
-            this.ServerNameTextBox1.Size = new System.Drawing.Size(731, 50);
+            this.ServerNameTextBox1.Size = new System.Drawing.Size(411, 29);
             this.ServerNameTextBox1.TabIndex = 0;
             // 
             // UserNameTextBox1
             // 
             this.UserNameTextBox1.Enabled = false;
             this.UserNameTextBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.UserNameTextBox1.Location = new System.Drawing.Point(413, 183);
+            this.UserNameTextBox1.Location = new System.Drawing.Point(163, 108);
+            this.UserNameTextBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.UserNameTextBox1.Name = "UserNameTextBox1";
-            this.UserNameTextBox1.Size = new System.Drawing.Size(731, 50);
+            this.UserNameTextBox1.Size = new System.Drawing.Size(411, 29);
             this.UserNameTextBox1.TabIndex = 0;
             // 
             // PasswordTextBox1
             // 
             this.PasswordTextBox1.Enabled = false;
             this.PasswordTextBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PasswordTextBox1.Location = new System.Drawing.Point(413, 300);
+            this.PasswordTextBox1.Location = new System.Drawing.Point(163, 168);
+            this.PasswordTextBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.PasswordTextBox1.Name = "PasswordTextBox1";
-            this.PasswordTextBox1.Size = new System.Drawing.Size(731, 50);
+            this.PasswordTextBox1.Size = new System.Drawing.Size(411, 29);
             this.PasswordTextBox1.TabIndex = 0;
             this.PasswordTextBox1.UseSystemPasswordChar = true;
             // 
@@ -71,9 +74,10 @@
             // 
             this.ServerNameLabel1.AutoSize = true;
             this.ServerNameLabel1.Font = new System.Drawing.Font("Segoe UI", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ServerNameLabel1.Location = new System.Drawing.Point(72, 80);
+            this.ServerNameLabel1.Location = new System.Drawing.Point(35, 50);
+            this.ServerNameLabel1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.ServerNameLabel1.Name = "ServerNameLabel1";
-            this.ServerNameLabel1.Size = new System.Drawing.Size(240, 50);
+            this.ServerNameLabel1.Size = new System.Drawing.Size(124, 25);
             this.ServerNameLabel1.TabIndex = 1;
             this.ServerNameLabel1.Text = "Server Name:";
             // 
@@ -81,9 +85,10 @@
             // 
             this.UserNameLabel1.AutoSize = true;
             this.UserNameLabel1.Font = new System.Drawing.Font("Segoe UI", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.UserNameLabel1.Location = new System.Drawing.Point(72, 186);
+            this.UserNameLabel1.Location = new System.Drawing.Point(35, 110);
+            this.UserNameLabel1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.UserNameLabel1.Name = "UserNameLabel1";
-            this.UserNameLabel1.Size = new System.Drawing.Size(211, 50);
+            this.UserNameLabel1.Size = new System.Drawing.Size(109, 25);
             this.UserNameLabel1.TabIndex = 1;
             this.UserNameLabel1.Text = "User Name:";
             // 
@@ -91,9 +96,10 @@
             // 
             this.PasswordLabel1.AutoSize = true;
             this.PasswordLabel1.Font = new System.Drawing.Font("Segoe UI", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PasswordLabel1.Location = new System.Drawing.Point(72, 303);
+            this.PasswordLabel1.Location = new System.Drawing.Point(35, 170);
+            this.PasswordLabel1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.PasswordLabel1.Name = "PasswordLabel1";
-            this.PasswordLabel1.Size = new System.Drawing.Size(185, 50);
+            this.PasswordLabel1.Size = new System.Drawing.Size(95, 25);
             this.PasswordLabel1.TabIndex = 1;
             this.PasswordLabel1.Text = "Password:";
             // 
@@ -101,9 +107,10 @@
             // 
             this.RemoteLoginCheckBox1.AutoSize = true;
             this.RemoteLoginCheckBox1.Font = new System.Drawing.Font("Segoe UI", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RemoteLoginCheckBox1.Location = new System.Drawing.Point(413, 393);
+            this.RemoteLoginCheckBox1.Location = new System.Drawing.Point(163, 213);
+            this.RemoteLoginCheckBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.RemoteLoginCheckBox1.Name = "RemoteLoginCheckBox1";
-            this.RemoteLoginCheckBox1.Size = new System.Drawing.Size(281, 54);
+            this.RemoteLoginCheckBox1.Size = new System.Drawing.Size(146, 29);
             this.RemoteLoginCheckBox1.TabIndex = 2;
             this.RemoteLoginCheckBox1.Text = "Remote Login";
             this.RemoteLoginCheckBox1.UseVisualStyleBackColor = true;
@@ -112,9 +119,10 @@
             // LoginButton1
             // 
             this.LoginButton1.Font = new System.Drawing.Font("Segoe UI", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LoginButton1.Location = new System.Drawing.Point(413, 515);
+            this.LoginButton1.Location = new System.Drawing.Point(304, 257);
+            this.LoginButton1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.LoginButton1.Name = "LoginButton1";
-            this.LoginButton1.Size = new System.Drawing.Size(257, 71);
+            this.LoginButton1.Size = new System.Drawing.Size(128, 37);
             this.LoginButton1.TabIndex = 3;
             this.LoginButton1.Text = "Login";
             this.LoginButton1.UseVisualStyleBackColor = true;
@@ -123,9 +131,10 @@
             // CancelButton1
             // 
             this.CancelButton1.Font = new System.Drawing.Font("Segoe UI", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CancelButton1.Location = new System.Drawing.Point(887, 515);
+            this.CancelButton1.Location = new System.Drawing.Point(446, 257);
+            this.CancelButton1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.CancelButton1.Name = "CancelButton1";
-            this.CancelButton1.Size = new System.Drawing.Size(257, 71);
+            this.CancelButton1.Size = new System.Drawing.Size(128, 37);
             this.CancelButton1.TabIndex = 3;
             this.CancelButton1.Text = "Cancel";
             this.CancelButton1.UseVisualStyleBackColor = true;
@@ -133,9 +142,9 @@
             // 
             // ServerCredentialsForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1224, 629);
+            this.ClientSize = new System.Drawing.Size(614, 329);
             this.Controls.Add(this.CancelButton1);
             this.Controls.Add(this.LoginButton1);
             this.Controls.Add(this.RemoteLoginCheckBox1);
@@ -146,6 +155,7 @@
             this.Controls.Add(this.UserNameTextBox1);
             this.Controls.Add(this.ServerNameTextBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "ServerCredentialsForm";
             this.Text = "Server Login";
             this.Load += new System.EventHandler(this.ServerCredentialsForm_Load);
