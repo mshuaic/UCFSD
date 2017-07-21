@@ -481,10 +481,7 @@ namespace CheckupExecApp
                 //}
 
                 // Display loading bar
-                System.Reflection.Assembly myAssembly = System.Reflection.Assembly.GetExecutingAssembly();
-                Stream myStream = myAssembly.GetManifestResourceStream("CheckupExecApp.loadingBar.gif");
-                Bitmap image = new Bitmap(myStream);
-                this.LoadingBarPictureBox6.Image = image;
+                this.LoadingBarPictureBox6.Image = loadingBar;
             }
         }
 
