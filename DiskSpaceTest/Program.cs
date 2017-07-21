@@ -48,7 +48,7 @@ namespace DiskSpaceTest
                 writer.WriteStartElement("DiskCapacities");
                 writer.WriteAttributeString("count", Max.ToString());
                 writer.WriteAttributeString("ServerName", System.Environment.MachineName);
-                DateTime date = DateTime.Now;
+                DateTime date = DateTime.Now.AddDays(-Max);
                 Random rnd = new Random();
                 List<long> usedSpace = storages.Select(x => x.UsedCapacityBytes).ToList();
 

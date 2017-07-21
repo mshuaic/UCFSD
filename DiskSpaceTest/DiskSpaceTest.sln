@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.15
+VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiskSpaceTest", "DiskSpaceTest.csproj", "{10ABFEC3-97C8-488B-93EE-8280CA75CE92}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckupExec", "E:\SkyDrive\UCF\SD\UCFSD-master\CheckupExec\CheckupExec.csproj", "{59EC6BCD-6F42-452B-BC48-CB271F107E00}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckupExec", "..\..\UCFSD-master\CheckupExec\CheckupExec.csproj", "{59EC6BCD-6F42-452B-BC48-CB271F107E00}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
