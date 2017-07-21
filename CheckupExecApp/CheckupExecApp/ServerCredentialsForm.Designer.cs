@@ -44,7 +44,7 @@
             this.ServerNameTextBox1.Enabled = false;
             this.ServerNameTextBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ServerNameTextBox1.Location = new System.Drawing.Point(163, 48);
-            this.ServerNameTextBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ServerNameTextBox1.Margin = new System.Windows.Forms.Padding(2);
             this.ServerNameTextBox1.Name = "ServerNameTextBox1";
             this.ServerNameTextBox1.Size = new System.Drawing.Size(411, 29);
             this.ServerNameTextBox1.TabIndex = 0;
@@ -54,7 +54,7 @@
             this.UserNameTextBox1.Enabled = false;
             this.UserNameTextBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.UserNameTextBox1.Location = new System.Drawing.Point(163, 108);
-            this.UserNameTextBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.UserNameTextBox1.Margin = new System.Windows.Forms.Padding(2);
             this.UserNameTextBox1.Name = "UserNameTextBox1";
             this.UserNameTextBox1.Size = new System.Drawing.Size(411, 29);
             this.UserNameTextBox1.TabIndex = 0;
@@ -64,7 +64,7 @@
             this.PasswordTextBox1.Enabled = false;
             this.PasswordTextBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PasswordTextBox1.Location = new System.Drawing.Point(163, 168);
-            this.PasswordTextBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.PasswordTextBox1.Margin = new System.Windows.Forms.Padding(2);
             this.PasswordTextBox1.Name = "PasswordTextBox1";
             this.PasswordTextBox1.Size = new System.Drawing.Size(411, 29);
             this.PasswordTextBox1.TabIndex = 0;
@@ -108,7 +108,7 @@
             this.RemoteLoginCheckBox1.AutoSize = true;
             this.RemoteLoginCheckBox1.Font = new System.Drawing.Font("Segoe UI", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RemoteLoginCheckBox1.Location = new System.Drawing.Point(163, 213);
-            this.RemoteLoginCheckBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.RemoteLoginCheckBox1.Margin = new System.Windows.Forms.Padding(2);
             this.RemoteLoginCheckBox1.Name = "RemoteLoginCheckBox1";
             this.RemoteLoginCheckBox1.Size = new System.Drawing.Size(146, 29);
             this.RemoteLoginCheckBox1.TabIndex = 2;
@@ -120,7 +120,7 @@
             // 
             this.LoginButton1.Font = new System.Drawing.Font("Segoe UI", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LoginButton1.Location = new System.Drawing.Point(304, 257);
-            this.LoginButton1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.LoginButton1.Margin = new System.Windows.Forms.Padding(2);
             this.LoginButton1.Name = "LoginButton1";
             this.LoginButton1.Size = new System.Drawing.Size(128, 37);
             this.LoginButton1.TabIndex = 3;
@@ -132,7 +132,7 @@
             // 
             this.CancelButton1.Font = new System.Drawing.Font("Segoe UI", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CancelButton1.Location = new System.Drawing.Point(446, 257);
-            this.CancelButton1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.CancelButton1.Margin = new System.Windows.Forms.Padding(2);
             this.CancelButton1.Name = "CancelButton1";
             this.CancelButton1.Size = new System.Drawing.Size(128, 37);
             this.CancelButton1.TabIndex = 3;
@@ -155,8 +155,9 @@
             this.Controls.Add(this.UserNameTextBox1);
             this.Controls.Add(this.ServerNameTextBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "ServerCredentialsForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Server Login";
             this.Load += new System.EventHandler(this.ServerCredentialsForm_Load);
             this.ResumeLayout(false);

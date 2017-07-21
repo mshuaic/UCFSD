@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea7 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series7 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.FrontEndAnalysisTab = new System.Windows.Forms.TabPage();
             this.LoadingBarPictureBox1 = new System.Windows.Forms.PictureBox();
@@ -222,7 +222,7 @@
             // 
             this.ReportProgressLabel.AutoSize = true;
             this.ReportProgressLabel.Font = new System.Drawing.Font("Segoe UI", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ReportProgressLabel.Location = new System.Drawing.Point(40, 626);
+            this.ReportProgressLabel.Location = new System.Drawing.Point(43, 620);
             this.ReportProgressLabel.Name = "ReportProgressLabel";
             this.ReportProgressLabel.Size = new System.Drawing.Size(89, 25);
             this.ReportProgressLabel.TabIndex = 8;
@@ -366,7 +366,7 @@
             // ReportProgressLabel2
             // 
             this.ReportProgressLabel2.AutoSize = true;
-            this.ReportProgressLabel2.Location = new System.Drawing.Point(40, 626);
+            this.ReportProgressLabel2.Location = new System.Drawing.Point(43, 620);
             this.ReportProgressLabel2.Name = "ReportProgressLabel2";
             this.ReportProgressLabel2.Size = new System.Drawing.Size(89, 25);
             this.ReportProgressLabel2.TabIndex = 16;
@@ -502,8 +502,8 @@
             // 
             // DriveUsageChart
             // 
-            chartArea1.Name = "ChartArea1";
-            this.DriveUsageChart.ChartAreas.Add(chartArea1);
+            chartArea7.Name = "ChartArea1";
+            this.DriveUsageChart.ChartAreas.Add(chartArea7);
             this.DriveUsageChart.Location = new System.Drawing.Point(467, 39);
             this.DriveUsageChart.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.DriveUsageChart.Name = "DriveUsageChart";
@@ -511,11 +511,11 @@
             this.DriveUsageChart.PaletteCustomColors = new System.Drawing.Color[] {
         System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(160)))), ((int)(((byte)(218))))),
         System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))))};
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
-            series1.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            series1.Name = "DriveUsage";
-            this.DriveUsageChart.Series.Add(series1);
+            series7.ChartArea = "ChartArea1";
+            series7.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
+            series7.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            series7.Name = "DriveUsage";
+            this.DriveUsageChart.Series.Add(series7);
             this.DriveUsageChart.Size = new System.Drawing.Size(446, 452);
             this.DriveUsageChart.TabIndex = 14;
             this.DriveUsageChart.Text = "Drive Usage";
@@ -590,7 +590,7 @@
             // ReportProgressLabel6
             // 
             this.ReportProgressLabel6.AutoSize = true;
-            this.ReportProgressLabel6.Location = new System.Drawing.Point(40, 626);
+            this.ReportProgressLabel6.Location = new System.Drawing.Point(43, 620);
             this.ReportProgressLabel6.Name = "ReportProgressLabel6";
             this.ReportProgressLabel6.Size = new System.Drawing.Size(89, 25);
             this.ReportProgressLabel6.TabIndex = 66;
@@ -617,7 +617,7 @@
             // SelectAllBackupJobsCheckBox6
             // 
             this.SelectAllBackupJobsCheckBox6.AutoSize = true;
-            this.SelectAllBackupJobsCheckBox6.Location = new System.Drawing.Point(722, 72);
+            this.SelectAllBackupJobsCheckBox6.Location = new System.Drawing.Point(725, 72);
             this.SelectAllBackupJobsCheckBox6.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.SelectAllBackupJobsCheckBox6.Name = "SelectAllBackupJobsCheckBox6";
             this.SelectAllBackupJobsCheckBox6.Size = new System.Drawing.Size(108, 29);
@@ -718,7 +718,7 @@
             // 
             // RefreshJobsButton
             // 
-            this.RefreshJobsButton.Location = new System.Drawing.Point(474, 495);
+            this.RefreshJobsButton.Location = new System.Drawing.Point(474, 485);
             this.RefreshJobsButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.RefreshJobsButton.Name = "RefreshJobsButton";
             this.RefreshJobsButton.Size = new System.Drawing.Size(390, 50);
@@ -730,7 +730,7 @@
             // EndDateTimePickerLabel
             // 
             this.EndDateTimePickerLabel.AutoSize = true;
-            this.EndDateTimePickerLabel.Location = new System.Drawing.Point(905, 480);
+            this.EndDateTimePickerLabel.Location = new System.Drawing.Point(905, 470);
             this.EndDateTimePickerLabel.Name = "EndDateTimePickerLabel";
             this.EndDateTimePickerLabel.Size = new System.Drawing.Size(92, 25);
             this.EndDateTimePickerLabel.TabIndex = 36;
@@ -739,7 +739,7 @@
             // StartDateTimePickerLabel
             // 
             this.StartDateTimePickerLabel.AutoSize = true;
-            this.StartDateTimePickerLabel.Location = new System.Drawing.Point(43, 480);
+            this.StartDateTimePickerLabel.Location = new System.Drawing.Point(43, 470);
             this.StartDateTimePickerLabel.Name = "StartDateTimePickerLabel";
             this.StartDateTimePickerLabel.Size = new System.Drawing.Size(98, 25);
             this.StartDateTimePickerLabel.TabIndex = 35;
@@ -749,7 +749,7 @@
             // 
             this.EndDateTimePicker.CustomFormat = "MM/dd/yyyy hh:mm:ss tt";
             this.EndDateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.EndDateTimePicker.Location = new System.Drawing.Point(910, 513);
+            this.EndDateTimePicker.Location = new System.Drawing.Point(910, 503);
             this.EndDateTimePicker.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.EndDateTimePicker.Name = "EndDateTimePicker";
             this.EndDateTimePicker.Size = new System.Drawing.Size(387, 32);
@@ -759,7 +759,7 @@
             // 
             this.StartDateTimePicker.CustomFormat = "MM/dd/yyyy hh:mm:ss tt";
             this.StartDateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.StartDateTimePicker.Location = new System.Drawing.Point(48, 513);
+            this.StartDateTimePicker.Location = new System.Drawing.Point(48, 503);
             this.StartDateTimePicker.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.StartDateTimePicker.Name = "StartDateTimePicker";
             this.StartDateTimePicker.Size = new System.Drawing.Size(387, 32);
@@ -821,7 +821,7 @@
             // ReportProgressLabel3
             // 
             this.ReportProgressLabel3.AutoSize = true;
-            this.ReportProgressLabel3.Location = new System.Drawing.Point(40, 626);
+            this.ReportProgressLabel3.Location = new System.Drawing.Point(43, 620);
             this.ReportProgressLabel3.Name = "ReportProgressLabel3";
             this.ReportProgressLabel3.Size = new System.Drawing.Size(89, 25);
             this.ReportProgressLabel3.TabIndex = 23;
@@ -949,7 +949,7 @@
             // 
             // RefreshJobsButton4
             // 
-            this.RefreshJobsButton4.Location = new System.Drawing.Point(474, 495);
+            this.RefreshJobsButton4.Location = new System.Drawing.Point(474, 485);
             this.RefreshJobsButton4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.RefreshJobsButton4.Name = "RefreshJobsButton4";
             this.RefreshJobsButton4.Size = new System.Drawing.Size(390, 50);
@@ -961,7 +961,7 @@
             // EndDateTimePickerLabel4
             // 
             this.EndDateTimePickerLabel4.AutoSize = true;
-            this.EndDateTimePickerLabel4.Location = new System.Drawing.Point(905, 480);
+            this.EndDateTimePickerLabel4.Location = new System.Drawing.Point(905, 470);
             this.EndDateTimePickerLabel4.Name = "EndDateTimePickerLabel4";
             this.EndDateTimePickerLabel4.Size = new System.Drawing.Size(92, 25);
             this.EndDateTimePickerLabel4.TabIndex = 57;
@@ -970,7 +970,7 @@
             // StartDateTimePickerLabel4
             // 
             this.StartDateTimePickerLabel4.AutoSize = true;
-            this.StartDateTimePickerLabel4.Location = new System.Drawing.Point(43, 480);
+            this.StartDateTimePickerLabel4.Location = new System.Drawing.Point(43, 470);
             this.StartDateTimePickerLabel4.Name = "StartDateTimePickerLabel4";
             this.StartDateTimePickerLabel4.Size = new System.Drawing.Size(98, 25);
             this.StartDateTimePickerLabel4.TabIndex = 56;
@@ -980,7 +980,7 @@
             // 
             this.EndDateTimePicker4.CustomFormat = "MM/dd/yyyy hh:mm:ss tt";
             this.EndDateTimePicker4.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.EndDateTimePicker4.Location = new System.Drawing.Point(910, 513);
+            this.EndDateTimePicker4.Location = new System.Drawing.Point(910, 503);
             this.EndDateTimePicker4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.EndDateTimePicker4.Name = "EndDateTimePicker4";
             this.EndDateTimePicker4.Size = new System.Drawing.Size(387, 32);
@@ -990,7 +990,7 @@
             // 
             this.StartDateTimePicker4.CustomFormat = "MM/dd/yyyy hh:mm:ss tt";
             this.StartDateTimePicker4.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.StartDateTimePicker4.Location = new System.Drawing.Point(48, 513);
+            this.StartDateTimePicker4.Location = new System.Drawing.Point(48, 503);
             this.StartDateTimePicker4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.StartDateTimePicker4.Name = "StartDateTimePicker4";
             this.StartDateTimePicker4.Size = new System.Drawing.Size(387, 32);
@@ -1052,7 +1052,7 @@
             // ReportProgressLabel4
             // 
             this.ReportProgressLabel4.AutoSize = true;
-            this.ReportProgressLabel4.Location = new System.Drawing.Point(40, 626);
+            this.ReportProgressLabel4.Location = new System.Drawing.Point(43, 620);
             this.ReportProgressLabel4.Name = "ReportProgressLabel4";
             this.ReportProgressLabel4.Size = new System.Drawing.Size(89, 25);
             this.ReportProgressLabel4.TabIndex = 45;
@@ -1147,6 +1147,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Checkup Exec";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.tabControl1.ResumeLayout(false);
