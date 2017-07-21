@@ -11,6 +11,24 @@ namespace ReportGen.ErrorsReport
     {
         private const string START_JS = "/**START MY JAVASCRIPT**/";
 
+        private const string MODEL = @"
+            var myPlot = document.getElementById('bar');
+            var modal = document.getElementById('myModal');
+            var span = document.getElementsByClassName('close')[0];
+
+            myPlot.on('plotly_click',function(data){
+              var pn='', error = [];
+              for(var i=0; i < data.points.length; i++){
+                pn = data.points[i].pointNumber;
+                error = data.points[i].data.errorMessage;
+              };
+              modal.style.display = 'block';
+              document.getElementById('p1').innerHTML = error[pn];
+              span.onclick = function() {
+                  modal.style.display = 'none';
+              };
+            });";
+
         public ErrorsReportGen(string output, List<JobHistory> jobHistory, int numOfTrunk = 10)
         {
             ErrorsReportInfo info = new ErrorsReportInfo(jobHistory, numOfTrunk);
@@ -20,7 +38,7 @@ namespace ReportGen.ErrorsReport
             int i = 0;
             foreach(var errorStatus in info.Bars.Keys)
             {
-                traces[i++] = barJs.GetNewTrace(new JArray(info.Labels), new JArray(info.Bars[errorStatus]), Constants.JobErrorStatuses[errorStatus]);
+                traces[i++] = barJs.GetNewTrace(new JArray(info.Labels), new JArray(info.Bars[errorStatus].Count), new JArray(info.Bars[errorStatus].BuildErrorMessages()), Constants.JobErrorStatuses[errorStatus]);
             }
             barJs.SetData(traces);
 
@@ -41,7 +59,7 @@ namespace ReportGen.ErrorsReport
             try
             {
                 string template = CheckupExec.Properties.Resources.template_errors;               
-                string html = template.Insert(template.IndexOf(START_JS) + START_JS.Length, barJs.Gen() + pieJs.Gen());
+                string html = template.Insert(template.IndexOf(START_JS) + START_JS.Length,"\n" + barJs.Gen() + pieJs.Gen() + MODEL);
                 //Console.WriteLine(html);
                 File.WriteAllText(output, html);
             }

@@ -17,7 +17,8 @@ namespace ReportGen.ErrorsReport
         }";
 
         private const string trace_json = @"{  
-            type: 'bar'
+            type: 'bar',
+            hoverinfo : 'y+name'
         }";
 
         public BarJsGen(string name) : base(name)
@@ -26,11 +27,12 @@ namespace ReportGen.ErrorsReport
 
         }
 
-        public JObject GetNewTrace(JArray x, JArray y, string name)
+        public JObject GetNewTrace(JArray x, JArray y, JArray errorMessage, string name)
         {
             JObject newTrace = JObject.Parse(trace_json);
             newTrace.Add(new JProperty("x", x));
             newTrace.Add(new JProperty("y", y));
+            newTrace.Add(new JProperty("errorMessage", errorMessage));
             newTrace.Add(new JProperty("name", name));
             return newTrace;
         }

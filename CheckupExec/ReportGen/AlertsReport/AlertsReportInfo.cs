@@ -11,6 +11,8 @@ namespace ReportGen.AlertsReport
 
         public string[] Hovertext { get; }
 
+        public string[] AlertsDetail { get; }
+
         public Dictionary<string, int> Pie { get; } = new Dictionary<string, int>();
 
         public string[] Labels { get; }
@@ -20,8 +22,6 @@ namespace ReportGen.AlertsReport
         public AlertsReportInfo(List<Alert> alerts, int numOfTrunk)
         {
             TotalAlters = alerts.Count;
-            // maybe not necessary 
-            alerts.Sort();
 
             int elapsedTime = (alerts[alerts.Count - 1].Date - alerts[0].Date).Days + 1;
             double interval = (double)elapsedTime / numOfTrunk;
@@ -31,10 +31,11 @@ namespace ReportGen.AlertsReport
 
             Bars = new int[numOfTrunk];
             Hovertext = new string[numOfTrunk];
+            AlertsDetail = new string[numOfTrunk];
             Labels = new string[numOfTrunk];
 
             int numOfAlters = 0;
-            HoverText hovertext = new HoverText();
+            AlertInfo hovertext = new AlertInfo();
             int currentTrunk = 0;
             DateTime tempDate = alerts[0].Date;
 
@@ -50,7 +51,8 @@ namespace ReportGen.AlertsReport
                 {
                     Bars[currentTrunk] = numOfAlters;
                     Hovertext[currentTrunk] = hovertext.ToString();
-                    hovertext = new HoverText();
+                    AlertsDetail[currentTrunk] = hovertext.AlertsDetail;
+                    hovertext = new AlertInfo();
                     numOfAlters = 0;
                     while (alert.Date > tempDate.AddDays(interval))
                     {
@@ -60,7 +62,7 @@ namespace ReportGen.AlertsReport
                 }
 
                 numOfAlters++;
-                hovertext.Add(alert.Name);
+                hovertext.Add(alert);
 
                 if (!Pie.ContainsKey(alert.Name))
                     Pie.Add(alert.Name, 1);
@@ -79,9 +81,11 @@ namespace ReportGen.AlertsReport
 
         }
 
-        private class HoverText
+        private class AlertInfo
         {
             private Dictionary<string, int> AlertAndNum { get; set; } = new Dictionary<string, int>();
+
+            public string AlertsDetail { get; set; } = "";
 
             public override string ToString()
             {
@@ -96,15 +100,22 @@ namespace ReportGen.AlertsReport
                 return sb.ToString();
             }
 
-            public void Add(string key)
+            public void Add(Alert alert)
             {
-                if(AlertAndNum.ContainsKey(key))
+                string newline = "";
+                if(AlertsDetail != "")
                 {
-                    AlertAndNum[key]++;
+                    newline = "<br>";
+                }
+                AlertsDetail += newline + string.Format("{0}  {1}", alert.Date.ToString("MM/dd"), alert.Name);
+
+                if (AlertAndNum.ContainsKey(alert.Name))
+                {
+                    AlertAndNum[alert.Name]++;
                 }
                 else
                 {
-                    AlertAndNum.Add(key, 1);
+                    AlertAndNum.Add(alert.Name, 1);
                 }
             }
         }

@@ -25,12 +25,13 @@ namespace ReportGen.AlertsReport
             base.layout = JObject.Parse(layout_json);
         }
 
-        public void SetData(JArray x, JArray y, JArray hovertext)
+        public void SetData(JArray x, JArray y, JArray hovertext, JArray alertsDetail)
         {
             JObject newTrace = JObject.Parse(trace_json);
             newTrace.Add(new JProperty("x", x));
             newTrace.Add(new JProperty("y", y));
             newTrace.Add(new JProperty("hovertext", hovertext));
+            newTrace.Add(new JProperty("alertsDetail", alertsDetail));
             AddTrace(newTrace);
         }
     }

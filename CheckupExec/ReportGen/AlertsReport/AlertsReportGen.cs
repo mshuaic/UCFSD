@@ -10,12 +10,30 @@ namespace ReportGen.AlertsReport
     {
         private const string START_JS = "/**START MY JAVASCRIPT**/";
 
+        private const string MODEL = @"
+            var myPlot = document.getElementById('bar');
+            var modal = document.getElementById('myModal');
+            var span = document.getElementsByClassName('close')[0];
+
+            myPlot.on('plotly_click',function(data){
+              var pn='', alertsDetail = [];
+              for(var i=0; i < data.points.length; i++){
+                pn = data.points[i].pointNumber;
+                alertsDetail = data.points[i].data.alertsDetail;
+              };
+              modal.style.display = 'block';
+              document.getElementById('p1').innerHTML = alertsDetail[pn];
+              span.onclick = function() {
+                  modal.style.display = 'none';
+              };
+            });";
+
         public AlertsReportGen(string output, List<Alert> alerts, int numOfTrunk = 10)
         {
             AlertsReportInfo info = new AlertsReportInfo(alerts, numOfTrunk);
             BarJsGen barJs = new BarJsGen("bar");
 
-            barJs.SetData(new JArray(info.Labels), new JArray(info.Bars), new JArray(info.Hovertext));
+            barJs.SetData(new JArray(info.Labels), new JArray(info.Bars), new JArray(info.Hovertext), new JArray(info.AlertsDetail));
 
             PieJsGen pieJs = new PieJsGen("pie");
             JArray values = new JArray();
@@ -31,7 +49,7 @@ namespace ReportGen.AlertsReport
             try
             {
                 string template = CheckupExec.Properties.Resources.template_alerts;
-                string html = template.Insert(template.IndexOf(START_JS) + START_JS.Length, barJs.Gen() + pieJs.Gen());
+                string html = template.Insert(template.IndexOf(START_JS) + START_JS.Length, "\n" + barJs.Gen() + pieJs.Gen()+ MODEL);
                 //Console.WriteLine(html);
                 File.WriteAllText(output, html);
             }

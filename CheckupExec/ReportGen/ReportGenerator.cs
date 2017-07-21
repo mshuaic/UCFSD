@@ -15,11 +15,11 @@ namespace ReportGen
             {
                 new AlertsReport.AlertsReportGen(outputFile, alerts, numOfTrunk);
             }
-            catch (Exception e)
+            finally
             {
-
+                Successful = true;
             }
-            Successful = true;
+            
         }
 
         public ReportGenerator(string reportPath, List<JobHistory> jobHistory, int numOfTrunk = 10, string fileName = "ErrorsReport.html")
@@ -29,11 +29,10 @@ namespace ReportGen
             {
                 new ErrorsReport.ErrorsReportGen(outputFile, jobHistory, numOfTrunk);
             }
-            catch
+            finally
             {
-
+                Successful = true;
             }
-            Successful = true;
         }
     }
 }
