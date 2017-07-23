@@ -15,7 +15,7 @@ namespace CheckupExec.Utilities
             string html = File.ReadAllText(path);
         }
 
-        public void makeReportFore(List<FrontEndCapacityReport> reps, string loc)
+        public Boolean makeReportFore(List<FrontEndCapacityReport> reps, string loc)
         {
             string html = File.ReadAllText("templateFrontEnd.html");
             foreach(FrontEndCapacityReport sinRep in reps){
@@ -25,31 +25,25 @@ namespace CheckupExec.Utilities
             string newHtml = html.Insert(html.IndexOf("<!--START REPORT-->") + "<!--START REPORT-->".Length, sc.middleFore(reps));
             newHtml = newHtml.Insert(newHtml.IndexOf("<!--CHARTS AREA-->") + "<!--CHARTS AREA-->".Length, sc.chartFore(reps));
             System.IO.File.WriteAllText(loc,newHtml);
-            Console.ReadKey();
-
+            return true;
         }
-        public void makeReportDisk(List<DiskCapacityReport> reps, string loc)
+        public Boolean makeReportDisk(List<DiskCapacityReport> reps, string loc)
         {
             string html = File.ReadAllText("templateDisk.html");
             SectionGen sc = new SectionGen();
             string newHtml = html.Insert(html.IndexOf("<!--START REPORT-->") + "<!--START REPORT-->".Length, sc.middleDisk(reps));
             newHtml = newHtml.Insert(newHtml.IndexOf("<!--CHARTS AREA-->") + "<!--CHARTS AREA-->".Length, sc.chartDisk(reps));
             System.IO.File.WriteAllText(loc, newHtml);
-            Console.ReadKey();
-
+            return true;
         }
-        public void makeReportJob(List<BackupJobReport> reps, string loc) {
+        public Boolean makeReportJob(List<BackupJobReport> reps, string loc) {
 
             string html = File.ReadAllText("templateJob.html");
             SectionGen sc = new SectionGen();
             string newHtml = html.Insert(html.IndexOf("<!--START REPORT-->") + "<!--START REPORT-->".Length, sc.middleJob(reps));
             newHtml = newHtml.Insert(newHtml.IndexOf("<!--CHARTS AREA-->") + "<!--CHARTS AREA-->".Length, sc.chartJob(reps));
             System.IO.File.WriteAllText(loc, newHtml);
-
-            Console.ReadKey();
-
-
-
+            return true;
         }
     }
 }
