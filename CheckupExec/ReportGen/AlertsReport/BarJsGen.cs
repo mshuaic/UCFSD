@@ -17,7 +17,7 @@ namespace ReportGen.AlertsReport
 
         private const string trace_json = @"{  
             type: 'bar',
-            hoverinfo: 'text'
+            hoverlabel : {bgcolor: 'rgba(255,255,255,1)', font: {color: 'rgba(0,0,0,1)'} }
         }";
 
         public BarJsGen(string name) : base(name)
@@ -25,14 +25,25 @@ namespace ReportGen.AlertsReport
             base.layout = JObject.Parse(layout_json);
         }
 
-        public void SetData(JArray x, JArray y, JArray hovertext, JArray alertsDetail)
+        public JObject GetNewTrace(JArray x, JArray y, JArray alertsDetail, string name, string hoverinfo, JArray hovertext)
         {
             JObject newTrace = JObject.Parse(trace_json);
             newTrace.Add(new JProperty("x", x));
             newTrace.Add(new JProperty("y", y));
-            newTrace.Add(new JProperty("hovertext", hovertext));
             newTrace.Add(new JProperty("alertsDetail", alertsDetail));
-            AddTrace(newTrace);
+            newTrace.Add(new JProperty("name", name));
+            newTrace.Add(new JProperty("hoverinfo", hoverinfo));
+            newTrace.Add(new JProperty("hovertext", hovertext));
+            return newTrace;
         }
+        //public void SetData(JArray x, JArray y, JArray hovertext, JArray alertsDetail)
+        //{
+        //    JObject newTrace = JObject.Parse(trace_json);
+        //    newTrace.Add(new JProperty("x", x));
+        //    newTrace.Add(new JProperty("y", y));
+        //    newTrace.Add(new JProperty("hovertext", hovertext));
+        //    newTrace.Add(new JProperty("alertsDetail", alertsDetail));
+        //    AddTrace(newTrace);
+        //}
     }
 }

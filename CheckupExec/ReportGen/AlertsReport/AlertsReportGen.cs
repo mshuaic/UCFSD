@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace ReportGen.AlertsReport
 {
@@ -33,7 +34,18 @@ namespace ReportGen.AlertsReport
             AlertsReportInfo info = new AlertsReportInfo(alerts, numOfTrunk);
             BarJsGen barJs = new BarJsGen("bar");
 
-            barJs.SetData(new JArray(info.Labels), new JArray(info.Bars), new JArray(info.Hovertext), new JArray(info.AlertsDetail));
+            JObject[] traces = new JObject[info.Bars.Count];
+            string[] alertArr = info.Bars.Keys.ToArray();
+            for (int i = 0; i < info.Bars.Count; i++)
+            {
+                var alert= alertArr[i];
+                if (i != info.Bars.Count - 1)
+                    traces[i] = barJs.GetNewTrace(new JArray(info.Labels), new JArray(info.Bars[alert].Count), null, alert, "none", null);
+                else
+                    traces[i] = barJs.GetNewTrace(new JArray(info.Labels), new JArray(info.Bars[alert].Count), new JArray(info.AlertsDetail), alert, "text", new JArray(info.Hovertext));
+            }
+
+            barJs.SetData(traces);
 
             PieJsGen pieJs = new PieJsGen("pie");
             JArray values = new JArray();
@@ -44,6 +56,20 @@ namespace ReportGen.AlertsReport
                 values.Add(info.Pie[alertName]);
             }
             pieJs.SetData(values, labels);
+
+
+
+            //barJs.SetData(new JArray(info.Labels), new JArray(info.Bars), new JArray(info.Hovertext), new JArray(info.AlertsDetail));
+
+            //PieJsGen pieJs = new PieJsGen("pie");
+            //JArray values = new JArray();
+            //JArray labels = new JArray();
+            //foreach (var alertName in info.Pie.Keys)
+            //{
+            //    labels.Add(alertName);
+            //    values.Add(info.Pie[alertName]);
+            //}
+            //pieJs.SetData(values, labels);
 
             //Generate HTML
             try

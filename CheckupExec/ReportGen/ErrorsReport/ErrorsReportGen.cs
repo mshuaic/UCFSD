@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using CheckupExec.Models;
 using CheckupExec.Utilities;
@@ -35,11 +36,16 @@ namespace ReportGen.ErrorsReport
             BarJsGen barJs = new BarJsGen("bar");
 
             JObject[] traces = new JObject[info.Bars.Count];
-            int i = 0;
-            foreach(var errorStatus in info.Bars.Keys)
+            string[] errorStatusArr = info.Bars.Keys.ToArray();
+            for (int i=0;i<info.Bars.Count;i++)
             {
-                traces[i++] = barJs.GetNewTrace(new JArray(info.Labels), new JArray(info.Bars[errorStatus].Count), new JArray(info.Bars[errorStatus].BuildErrorMessages()), Constants.JobErrorStatuses[errorStatus]);
+                var errorStatus = errorStatusArr[i];
+                if(i != info.Bars.Count-1)
+                traces[i] = barJs.GetNewTrace(new JArray(info.Labels), new JArray(info.Bars[errorStatus].Count), new JArray(info.Bars[errorStatus].BuildErrorMessages()), Constants.JobErrorStatuses[errorStatus],"none",null);
+                else
+                    traces[i] = barJs.GetNewTrace(new JArray(info.Labels), new JArray(info.Bars[errorStatus].Count), new JArray(info.Bars[errorStatus].BuildErrorMessages()), Constants.JobErrorStatuses[errorStatus], "text", new JArray(info.Hovertext));
             }
+
             barJs.SetData(traces);
 
             PieJsGen pieJs = new PieJsGen("pie");

@@ -11,6 +11,8 @@ namespace ReportGen.ErrorsReport
     {
         public Dictionary<string, BarInfo> Bars { get; }
 
+        public string[] Hovertext { get; }
+
         public Dictionary<string, int> Pie { get; }
 
         public List<string> Labels { get; }
@@ -30,21 +32,36 @@ namespace ReportGen.ErrorsReport
 
             if (interval < 1)
                 numOfTrunk = elapsedTime;
-            
+
+            Hovertext = new string[numOfTrunk];
+
             int currentTrunk = 0;
+            ErrorInfo hovertext = new ErrorInfo();
 
             foreach (var job in jobHistory)
             {
-                while (job.EndTime > tempDate.AddDays(interval))
+                if(job.Equals(jobHistory[jobHistory.Count-1]))
                 {
-                    currentTrunk++;
-                    tempDate = tempDate.AddDays(interval);
+                    Hovertext[currentTrunk] = hovertext.ToString();
                 }
+
+                if(job.EndTime > tempDate.AddDays(interval))
+                {
+                    Hovertext[currentTrunk] = hovertext.ToString();
+                    hovertext = new ErrorInfo();
+                    while (job.EndTime > tempDate.AddDays(interval))
+                    {
+                        currentTrunk++;
+                        tempDate = tempDate.AddDays(interval);
+                    }
+                }
+
                 if (!Bars.ContainsKey(job.JobStatus))
                 {
                     Bars.Add(job.JobStatus, new BarInfo(numOfTrunk));
                 }
                 Bars[job.JobStatus].Count[currentTrunk]++;
+                hovertext.Add(job);
 
                 // if jobstatus == "Error"
                 if (Constants.JobErrorStatuses[job.JobStatus] == "Error")
@@ -70,6 +87,37 @@ namespace ReportGen.ErrorsReport
                 endTime = startTime.AddDays(interval);
             }
         }
+
+        private class ErrorInfo
+        {
+            private Dictionary<string, int> ErrorAndNum { get; set; } = new Dictionary<string, int>();
+
+            public override string ToString()
+            {
+                StringBuilder sb = new StringBuilder();
+                string newline = "";
+                foreach (var error in ErrorAndNum.Keys)
+                {
+                    sb.Append(newline);
+                    sb.AppendFormat("({0}) {1}", ErrorAndNum[error], Constants.JobErrorStatuses[error]);
+                    newline = "<br>";
+                }
+                return sb.ToString();
+            }
+
+            public void Add(JobHistory jobhistory)
+            {
+                if(ErrorAndNum.ContainsKey(jobhistory.JobStatus))
+                {
+                    ErrorAndNum[jobhistory.JobStatus]++;
+                }
+                else
+                {
+                    ErrorAndNum.Add(jobhistory.JobStatus, 1);
+                }
+            }
+        }
+
 
         public class BarInfo
         {
