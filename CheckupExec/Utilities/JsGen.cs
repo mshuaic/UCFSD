@@ -34,7 +34,7 @@ namespace ReportGen
 
         public virtual string Gen()
         {
-            return PLOTLY + name +","+ data.ToString(Formatting.None)+","+layout.ToString(Formatting.None)+");";
+            return PLOTLY + name +","+ data.ToString(Formatting.None)+","+layout.ToString(Formatting.None)+ ",{displayModeBar: false});";
         }
     }
 }

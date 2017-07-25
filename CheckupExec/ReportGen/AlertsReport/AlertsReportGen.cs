@@ -75,8 +75,7 @@ namespace ReportGen.AlertsReport
             try
             {
                 string template = CheckupExec.Properties.Resources.template_alerts;
-                string html = template.Insert(template.IndexOf(START_JS) + START_JS.Length, "\n" + barJs.Gen() + pieJs.Gen()+ MODEL);
-                //Console.WriteLine(html);
+                string html = template.Insert(template.IndexOf(START_JS) + START_JS.Length, "\n" + barJs.Gen() + pieJs.Gen()+ MODEL.Replace("\r\n", "").Replace(" ", "").Trim());
                 File.WriteAllText(output, html);
             }
             catch (IOException e)

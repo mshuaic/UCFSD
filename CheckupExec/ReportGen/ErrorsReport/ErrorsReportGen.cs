@@ -65,7 +65,7 @@ namespace ReportGen.ErrorsReport
             try
             {
                 string template = CheckupExec.Properties.Resources.template_errors;               
-                string html = template.Insert(template.IndexOf(START_JS) + START_JS.Length,"\n" + barJs.Gen() + pieJs.Gen() + MODEL);
+                string html = template.Insert(template.IndexOf(START_JS) + START_JS.Length,"\n" + barJs.Gen() + pieJs.Gen() + MODEL.Replace("\r\n", "").Replace(" ", "").Trim());
                 //Console.WriteLine(html);
                 File.WriteAllText(output, html);
             }

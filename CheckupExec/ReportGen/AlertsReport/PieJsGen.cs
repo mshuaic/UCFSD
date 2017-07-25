@@ -21,7 +21,7 @@ namespace ReportGen.AlertsReport
         private const string data_json = @"{
             type: 'pie',
             showlegend: false,
-            hoverinfo: 'label+percent'
+            hoverinfo: 'label+percent+value'
         }";
         public PieJsGen(string name) : base(name)
         {
